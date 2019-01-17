@@ -25,7 +25,7 @@ wget https://raw.githubusercontent.com/jacko1045/frp-onekey/master/install-frps.
 ```Bash
 ./install-frps.sh update
 ```
-### 服务器管理
+### Server management
 ```Bash
  Usage: /etc/init.d/frps {start|stop|restart|status|config|version}
 ```
