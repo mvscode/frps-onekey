@@ -6,6 +6,7 @@ Frp 是一个高性能的反向代理应用，可以帮助您轻松地进行内�
 * 详情：fatedier (https://github.com/fatedier/frp）
 * 此脚本原作者：clangcn （https://github.com/clangcn/onekey-install-shell）
 
+这个是frps一键服务端配置脚本，已更新最新版本：0.23.1
 ## Server
 ------
 
