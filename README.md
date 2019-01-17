@@ -10,22 +10,22 @@ Frp 是一个高性能的反向代理应用，可以帮助您轻松地进行内�
 ## Server
 ------
 
-### Install
+### Install（安装）
 
 ```Bash
 wget https://raw.githubusercontent.com/jacko1045/frp-onekey/master/install-frps.sh -O ./install-frps.sh;chmod +x install-frps.sh
 ./install-frps.sh install
 ```
 
-### Uninstall
+### Uninstall（卸载）
 ```Bash
 ./install-frps.sh uninstall
 ```
-### Update
+### Update（更新）
 ```Bash
 ./install-frps.sh update
 ```
-### Server management
+### Server management（服务管理器）
 ```Bash
  Usage: /etc/init.d/frps {start|stop|restart|status|config|version}
 ```
