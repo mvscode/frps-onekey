@@ -13,32 +13,22 @@ str_program_dir="/usr/local/${program_name}"
 program_init="/etc/init.d/${program_name}"
 program_config_file="frps.ini"
 ver_file="/tmp/.frp_ver.sh"
-program_version_link="https://raw.githubusercontent.com/jacko1045/frp-onekey/master/version.sh"
-str_install_shell="https://raw.githubusercontent.com/jacko1045/frp-onekey/master/install-frps.sh"
-shell_update(){
-    fun_clangcn "clear"
-    echo "Check updates for shell..."
-    remote_shell_version=`wget  -qO- ${str_install_shell} | sed -n '/'^version'/p' | cut -d\" -f2`
-    if [ ! -z ${remote_shell_version} ]; then
-        if [[ "${version}" != "${remote_shell_version}" ]];then
-            echo -e "${COLOR_GREEN}Found a new version,update now!!!${COLOR_END}"
-            echo
-            echo -n "Update shell ..."
-            if ! wget -N  -qO $0 ${str_install_shell}; then
-                echo -e " [${COLOR_RED}failed${COLOR_END}]"
-                echo
-                exit 1
-            else
-                chmod +x install-frps.sh
-                echo -e " [${COLOR_GREEN}OK${COLOR_END}]"
-                echo
-                echo -e "${COLOR_GREEN}Please Re-run${COLOR_END} ${COLOR_PINK}$0 ${clang_action}${COLOR_END}"
-                echo
-                exit 1
-            fi
-            exit 1
-        fi
-    fi
+get_version(){
+	api_url="https://api.github.com/repos/fatedier/frp/releases/latest"
+
+	new_ver=`curl ${PROXY} -s ${api_url} --connect-timeout 10| grep 'tag_name' | cut -d\" -f4`
+
+	touch ./version.txt
+	cat <<EOF > ./version.txt
+${new_ver}
+EOF
+
+	sed -i 's/v//g' ./version.txt
+	get_releases=$(cat ./version.txt)
+
+	releases_url=https://github.com/fatedier/frp/releases/download/${new_ver}/frp_${get_releases}_linux_amd64.tar.gz
+	windows_url=https://github.com/fatedier/frp/releases/download/${new_ver}/frp_${get_releases}_windows_amd64.zip
+	rm -rf ./version.txt
 }
 fun_clangcn(){
     local clear_flag=""
