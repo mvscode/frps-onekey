@@ -4,13 +4,15 @@ Frps onkey-install-shell Changelog
 
 * v0.23.1 [2019/01/16]
  
- **Fix
-  *Fix status api.
-  *Fix reload and status command error.
+ Fix
+  
+  Fix status api.
+  Fix reload and status command error.
 
 * v0.23.0 [2019/01/15]
 
-**New
-  *Support render configure file template with os environment.
- **Change
-  *Remove check for authentication timeout.
+ New
+  Support render configure file template with os environment.
+ 
+ Change
+  Remove check for authentication timeout.
