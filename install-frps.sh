@@ -1,12 +1,12 @@
 #! /bin/bash
 PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
 export PATH
-#===============================================================================================
+#===============================================================================
 #   System Required:  CentOS Debian or Ubuntu (32bit/64bit)
 #   Description:  A tool to auto-compile & install frps on Linux
 #   Author: Clang
 #   Mender：jacko1045
-#===============================================================================================
+#===============================================================================
 program_name="frps"
 version="1.8.7"
 str_program_dir="/usr/local/${program_name}"
@@ -49,9 +49,9 @@ fun_clangcn(){
     echo ""
     echo "+----------------------------------------------------------+"
     echo "|frps for Linux Server, Written by Clang ，Mender jacko1045|"
-    echo "+---------------------------------------------------------+"
-    echo "|    A tool to auto-compile & install frps on Linux       |"
-    echo "+---------------------------------------------------------+"
+    echo "+----------------------------------------------------------+"
+    echo "|     A tool to auto-compile & install frps on Linux       |"
+    echo "+----------------------------------------------------------+"
     echo ""
 }
 fun_set_text_color(){
