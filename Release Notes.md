@@ -4,9 +4,8 @@ Frp版本更新说明
 
  <!-- vim-markdown-toc GFM -->
  
-* [Status](#status)
  * [ v0.23.1 [2019/01/16]](#v0.23.1[2019/01/16])  
-  Fix<br>  
+   * Fix
   *Fix status api.<br>  
   *Fix reload and status command error.
 
