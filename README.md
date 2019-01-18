@@ -5,7 +5,7 @@ Frp-Onekey-Install-Shell
 * 详情：fatedier (https://github.com/fatedier/frp）
 * 此脚本原作者：clangcn （https://github.com/clangcn/onekey-install-shell）
 
-# 这个是frps服务端一键配置脚本，最新版本：0.23.1
+# Frps服务端一键配置脚本，最新版本：0.23.1
 -------
 
 ### Install（安装）
