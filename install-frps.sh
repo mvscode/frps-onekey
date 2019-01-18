@@ -47,8 +47,8 @@ fun_clangcn(){
         clear
     fi
     echo ""
-    echo "+---------------------------------------------------------+"
-    echo "|frps for Linux Server, Written by Clang ，mender jacko1045|"
+    echo "+----------------------------------------------------------+"
+    echo "|frps for Linux Server, Written by Clang ，Mender jacko1045|"
     echo "+---------------------------------------------------------+"
     echo "|    A tool to auto-compile & install frps on Linux       |"
     echo "+---------------------------------------------------------+"
