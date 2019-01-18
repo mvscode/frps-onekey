@@ -1,6 +1,7 @@
 Frps onkey-install-shell Changelog<br>  
 Frp版本更新说明
 ---------------------------------------
+ * [Status]
  * [ v0.23.1 2019/01/16]  
   Fix<br>  
   *Fix status api.<br>  
