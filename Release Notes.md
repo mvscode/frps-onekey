@@ -3,7 +3,7 @@ Frp版本更新说明
 ==================================
 ## * v0.23.1 [2019/01/16]
  Fix
-  *Fix status api.
+  *Fix status api.<br>  
   *Fix reload and status command error.
 
 ###  * v0.23.0 [2019/01/15]
