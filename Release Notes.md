@@ -5,7 +5,7 @@ Frp版本更新说明
   Fix<br>  
   *Fix status api.<br>  
   *Fix reload and status command error.
-
+<!-- vim-markdown-toc GFM -->
 * v0.23.0 [2019/01/15]<br>  
     New
     Support render configure file template with os environment.
