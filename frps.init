@@ -36,7 +36,7 @@ fun_clangcn()
 {
     echo ""
     echo "+--------------------------------------------------------------- -+"
-    echo "| Manager for ${ProgramName}, Written by Clang，Mender ：jacko1045|"
+    echo "| Manager for ${ProgramName}, Written by Clang，Mender ：jacko1045 |"
     echo "+-----------------------------------------------------------------+"
     echo ""
 }
