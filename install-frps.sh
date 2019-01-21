@@ -179,11 +179,11 @@ fun_get_version(){
     fi
 }
 fun_getServer(){
-    def_server_url="aliyun"
+    def_server_url="github"
     echo ""
     echo -e "Please select ${program_name} download url:"
-    echo -e "[1].aliyun (default)"
-    echo -e "[2].github"
+    echo -e "[1].aliyun "
+    echo -e "[2].github (default)"
     read -e -p "Enter your choice (1, 2 or exit. default [${def_server_url}]): " set_server_url
     [ -z "${set_server_url}" ] && set_server_url="${def_server_url}"
     case "${set_server_url}" in
@@ -374,6 +374,11 @@ pre_install_clang(){
         [ -z "${set_token}" ] && set_token="${default_token}"
         echo "${program_name} token: ${set_token}"
         echo ""
+        default_subdomain_host=`fun_randstr 16`
+        read -e -p "Please input subdomain_host (Default: ${default_subdomain_host}):" set_subdomain_host
+        [ -z "${set_subdomain_host}" ] && set_subdomain_host="${default_subdomain_host}"
+        echo "${program_name} subdomain_host: ${set_subdomain_host}"
+        echo ""
         fun_input_max_pool_count
         [ -n "${input_number}" ] && set_max_pool_count="${input_number}"
         echo "${program_name} max_pool_count: ${set_max_pool_count}"
@@ -487,6 +492,7 @@ pre_install_clang(){
         echo -e "Dashboard user     : ${COLOR_GREEN}${set_dashboard_user}${COLOR_END}"
         echo -e "Dashboard password : ${COLOR_GREEN}${set_dashboard_pwd}${COLOR_END}"
         echo -e "token              : ${COLOR_GREEN}${set_token}${COLOR_END}"
+        echo -e "subdomain_host     : ${COLOR_GREEN}${set_subdomain_host}${COLOR_END}"
         echo -e "tcp_mux            : ${COLOR_GREEN}${set_tcp_mux}${COLOR_END}"
         echo -e "Max Pool count     : ${COLOR_GREEN}${set_max_pool_count}${COLOR_END}"
         echo -e "Log level          : ${COLOR_GREEN}${str_log_level}${COLOR_END}"
@@ -534,6 +540,8 @@ log_level = ${str_log_level}
 log_max_days = ${set_log_max_days}
 # auth token
 token = ${set_token}
+# It is convenient to use subdomain configure for http、https type when many people use one frps server together.
+subdomain_host = ${set_subdomain_host}
 # only allow frpc to bind ports you list, if you set nothing, there won't be any limit
 #allow_ports = 1-65535
 # pool_count in each proxy will change to max_pool_count if they exceed the maximum value
@@ -615,6 +623,7 @@ fi
     echo -e "vhost https port   : ${COLOR_GREEN}${set_vhost_https_port}${COLOR_END}"
     echo -e "Dashboard port     : ${COLOR_GREEN}${set_dashboard_port}${COLOR_END}"
     echo -e "token              : ${COLOR_GREEN}${set_token}${COLOR_END}"
+    echo -e "subdomain_host     : ${COLOR_GREEN}${set_subdomain_host}${COLOR_END}"
     echo -e "tcp_mux            : ${COLOR_GREEN}${set_tcp_mux}${COLOR_END}"
     echo -e "Max Pool count     : ${COLOR_GREEN}${set_max_pool_count}${COLOR_END}"
     echo -e "Log level          : ${COLOR_GREEN}${str_log_level}${COLOR_END}"
