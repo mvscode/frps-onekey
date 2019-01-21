@@ -575,6 +575,8 @@ log_level = ${str_log_level}
 log_max_days = ${set_log_max_days}
 # auth token
 token = ${set_token}
+# It is convenient to use subdomain configure for http、https type when many people use one frps server together.
+subdomain_host = ${set_subdomain_host}
 # only allow frpc to bind ports you list, if you set nothing, there won't be any limit
 #allow_ports = 1-65535
 # pool_count in each proxy will change to max_pool_count if they exceed the maximum value
