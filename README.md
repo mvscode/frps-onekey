@@ -11,7 +11,8 @@ Frp-Onekey-Install-Shell
 ### Install（安装）
 
 ```Bash
-wget https://raw.githubusercontent.com/jacko1045/frp-onekey/master/install-frps.sh -O ./install-frps.sh;chmod +x install-frps.sh
+wget --no-check-certificate https://raw.githubusercontent.com/jacko1045/frp-onekey/master/frps/install-frps.sh -O ./install-frps.sh
+chmod 700 ./install-frps.sh
 ./install-frps.sh install
 ```
 
