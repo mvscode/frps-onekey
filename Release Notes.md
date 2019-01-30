@@ -3,8 +3,8 @@ Frps onkey-install-shell Changelog<br>Frp版本更新说明
 
  <!-- vim-markdown-toc GFM -->
  
- 
-* ## [v0.23.3 [2019/01/30]](#v0.23.3[2019/01/30]）
+  
+* ## [v0.23.3 [2019/01/30]](#v0.23.3[2019/01/30])
     * ### Fix
      > Fix Reload proxy not saved after reconnecting
   
