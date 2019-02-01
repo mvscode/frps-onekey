@@ -201,7 +201,7 @@ fun_getServer(){
             ;;
     esac
     echo "---------------------------------------"
-    echo "Your select: ${set_server_url}"
+    echo "    Your select: ${set_server_url}     "
     echo "---------------------------------------"
 }
 fun_getVer(){
@@ -374,7 +374,7 @@ pre_install_clang(){
         [ -z "${set_token}" ] && set_token="${default_token}"
         echo "${program_name} token: ${set_token}"
         echo ""
-        default_subdomain_host=`fun_randstr 16`
+        default_subdomain_host=${defIP}
         read -e -p "Please input subdomain_host (Default: ${default_subdomain_host}):" set_subdomain_host
         [ -z "${set_subdomain_host}" ] && set_subdomain_host="${default_subdomain_host}"
         echo "${program_name} subdomain_host: ${set_subdomain_host}"
