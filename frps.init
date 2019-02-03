@@ -35,7 +35,7 @@ fun_clangcn()
 {
     echo ""
     echo "+---------------------------------------------------------+"
-    echo "|      Manager for ${ProgramName}, Author Clang, Mender jacko1045    |"
+    echo "|     Manager for ${ProgramName}, Author Clang, Mender jacko1045    |"
     echo "+---------------------------------------------------------+"
     echo ""
 }
