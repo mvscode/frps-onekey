@@ -1,12 +1,12 @@
 #! /bin/bash
 PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
 export PATH
-#===============================================================================
+#======================================================================
 #   System Required:  CentOS Debian or Ubuntu (32bit/64bit)
 #   Description:  A tool to auto-compile & install frps on Linux
 #   Author: Clang
 #   Mender：jacko1045
-#===============================================================================
+#======================================================================
 program_name="frps"
 version="1.8.7"
 str_program_dir="/usr/local/${program_name}"
@@ -47,11 +47,10 @@ fun_clangcn(){
         clear
     fi
     echo ""
-    echo "+----------------------------------------------------------+"
-    echo "|frps for Linux Server, Written by Clang ，Mender jacko1045|"
-    echo "+----------------------------------------------------------+"
-    echo "|     A tool to auto-compile & install frps on Linux       |"
-    echo "+----------------------------------------------------------+"
+    echo "+------------------------------------------------------------+"
+    echo "|   frps for Linux Server, Author Clang ，Mender jacko1045
+    echo "|      A tool to auto-compile & install frps on Linux        |"
+    echo "+------------------------------------------------------------+"
     echo ""
 }
 fun_set_text_color(){
@@ -83,7 +82,7 @@ get_char(){
 }
 # Check OS
 checkos(){
-    if grep -Eqi "CentOS" /etc/issue || grep -Eq "CentOS" /etc/*-release; then
+    if  grep -Eqi "CentOS" /etc/issue || grep -Eq "CentOS" /etc/*-release; then
         OS=CentOS
     elif grep -Eqi "Debian" /etc/issue || grep -Eq "Debian" /etc/*-release; then
         OS=Debian
@@ -200,9 +199,9 @@ fun_getServer(){
             program_download_url=${aliyun_download_url}
             ;;
     esac
-    echo "---------------------------------------"
-    echo "    Your select: ${set_server_url}     "
-    echo "---------------------------------------"
+    echo     "-----------------------------------"
+    echo -e  "       Your select: ${COLOR_YELOW}${set_server_url}${COLOR_END}    "
+    echo     "-----------------------------------"
 }
 fun_getVer(){
     echo -e "Loading network version for ${program_name}, please wait..."
@@ -276,7 +275,7 @@ fun_check_number(){
         fun_input_${num_flag}
     fi
 }
-# input port
+# input configuration data
 fun_input_bind_port(){
     def_server_port="5443"
     echo ""
@@ -289,7 +288,7 @@ fun_input_dashboard_port(){
     def_dashboard_port="6443"
     echo ""
     echo -n -e "Please input ${program_name} ${COLOR_GREEN}dashboard_port${COLOR_END} [1-65535]"
-    read -e -p "(Default dashboard_port: ${def_dashboard_port}):" input_dashboard_port
+    read -e -p "(Default : ${def_dashboard_port}):" input_dashboard_port
     [ -z "${input_dashboard_port}" ] && input_dashboard_port="${def_dashboard_port}"
     fun_check_port "dashboard" "${input_dashboard_port}"
 }
@@ -297,7 +296,7 @@ fun_input_vhost_http_port(){
     def_vhost_http_port="80"
     echo ""
     echo -n -e "Please input ${program_name} ${COLOR_GREEN}vhost_http_port${COLOR_END} [1-65535]"
-    read -e -p "(Default vhost_http_port: ${def_vhost_http_port}):" input_vhost_http_port
+    read -e -p "(Default : ${def_vhost_http_port}):" input_vhost_http_port
     [ -z "${input_vhost_http_port}" ] && input_vhost_http_port="${def_vhost_http_port}"
     fun_check_port "vhost_http" "${input_vhost_http_port}"
 }
@@ -305,7 +304,7 @@ fun_input_vhost_https_port(){
     def_vhost_https_port="443"
     echo ""
     echo -n -e "Please input ${program_name} ${COLOR_GREEN}vhost_https_port${COLOR_END} [1-65535]"
-    read -e -p "(Default vhost_https_port: ${def_vhost_https_port}):" input_vhost_https_port
+    read -e -p "(Default : ${def_vhost_https_port}):" input_vhost_https_port
     [ -z "${input_vhost_https_port}" ] && input_vhost_https_port="${def_vhost_https_port}"
     fun_check_port "vhost_https" "${input_vhost_https_port}"
 }
@@ -314,7 +313,7 @@ fun_input_log_max_days(){
     def_log_max_days="3"
     echo ""
     echo -e "Please input ${program_name} ${COLOR_GREEN}log_max_days${COLOR_END} [1-${def_max_days}]"
-    read -e -p "(Default log_max_days: ${def_log_max_days} day):" input_log_max_days
+    read -e -p "(Default : ${def_log_max_days} day):" input_log_max_days
     [ -z "${input_log_max_days}" ] && input_log_max_days="${def_log_max_days}"
     fun_check_number "log_max_days" "${def_max_days}" "${input_log_max_days}"
 }
@@ -323,10 +322,39 @@ fun_input_max_pool_count(){
     def_max_pool_count="50"
     echo ""
     echo -e "Please input ${program_name} ${COLOR_GREEN}max_pool_count${COLOR_END} [1-${def_max_pool}]"
-    read -e -p "(Default max_pool_count: ${def_max_pool_count}):" input_max_pool_count
+    read -e -p "(Default : ${def_max_pool_count}):" input_max_pool_count
     [ -z "${input_max_pool_count}" ] && input_max_pool_count="${def_max_pool_count}"
     fun_check_number "max_pool_count" "${def_max_pool}" "${input_max_pool_count}"
 }
+fun_input_dashboard_user(){
+    def_dashboard_user="admin"
+    echo ""
+    echo -n -e "Please input ${program_name} ${COLOR_GREEN}dashboard_user${COLOR_END}"
+    read -e -p "(Default : ${def_dashboard_user}):" input_dashboard_user
+    [ -z "${input_dashboard_user}" ] && input_dashboard_user="${def_dashboard_user}"
+}
+fun_input_dashboard_pwd(){
+    def_dashboard_pwd=`fun_randstr 8`
+    echo ""
+    echo -n -e "Please input ${program_name} ${COLOR_GREEN}dashboard_pwd${COLOR_END}"
+    read -e -p "(Default : ${def_dashboard_pwd}):" input_dashboard_pwd
+    [ -z "${input_dashboard_pwd}" ] && input_dashboard_pwd="${def_dashboard_pwd}"
+}
+fun_input_token(){
+    def_token=`fun_randstr 16`
+    echo ""
+    echo -n -e "Please input ${program_name} ${COLOR_GREEN}token${COLOR_END}"
+    read -e -p "(Default : ${def_token}):" input_token
+    [ -z "${input_token}" ] && input_token="${def_token}"
+}
+fun_input_subdomain_host(){
+    def_subdomain_host=${defIP}
+    echo ""
+    echo -n -e "Please input ${program_name} ${COLOR_GREEN}subdomain_host${COLOR_END}"
+    read -e -p "(Default : ${def_subdomain_host}):" input_subdomain_host
+    [ -z "${input_subdomain_host}" ] && input_subdomain_host="${def_subdomain_host}"
+}
+
 pre_install_clang(){
     fun_clangcn
     echo -e "Check your server setting, please wait..."
@@ -359,36 +387,32 @@ pre_install_clang(){
         [ -n "${input_port}" ] && set_dashboard_port="${input_port}"
         echo "${program_name} dashboard_port: ${set_dashboard_port}"
         echo ""
-        def_dashboard_user="admin"
-        read -e -p "Please input dashboard_user (Default: ${def_dashboard_user}):" set_dashboard_user
-        [ -z "${set_dashboard_user}" ] && set_dashboard_user="${def_dashboard_user}"
+        fun_input_dashboard_user
+        [ -n "${input_dashboard_user}" ] && set_dashboard_user="${input_dashboard_user}"
         echo "${program_name} dashboard_user: ${set_dashboard_user}"
         echo ""
-        def_dashboard_pwd=`fun_randstr 8`
-        read -e -p "Please input dashboard_pwd (Default: ${def_dashboard_pwd}):" set_dashboard_pwd
-        [ -z "${set_dashboard_pwd}" ] && set_dashboard_pwd="${def_dashboard_pwd}"
+        fun_input_dashboard_pwd
+        [ -n "${input_dashboard_pwd}" ] && set_dashboard_pwd="${input_dashboard_pwd}"
         echo "${program_name} dashboard_pwd: ${set_dashboard_pwd}"
         echo ""
-        default_token=`fun_randstr 16`
-        read -e -p "Please input token (Default: ${default_token}):" set_token
-        [ -z "${set_token}" ] && set_token="${default_token}"
-        echo "${program_name} token: ${set_token}"
+        fun_input_token
+        [ -n "${input_token}" ] && set_token="${input_token}"
+        echo "${program_name} tolen: ${set_token}"
         echo ""
-        default_subdomain_host=${defIP}
-        read -e -p "Please input subdomain_host (Default: ${default_subdomain_host}):" set_subdomain_host
-        [ -z "${set_subdomain_host}" ] && set_subdomain_host="${default_subdomain_host}"
+        fun_input_subdomain_host
+        [ -n "${input_subdomain_host}" ] && set_subdomain_host="${input_subdomain_host}"
         echo "${program_name} subdomain_host: ${set_subdomain_host}"
         echo ""
         fun_input_max_pool_count
         [ -n "${input_number}" ] && set_max_pool_count="${input_number}"
         echo "${program_name} max_pool_count: ${set_max_pool_count}"
         echo ""
-        echo "##### Please select log_level #####"
-        echo "1: info (default)"
-        echo "2: warn"
-        echo "3: error"
-        echo "4: debug"
-        echo "#####################################################"
+        echo -e "Please select ${COLOR_GREEN}log_level${COLOR_END}"
+        echo    "1: info (default)"
+        echo    "2: warn"
+        echo    "3: error"
+        echo    "4: debug"    
+        echo "-------------------------"   
         read -e -p "Enter your choice (1, 2, 3, 4 or exit. default [1]): " str_log_level
         case "${str_log_level}" in
             1|[Ii][Nn][Ff][Oo])
@@ -416,10 +440,10 @@ pre_install_clang(){
         [ -n "${input_number}" ] && set_log_max_days="${input_number}"
         echo "${program_name} log_max_days: ${set_log_max_days}"
         echo ""
-        echo "##### Please select log_file #####"
-        echo "1: enable (default)"
-        echo "2: disable"
-        echo "#####################################################"
+        echo -e "Please select ${COLOR_GREEN}log_file${COLOR_END}"
+        echo    "1: enable (default)"
+        echo    "2: disable"
+        echo "-------------------------"
         read -e -p "Enter your choice (1, 2 or exit. default [1]): " str_log_file
         case "${str_log_file}" in
             1|[yY]|[yY][eE][sS]|[oO][nN]|[tT][rR][uU][eE]|[eE][nN][aA][bB][lL][eE])
@@ -440,10 +464,10 @@ pre_install_clang(){
         esac
         echo "log_file: ${str_log_file_flag}"
         echo ""
-        echo "##### Please select tcp_mux #####"
-        echo "1: enable (default)"
-        echo "2: disable"
-        echo "#####################################################"
+        echo -e "Please select ${COLOR_GREEN}tcp_mux${COLOR_END}"
+        echo    "1: enable (default)"
+        echo    "2: disable"
+        echo "-------------------------"         
         read -e -p "Enter your choice (1, 2 or exit. default [1]): " str_tcp_mux
         case "${str_tcp_mux}" in
             1|[yY]|[yY][eE][sS]|[oO][nN]|[tT][rR][uU][eE]|[eE][nN][aA][bB][lL][eE])
@@ -461,10 +485,10 @@ pre_install_clang(){
         esac
         echo "tcp_mux: ${set_tcp_mux}"
         echo ""
-        echo "##### Please select kcp support #####"
-        echo "1: enable (default)"
-        echo "2: disable"
-        echo "#####################################################"
+        echo -e "Please select ${COLOR_GREEN}kcp support${COLOR_END}"
+        echo    "1: enable (default)"
+        echo    "2: disable"
+        echo "-------------------------"  
         read -e -p "Enter your choice (1, 2 or exit. default [1]): " str_kcp
         case "${str_kcp}" in
             1|[yY]|[yY][eE][sS]|[oO][nN]|[tT][rR][uU][eE]|[eE][nN][aA][bB][lL][eE])
@@ -482,6 +506,7 @@ pre_install_clang(){
         esac
         echo "kcp support: ${set_kcp}"
         echo ""
+
         echo "============== Check your input =============="
         echo -e "You Server IP      : ${COLOR_GREEN}${defIP}${COLOR_END}"
         echo -e "Bind port          : ${COLOR_GREEN}${set_bind_port}${COLOR_END}"
@@ -632,7 +657,7 @@ fi
     echo -e "Log max days       : ${COLOR_GREEN}${set_log_max_days}${COLOR_END}"
     echo -e "Log file           : ${COLOR_GREEN}${str_log_file_flag}${COLOR_END}"
     echo "=============================================="
-    echo -e "${program_name} Dashboard     : ${COLOR_GREEN}http://${defIP}:${set_dashboard_port}/${COLOR_END}"
+    echo -e "${program_name} Dashboard     : ${COLOR_GREEN}http://${set_subdomain_host}:${set_dashboard_port}/${COLOR_END}"
     echo -e "Dashboard user     : ${COLOR_GREEN}${set_dashboard_user}${COLOR_END}"
     echo -e "Dashboard password : ${COLOR_GREEN}${set_dashboard_pwd}${COLOR_END}"
     echo "=============================================="
@@ -660,7 +685,7 @@ uninstall_program_server_clang(){
         echo "============== Uninstall ${program_name} =============="
         str_uninstall="n"
         echo -n -e "${COLOR_YELOW}You want to uninstall?${COLOR_END}"
-        read -e -p "[y/N]:" str_uninstall
+        read -e -p "[Y/N]:" str_uninstall
         case "${str_uninstall}" in
         [yY]|[yY][eE][sS])
         echo ""
@@ -721,11 +746,11 @@ update_config_clang(){
                 echo ""
                 sed -i "/dashboard_port =.*/a\dashboard_user = ${set_dashboard_user_update}\ndashboard_pwd = ${set_dashboard_pwd_update}\n" ${str_program_dir}/${program_config_file}
             fi
-            if [ -z "${search_kcp_bind_port}" ];then
-                echo "##### Please select kcp support #####"
+            if [ -z "${search_kcp_bind_port}" ];then 
+                echo -e "${COLOR_GREEN}Please select kcp support${COLOR_END}"
                 echo "1: enable (default)"
                 echo "2: disable"
-                echo "#####################################################"
+                echo "-------------------------"  
                 read -e -p "Enter your choice (1, 2 or exit. default [1]): " str_kcp
                 case "${str_kcp}" in
                     1|[yY]|[yY][eE][sS]|[oO][nN]|[tT][rR][uU][eE]|[eE][nN][aA][bB][lL][eE])
@@ -750,10 +775,10 @@ update_config_clang(){
                 fi
             fi
             if [ -z "${search_tcp_mux}" ];then
-                echo "##### Please select tcp_mux #####"
+                echo "# Please select tcp_mux "
                 echo "1: enable (default)"
                 echo "2: disable"
-                echo "#####################################################"
+                echo "-------------------------"  
                 read -e -p "Enter your choice (1, 2 or exit. default [1]): " str_tcp_mux
                 case "${str_tcp_mux}" in
                     1|[yY]|[yY][eE][sS]|[oO][nN]|[tT][rR][uU][eE]|[eE][nN][aA][bB][lL][eE])
