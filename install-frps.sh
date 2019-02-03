@@ -48,7 +48,7 @@ fun_clangcn(){
     fi
     echo ""
     echo "+------------------------------------------------------------+"
-    echo "|   frps for Linux Server, Author Clang ，Mender jacko1045
+    echo "|   frps for Linux Server, Author Clang ，Mender jacko1045   |" 
     echo "|      A tool to auto-compile & install frps on Linux        |"
     echo "+------------------------------------------------------------+"
     echo ""
