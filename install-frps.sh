@@ -13,8 +13,8 @@ str_program_dir="/usr/local/${program_name}"
 program_init="/etc/init.d/${program_name}"
 program_config_file="frps.ini"
 ver_file="/tmp/.frp_ver.sh"
-program_version_link="https://raw.githubusercontent.com/jacko1045/frp-onekey/master/version.sh"
-str_install_shell="https://raw.githubusercontent.com/jacko1045/frp-onekey/master/install-frps.sh"
+program_version_link="https://raw.githubusercontent.com/jacko1045/frp-test/master/version.sh"
+str_install_shell="https://raw.githubusercontent.com/jacko1045/frp-test/master/install-frps.sh"
 shell_update(){
     fun_clangcn "clear"
     echo "Check updates for shell..."
@@ -48,7 +48,8 @@ fun_clangcn(){
     fi
     echo ""
     echo "+------------------------------------------------------------+"
-    echo "|   frps for Linux Server, Author Clang ，Mender jacko1045   |" 
+    echo "|   frps for Linux Server, Author Clang ，Mender jacko1045   |"
+    echo "+------------------------------------------------------------+"
     echo "|      A tool to auto-compile & install frps on Linux        |"
     echo "+------------------------------------------------------------+"
     echo ""
@@ -397,7 +398,7 @@ pre_install_clang(){
         echo ""
         fun_input_token
         [ -n "${input_token}" ] && set_token="${input_token}"
-        echo "${program_name} token: ${set_token}"
+        echo "${program_name} tolen: ${set_token}"
         echo ""
         fun_input_subdomain_host
         [ -n "${input_subdomain_host}" ] && set_subdomain_host="${input_subdomain_host}"
