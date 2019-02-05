@@ -211,7 +211,7 @@ fun_getVer(){
     if [ -z "${program_latest_filename}" ]; then
         echo -e "${COLOR_RED}Load network version failed!!!${COLOR_END}"
     else
-        echo -e "${program_name} Latest release file ${COLOR_GREEN}${program_latest_filename}${COLOR_END}"
+        echo -e "${program_name} Latest release file ${COLOR_YELOW}${program_latest_filename}${COLOR_END}"
     fi
 }
 fun_download_file(){
@@ -371,7 +371,9 @@ pre_install_clang(){
         echo -e "Loading You Server IP, please wait..."
         defIP=$(wget -qO- ip.clang.cn | sed -r 's/\r//')
         echo -e "You Server IP:${COLOR_YELOW}${defIP}${COLOR_END}"
+        echo -e "______________________________________________"
         echo -e  "${COLOR_RED}Please input your server setting:${COLOR_END}"
+        echo -e "______________________________________________"
         fun_input_bind_port
         [ -n "${input_port}" ] && set_bind_port="${input_port}"
         echo -e "${program_name} bind_port:${set_bind_port}"
