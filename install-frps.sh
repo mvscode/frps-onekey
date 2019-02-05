@@ -374,8 +374,8 @@ pre_install_clang(){
         echo -e  "${COLOR_YELOW}Please input your server setting:${COLOR_END}"
         fun_input_bind_port
         [ -n "${input_port}" ] && set_bind_port="${input_port}"
-        echo -e "${program_name} bind_port:${COLOR_GREEN}${set_bind_port}${COLOR_END}"
-        echo -e ""
+        echo "${program_name} bind_port: ${set_bind_port}"
+        echo ""
         fun_input_vhost_http_port
         [ -n "${input_port}" ] && set_vhost_http_port="${input_port}"
         echo "${program_name} vhost_http_port: ${set_vhost_http_port}"
