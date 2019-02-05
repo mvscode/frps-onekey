@@ -1,6 +1,11 @@
 #! /bin/bash
 PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
+###export###
 export PATH
+export FRPS_VER=0.23.3
+export FRPS_INIT="https://raw.githubusercontent.com/jacko1045/frp-onekey/test/frps.init"
+export aliyun_download_url="https://code.aliyun.com/jacko1045/frp/raw/master"
+export github_download_url="https://github.com/fatedier/frp/releases/download"
 #======================================================================
 #   System Required:  CentOS Debian or Ubuntu (32bit/64bit)
 #   Description:  A tool to auto-compile & install frps on Linux
@@ -13,7 +18,6 @@ str_program_dir="/usr/local/${program_name}"
 program_init="/etc/init.d/${program_name}"
 program_config_file="frps.ini"
 ver_file="/tmp/.frp_ver.sh"
-program_version_link="https://raw.githubusercontent.com/jacko1045/frp-onekey/master/version.sh"
 str_install_shell="https://raw.githubusercontent.com/jacko1045/frp-onekey/master/install-frps.sh"
 shell_update(){
     fun_clangcn "clear"
@@ -162,20 +166,6 @@ fun_randstr(){
     strRandomPass=""
     strRandomPass=`tr -cd '[:alnum:]' < /dev/urandom | fold -w ${strNum} | head -n1`
     echo ${strRandomPass}
-}
-fun_get_version(){
-    rm -f ${ver_file}
-    if ! wget  -qO ${ver_file} ${program_version_link}; then
-        echo -e "${COLOR_RED}Failed to download version.sh${COLOR_END}"
-    fi
-    if [ -s ${ver_file} ]; then
-        [ -x ${ver_file} ] && chmod +x ${ver_file}
-        . ${ver_file}
-    fi
-    if [ -z ${FRPS_VER} ] || [ -z ${FRPS_INIT} ] || [ -z ${aliyun_download_url} ] || [ -z ${github_download_url} ]; then
-        echo -e "${COLOR_RED}Error: ${COLOR_END}Get Program version failed!"
-        exit 1
-    fi
 }
 fun_getServer(){
     def_server_url="github"
@@ -364,7 +354,6 @@ pre_install_clang(){
     else
         clear
         fun_clangcn
-        fun_get_version
         fun_getServer
         fun_getVer
         echo -e "Loading You Server IP, please wait..."
