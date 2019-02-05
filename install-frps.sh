@@ -414,7 +414,7 @@ pre_install_clang(){
         echo    "2: warn"
         echo    "3: error"
         echo    "4: debug"    
-        echo "-------------------------"   
+        echo "————————————————————————————————————————"   
         read -e -p "Enter your choice (1, 2, 3, 4 or exit. default [1]): " str_log_level
         case "${str_log_level}" in
             1|[Ii][Nn][Ff][Oo])
@@ -440,7 +440,7 @@ pre_install_clang(){
         echo -e ""
         fun_input_log_max_days
         [ -n "${input_number}" ] && set_log_max_days="${input_number}"
-        echo -e "${program_name} log_max_days: ${COLOR_GREEN}${set_log_max_days}${COLOR_END}"
+        echo -e "${program_name} log_max_days: ${COLOR_YELOW}${set_log_max_days}${COLOR_END}"
         echo -e ""
         echo -e "Please select ${COLOR_GREEN}log_file${COLOR_END}"
         echo    "1: enable (default)"
