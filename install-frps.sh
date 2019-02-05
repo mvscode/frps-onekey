@@ -200,7 +200,7 @@ fun_getServer(){
             ;;
     esac
     echo     "-----------------------------------"
-    echo -e  "       Your select: ${COLOR_GREEN}${set_server_url}${COLOR_END}    "
+    echo -e  "       Your select: ${COLOR_YELOW}${set_server_url}${COLOR_END}    "
     echo     "-----------------------------------"
 }
 fun_getVer(){
@@ -275,19 +275,19 @@ fun_check_number(){
         fun_input_${num_flag}
     fi
 }
-# # input configuration data
+# input configuration data
 fun_input_bind_port(){
     def_server_port="5443"
     echo ""
-    echo -n -e "Please input ${program_name} ${COLOR_YELOW}bind_port${COLOR_END} [1-65535]"
-    read -e -p "(Default : ${def_server_port}):" input_serverport
+    echo -n -e "Please input ${program_name} ${COLOR_GREEN}bind_port${COLOR_END} [1-65535]"
+    read -e -p "(Default Server Port: ${def_server_port}):" serverport
     [ -z "${serverport}" ] && serverport="${def_server_port}"
     fun_check_port "bind" "${serverport}"
 }
 fun_input_dashboard_port(){
     def_dashboard_port="6443"
     echo ""
-    echo -n -e "Please input ${program_name} ${COLOR_YELOW}dashboard_port${COLOR_END} [1-65535]"
+    echo -n -e "Please input ${program_name} ${COLOR_GREEN}dashboard_port${COLOR_END} [1-65535]"
     read -e -p "(Default : ${def_dashboard_port}):" input_dashboard_port
     [ -z "${input_dashboard_port}" ] && input_dashboard_port="${def_dashboard_port}"
     fun_check_port "dashboard" "${input_dashboard_port}"
@@ -295,7 +295,7 @@ fun_input_dashboard_port(){
 fun_input_vhost_http_port(){
     def_vhost_http_port="80"
     echo ""
-    echo -n -e "Please input ${program_name} ${COLOR_YELOW}vhost_http_port${COLOR_END} [1-65535]"
+    echo -n -e "Please input ${program_name} ${COLOR_GREEN}vhost_http_port${COLOR_END} [1-65535]"
     read -e -p "(Default : ${def_vhost_http_port}):" input_vhost_http_port
     [ -z "${input_vhost_http_port}" ] && input_vhost_http_port="${def_vhost_http_port}"
     fun_check_port "vhost_http" "${input_vhost_http_port}"
@@ -303,7 +303,7 @@ fun_input_vhost_http_port(){
 fun_input_vhost_https_port(){
     def_vhost_https_port="443"
     echo ""
-    echo -n -e "Please input ${program_name} ${COLOR_YELOW}vhost_https_port${COLOR_END} [1-65535]"
+    echo -n -e "Please input ${program_name} ${COLOR_GREEN}vhost_https_port${COLOR_END} [1-65535]"
     read -e -p "(Default : ${def_vhost_https_port}):" input_vhost_https_port
     [ -z "${input_vhost_https_port}" ] && input_vhost_https_port="${def_vhost_https_port}"
     fun_check_port "vhost_https" "${input_vhost_https_port}"
@@ -312,36 +312,45 @@ fun_input_log_max_days(){
     def_max_days="30"
     def_log_max_days="3"
     echo ""
-    echo -e "Please input ${program_name} ${COLOR_YELOW}log_max_days${COLOR_END} [1-${def_max_days}]"
+    echo -e "Please input ${program_name} ${COLOR_GREEN}log_max_days${COLOR_END} [1-${def_max_days}]"
     read -e -p "(Default : ${def_log_max_days} day):" input_log_max_days
     [ -z "${input_log_max_days}" ] && input_log_max_days="${def_log_max_days}"
     fun_check_number "log_max_days" "${def_max_days}" "${input_log_max_days}"
 }
+fun_input_max_pool_count(){
+    def_max_pool="200"
+    def_max_pool_count="50"
+    echo ""
+    echo -e "Please input ${program_name} ${COLOR_GREEN}max_pool_count${COLOR_END} [1-${def_max_pool}]"
+    read -e -p "(Default : ${def_max_pool_count}):" input_max_pool_count
+    [ -z "${input_max_pool_count}" ] && input_max_pool_count="${def_max_pool_count}"
+    fun_check_number "max_pool_count" "${def_max_pool}" "${input_max_pool_count}"
+}
 fun_input_dashboard_user(){
     def_dashboard_user="admin"
     echo ""
-    echo -n -e "Please input ${program_name} ${COLOR_YELOW}dashboard_user${COLOR_END}"
+    echo -n -e "Please input ${program_name} ${COLOR_GREEN}dashboard_user${COLOR_END}"
     read -e -p "(Default : ${def_dashboard_user}):" input_dashboard_user
     [ -z "${input_dashboard_user}" ] && input_dashboard_user="${def_dashboard_user}"
 }
 fun_input_dashboard_pwd(){
     def_dashboard_pwd=`fun_randstr 8`
     echo ""
-    echo -n -e "Please input ${program_name} ${COLOR_YELOW}dashboard_pwd${COLOR_END}"
+    echo -n -e "Please input ${program_name} ${COLOR_GREEN}dashboard_pwd${COLOR_END}"
     read -e -p "(Default : ${def_dashboard_pwd}):" input_dashboard_pwd
     [ -z "${input_dashboard_pwd}" ] && input_dashboard_pwd="${def_dashboard_pwd}"
 }
 fun_input_token(){
     def_token=`fun_randstr 16`
     echo ""
-    echo -n -e "Please input ${program_name} ${COLOR_YELOW}token${COLOR_END}"
+    echo -n -e "Please input ${program_name} ${COLOR_GREEN}token${COLOR_END}"
     read -e -p "(Default : ${def_token}):" input_token
     [ -z "${input_token}" ] && input_token="${def_token}"
 }
 fun_input_subdomain_host(){
     def_subdomain_host=${defIP}
     echo ""
-    echo -n -e "Please input ${program_name} ${COLOR_YELOW}subdomain_host${COLOR_END}"
+    echo -n -e "Please input ${program_name} ${COLOR_GREEN}subdomain_host${COLOR_END}"
     read -e -p "(Default : ${def_subdomain_host}):" input_subdomain_host
     [ -z "${input_subdomain_host}" ] && input_subdomain_host="${def_subdomain_host}"
 }
@@ -361,47 +370,46 @@ pre_install_clang(){
         echo -e "Loading You Server IP, please wait..."
         defIP=$(wget -qO- ip.clang.cn | sed -r 's/\r//')
         echo -e "You Server IP:${COLOR_YELOW}${defIP}${COLOR_END}"
-        echo    ""
-        echo    "——————————————————————————————————————————"
-        echo -e "    ${COLOR_RED}Please input your server setting:${COLOR_END}"
-        echo    "——————————————————————————————————————————"
+        echo     "————————————————————————————————————————————"
+        echo -e  "${COLOR_RED}Please input your server setting:${COLOR_END}"
+        echo     "————————————————————————————————————————————"
         fun_input_bind_port
-        [ -n    "${input_port}" ] && set_bind_port="${input_port}"
-        echo -e "${program_name} bind_port: ${COLOR_GREEN}${set_bind_port}"
-        echo    ""
+        [ -n "${input_port}" ] && set_bind_port="${input_port}"
+        echo -e "${program_name} bind_port: ${COLOR_YELOW}${set_bind_port}${COLOR_END}"
+        echo -e ""
         fun_input_vhost_http_port
-        [ -n    "${input_port}" ] && set_vhost_http_port="${input_port}"
-        echo -e "${program_name} vhost_http_port: ${COLOR_GREEN}${set_vhost_http_port}"
-        echo    ""
+        [ -n "${input_port}" ] && set_vhost_http_port="${input_port}"
+        echo -e "${program_name} vhost_http_port: ${COLOR_YELOW}${set_vhost_http_port}"
+        echo -e ""
         fun_input_vhost_https_port
-        [ -n    "${input_port}" ] && set_vhost_https_port="${input_port}"
-        echo -e "${program_name} vhost_https_port: ${COLOR_GREEN}${set_vhost_https_port}"
-        echo    ""
+        [ -n "${input_port}" ] && set_vhost_https_port="${input_port}"
+        echo -e "${program_name} vhost_https_port: ${COLOR_YELOW}${set_vhost_https_port}"
+        echo -e ""
         fun_input_dashboard_port
-        [ -n    "${input_port}" ] && set_dashboard_port="${input_port}"
-        echo -e "${program_name} dashboard_port: ${COLOR_GREEN}${set_dashboard_port}"
-        echo    ""
+        [ -n "${input_port}" ] && set_dashboard_port="${input_port}"
+        echo -e "${program_name} dashboard_port: ${COLOR_YELOW}${set_dashboard_port}"
+        echo -e ""
         fun_input_dashboard_user
-        [ -n    "${input_dashboard_user}" ] && set_dashboard_user="${input_dashboard_user}"
-        echo -e "${program_name} dashboard_user: ${COLOR_GREEN}${set_dashboard_user}"
-        echo    ""
+        [ -n "${input_dashboard_user}" ] && set_dashboard_user="${input_dashboard_user}"
+        echo -e "${program_name} dashboard_user: ${COLOR_YELOW}${set_dashboard_user}"
+        echo -e ""
         fun_input_dashboard_pwd
-        [ -n    "${input_dashboard_pwd}" ] && set_dashboard_pwd="${input_dashboard_pwd}"
-        echo -e "${program_name} dashboard_pwd: ${COLOR_GREEN}${set_dashboard_pwd}"
-        echo    ""
+        [ -n "${input_dashboard_pwd}" ] && set_dashboard_pwd="${input_dashboard_pwd}"
+        echo -e "${program_name} dashboard_pwd: ${COLOR_YELOW}${set_dashboard_pwd}"
+        echo -e ""
         fun_input_token
-        [ -n    "${input_token}" ] && set_token="${input_token}"
-        echo -e "${program_name} token: ${COLOR_GREEN}${set_token}"
-        echo    ""
+        [ -n "${input_token}" ] && set_token="${input_token}"
+        echo -e "${program_name} token: ${COLOR_YELOW}${set_token}"
+        echo -e ""
         fun_input_subdomain_host
-        [ -n    "${input_subdomain_host}" ] && set_subdomain_host="${input_subdomain_host}"
-        echo -e "${program_name} subdomain_host: ${COLOR_GREEN}${set_subdomain_host}"
-        echo    ""
+        [ -n "${input_subdomain_host}" ] && set_subdomain_host="${input_subdomain_host}"
+        echo "${program_name} subdomain_host: ${COLOR_YELOW}${set_subdomain_host}"
+        echo ""
         fun_input_max_pool_count
-        [ -n    "${input_number}" ] && set_max_pool_count="${input_number}"
-        echo -e "${program_name} max_pool_count: ${COLOR_GREEN}${set_max_pool_count}"
-        echo    ""
-        echo -e "Please select ${COLOR_YELOW}log_level${COLOR_END}"
+        [ -n "${input_number}" ] && set_max_pool_count="${input_number}"
+        echo -e "${program_name} max_pool_count: ${COLOR_YELOW}${set_max_pool_count}"
+        echo -e ""
+        echo -e "Please select ${COLOR_GREEN}log_level${COLOR_END}"
         echo    "1: info (default)"
         echo    "2: warn"
         echo    "3: error"
@@ -428,13 +436,13 @@ pre_install_clang(){
                 str_log_level="info"
                 ;;
         esac
-        echo -e "log_level: ${COLOR_GREEN}${str_log_level}"
-        echo ""
+        echo -e "log_level: ${COLOR_YELOW}${str_log_level}"
+        echo -e ""
         fun_input_log_max_days
         [ -n "${input_number}" ] && set_log_max_days="${input_number}"
         echo "${program_name} log_max_days: ${set_log_max_days}"
         echo ""
-        echo -e "Please select ${COLOR_YELOW}log_file${COLOR_END}"
+        echo -e "Please select ${COLOR_GREEN}log_file${COLOR_END}"
         echo    "1: enable (default)"
         echo    "2: disable"
         echo "-------------------------"
@@ -456,9 +464,9 @@ pre_install_clang(){
                 str_log_file_flag="enable"
                 ;;
         esac
-        echo -e "log_file: ${COLOR_GREEN}${str_log_file_flag}"
-        echo ""
-        echo -e "Please select ${COLOR_YELOW}tcp_mux${COLOR_END}"
+        echo -e "log_file: ${COLOR_YELOW}${str_log_file_flag}"
+        echo -e ""
+        echo -e "Please select ${COLOR_GREEN}tcp_mux${COLOR_END}"
         echo    "1: enable (default)"
         echo    "2: disable"
         echo "-------------------------"         
@@ -477,9 +485,9 @@ pre_install_clang(){
                 set_tcp_mux="true"
                 ;;
         esac
-        echo -e "tcp_mux: ${COLOR_GREEN}${set_tcp_mux}"
-        echo ""
-        echo -e "Please select ${COLOR_YELOW}kcp support${COLOR_END}"
+        echo -e "tcp_mux: ${COLOR_YELOW}${set_tcp_mux}"
+        echo -e ""
+        echo -e "Please select ${COLOR_GREEN}kcp support${COLOR_END}"
         echo    "1: enable (default)"
         echo    "2: disable"
         echo "-------------------------"  
@@ -498,8 +506,8 @@ pre_install_clang(){
                 set_kcp="true"
                 ;;
         esac
-        echo -e "kcp support: ${COLOR_GREEN}${set_kcp}"
-        echo ""
+        echo -e "kcp support: ${COLOR_YELOW}${set_kcp}"
+        echo -e ""
 
         echo "============== Check your input =============="
         echo -e "You Server IP      : ${COLOR_GREEN}${defIP}${COLOR_END}"
