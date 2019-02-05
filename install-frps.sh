@@ -414,7 +414,7 @@ pre_install_clang(){
         echo    "2: warn"
         echo    "3: error"
         echo    "4: debug"    
-        echo "————————————————————————————————————————"   
+        echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"   
         read -e -p "Enter your choice (1, 2, 3, 4 or exit. default [1]): " str_log_level
         case "${str_log_level}" in
             1|[Ii][Nn][Ff][Oo])
