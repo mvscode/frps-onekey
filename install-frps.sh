@@ -281,7 +281,7 @@ fun_input_bind_port(){
     def_server_port="5443"
     echo ""
     echo -n -e "Please input ${program_name} ${COLOR_YELOW}bind_port${COLOR_END} [1-65535]"
-    read -e -p "(Default Server Port: ${def_server_port}):" serverport
+    read -e -p "(Default : ${def_server_port}):" serverport
     [ -z "${serverport}" ] && serverport="${def_server_port}"
     fun_check_port "bind" "${serverport}"
 }
@@ -371,9 +371,10 @@ pre_install_clang(){
         echo -e "Loading You Server IP, please wait..."
         defIP=$(wget -qO- ip.clang.cn | sed -r 's/\r//')
         echo -e "You Server IP:${COLOR_YELOW}${defIP}${COLOR_END}"
-        echo -e "______________________________________________"
+        echo ""
+        echo -e "——————————————————————————————————————————————"
         echo -e  "${COLOR_RED}Please input your server setting:${COLOR_END}"
-        echo -e "______________________________________________"
+        echo -e "——————————————————————————————————————————————"
         fun_input_bind_port
         [ -n "${input_port}" ] && set_bind_port="${input_port}"
         echo -e "${program_name} bind_port:${set_bind_port}"
