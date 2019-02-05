@@ -371,7 +371,7 @@ pre_install_clang(){
         defIP=$(wget -qO- ip.clang.cn | sed -r 's/\r//')
         echo -e "You Server IP:${COLOR_YELOW}${defIP}${COLOR_END}"
         echo     "————————————————————————————————————————————"
-        echo -e  "${COLOR_RED}Please input your server setting:${COLOR_END}"
+        echo -e  "      ${COLOR_RED}Please input your server setting:${COLOR_END}"
         echo     "————————————————————————————————————————————"
         fun_input_bind_port
         [ -n "${input_port}" ] && set_bind_port="${input_port}"
