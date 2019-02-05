@@ -309,8 +309,7 @@ fun_input_vhost_https_port(){
     fun_check_port "vhost_https" "${input_vhost_https_port}"
 }
 fun_input_log_max_days(){
-    def_max_days="30"
-    def_log_max_days="3"
+    def_max_days="30" def_log_max_days="3"
     echo ""
     echo -e "Please input ${program_name} ${COLOR_GREEN}log_max_days${COLOR_END} [1-${def_max_days}]"
     read -e -p "(Default : ${def_log_max_days} day):" input_log_max_days
@@ -441,7 +440,7 @@ pre_install_clang(){
         fun_input_log_max_days
         [ -n "${input_number}" ] && set_log_max_days="${input_number}"
         echo -e "${program_name} log_max_days: ${COLOR_GREEN}${set_log_max_days}${COLOR_END}"
-        echo ""
+        echo -e ""
         echo -e "Please select ${COLOR_GREEN}log_file${COLOR_END}"
         echo    "1: enable (default)"
         echo    "2: disable"
