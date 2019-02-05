@@ -399,7 +399,7 @@ pre_install_clang(){
         echo -e ""
         fun_input_token
         [ -n "${input_token}" ] && set_token="${input_token}"
-        echo -e "${program_name} token: ${COLOR_YELOW}${set_token}"
+        echo -e "${program_name} token: ${COLOR_YELOW}${set_token}${COLOR_END}"
         echo -e ""
         fun_input_subdomain_host
         [ -n "${input_subdomain_host}" ] && set_subdomain_host="${input_subdomain_host}"
