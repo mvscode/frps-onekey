@@ -13,8 +13,8 @@ str_program_dir="/usr/local/${program_name}"
 program_init="/etc/init.d/${program_name}"
 program_config_file="frps.ini"
 ver_file="/tmp/.frp_ver.sh"
-program_version_link="https://raw.githubusercontent.com/jacko1045/frp-onekey/master/version.sh"
-str_install_shell="https://raw.githubusercontent.com/jacko1045/frp-onekey/master/install-frps.sh"
+program_version_link="https://raw.githubusercontent.com/Jacko1045/frp-onekey/Jacko1045-frp-test/version.sh"
+str_install_shell="https://raw.githubusercontent.com/Jacko1045/frp-onekey/Jacko1045-frp-test/install-frps.sh"
 shell_update(){
     fun_clangcn "clear"
     echo "Check updates for shell..."
@@ -48,7 +48,8 @@ fun_clangcn(){
     fi
     echo ""
     echo "+------------------------------------------------------------+"
-    echo "|   frps for Linux Server, Author Clang ，Mender jacko1045   |" 
+    echo "|   frps for Linux Server, Author Clang ，Mender jacko1045   |"
+    echo "+------------------------------------------------------------+"
     echo "|      A tool to auto-compile & install frps on Linux        |"
     echo "+------------------------------------------------------------+"
     echo ""
@@ -373,8 +374,8 @@ pre_install_clang(){
         echo -e  "${COLOR_YELOW}Please input your server setting:${COLOR_END}"
         fun_input_bind_port
         [ -n "${input_port}" ] && set_bind_port="${input_port}"
-        echo "${program_name} bind_port: ${set_bind_port}"
-        echo ""
+        echo -e "${program_name} bind_port:${COLOR_GREEN}${set_bind_port}${COLOR_END}"
+        echo -e ""
         fun_input_vhost_http_port
         [ -n "${input_port}" ] && set_vhost_http_port="${input_port}"
         echo "${program_name} vhost_http_port: ${set_vhost_http_port}"
