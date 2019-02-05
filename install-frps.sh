@@ -309,7 +309,8 @@ fun_input_vhost_https_port(){
     fun_check_port "vhost_https" "${input_vhost_https_port}"
 }
 fun_input_log_max_days(){
-    def_max_days="30" def_log_max_days="3"
+    def_max_days="30" 
+    def_log_max_days="3"
     echo ""
     echo -e "Please input ${program_name} ${COLOR_GREEN}log_max_days${COLOR_END} [1-${def_max_days}]"
     read -e -p "(Default : ${def_log_max_days} day):" input_log_max_days
