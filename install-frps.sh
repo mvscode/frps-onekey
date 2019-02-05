@@ -317,15 +317,6 @@ fun_input_log_max_days(){
     [ -z "${input_log_max_days}" ] && input_log_max_days="${def_log_max_days}"
     fun_check_number "log_max_days" "${def_max_days}" "${input_log_max_days}"
 }
-fun_input_max_pool_count(){
-    def_max_pool="200"
-    def_max_pool_count="50"
-    echo ""
-    echo -e "Please input ${program_name} ${COLOR_YELOW}max_pool_count${COLOR_END} [1-${def_max_pool}]"
-    read -e -p "(Default : ${def_max_pool_count}):" input_max_pool_count
-    [ -z "${input_max_pool_count}" ] && input_max_pool_count="${def_max_pool_count}"
-    fun_check_number "max_pool_count" "${def_max_pool}" "${input_max_pool_count}"
-}
 fun_input_dashboard_user(){
     def_dashboard_user="admin"
     echo ""
