@@ -12,7 +12,7 @@ Frps服务端一键配置脚本，最新版本：0.23.3
 ### Install（安装）
 
 ```Bash
-wget https://raw.githubusercontent.com/jacko1045/frp-onekey/tree/Jacko1045-frp-onekey/install-frps.sh -O ./install-frps.sh
+wget https://raw.githubusercontent.com/jacko1045/frp-onekey/jacko1045-frp-onekey/install-frps.sh -O ./install-frps.sh
 chmod 700 ./install-frps.sh
 ./install-frps.sh install
 ```
