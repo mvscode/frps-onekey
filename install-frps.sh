@@ -388,7 +388,7 @@ pre_install_clang(){
         echo    ""
         fun_input_dashboard_port
         [ -n    "${input_port}" ] && set_dashboard_port="${input_port}"
-        echo -e "${program_name} dashboard_port: ${set_dashboard_port}{COLOR_END}"
+        echo -e "${program_name} dashboard_port: ${COLOR_GREEN${set_dashboard_port}{COLOR_END}"
         echo    ""
         fun_input_dashboard_user
         [ -n    "${input_dashboard_user}" ] && set_dashboard_user="${input_dashboard_user}"
