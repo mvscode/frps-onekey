@@ -440,7 +440,7 @@ pre_install_clang(){
         echo -e ""
         fun_input_log_max_days
         [ -n "${input_number}" ] && set_log_max_days="${input_number}"
-        echo "${program_name} log_max_days: ${set_log_max_days}"
+        echo -e "${program_name} log_max_days: ${COLOR_GREEN}${set_log_max_days}${COLOR_END}"
         echo ""
         echo -e "Please select ${COLOR_GREEN}log_file${COLOR_END}"
         echo    "1: enable (default)"
