@@ -490,7 +490,7 @@ pre_install_clang(){
         echo -e "Please select ${COLOR_GREEN}kcp support${COLOR_END}"
         echo    "1: enable (default)"
         echo    "2: disable"
-        echo "-------------------------"  
+        echo "______________________________________________"  
         read -e -p "Enter your choice (1, 2 or exit. default [1]): " str_kcp
         case "${str_kcp}" in
             1|[yY]|[yY][eE][sS]|[oO][nN]|[tT][rR][uU][eE]|[eE][nN][aA][bB][lL][eE])
