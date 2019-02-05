@@ -49,7 +49,6 @@ fun_clangcn(){
     echo ""
     echo "+------------------------------------------------------------+"
     echo "|   frps for Linux Server, Author Clang ，Mender jacko1045   |"
-    echo "+------------------------------------------------------------+"
     echo "|      A tool to auto-compile & install frps on Linux        |"
     echo "+------------------------------------------------------------+"
     echo ""
@@ -83,7 +82,7 @@ get_char(){
 }
 # Check OS
 checkos(){
-    if  grep -Eqi "CentOS" /etc/issue || grep -Eq "CentOS" /etc/*-release; then
+    if   grep -Eqi "CentOS" /etc/issue || grep -Eq "CentOS" /etc/*-release; then
         OS=CentOS
     elif grep -Eqi "Debian" /etc/issue || grep -Eq "Debian" /etc/*-release; then
         OS=Debian
@@ -211,7 +210,7 @@ fun_getVer(){
     if [ -z "${program_latest_filename}" ]; then
         echo -e "${COLOR_RED}Load network version failed!!!${COLOR_END}"
     else
-        echo -e "${program_name} Latest release file ${COLOR_GREEN}${program_latest_filename}${COLOR_END}"
+        echo -e "${program_name} Latest release file ${COLOR_YELOW}${program_latest_filename}${COLOR_END}"
     fi
 }
 fun_download_file(){
@@ -371,42 +370,44 @@ pre_install_clang(){
         echo -e "Loading You Server IP, please wait..."
         defIP=$(wget -qO- ip.clang.cn | sed -r 's/\r//')
         echo -e "You Server IP:${COLOR_GREEN}${defIP}${COLOR_END}"
-        echo -e  "${COLOR_YELOW}Please input your server setting:${COLOR_END}"
+        echo     "————————————————————————————————————————————"
+        echo -e  "${COLOR_RED}Please input your server setting:${COLOR_END}"
+        echo     "————————————————————————————————————————————"
         fun_input_bind_port
         [ -n "${input_port}" ] && set_bind_port="${input_port}"
-        echo -e "${program_name} bind_port:${COLOR_GREEN}${set_bind_port}${COLOR_END}"
+        echo -e "${program_name} bind_port: ${COLOR_YELOW}${set_bind_port}${COLOR_END}"
         echo -e ""
         fun_input_vhost_http_port
         [ -n "${input_port}" ] && set_vhost_http_port="${input_port}"
-        echo "${program_name} vhost_http_port: ${set_vhost_http_port}"
+        echo "${program_name} vhost_http_port: ${COLOR_YELOW}${set_vhost_http_port}"
         echo ""
         fun_input_vhost_https_port
         [ -n "${input_port}" ] && set_vhost_https_port="${input_port}"
-        echo "${program_name} vhost_https_port: ${set_vhost_https_port}"
+        echo "${program_name} vhost_https_port: ${COLOR_YELOW}${set_vhost_https_port}"
         echo ""
         fun_input_dashboard_port
         [ -n "${input_port}" ] && set_dashboard_port="${input_port}"
-        echo "${program_name} dashboard_port: ${set_dashboard_port}"
+        echo "${program_name} dashboard_port: ${COLOR_YELOW}${set_dashboard_port}"
         echo ""
         fun_input_dashboard_user
         [ -n "${input_dashboard_user}" ] && set_dashboard_user="${input_dashboard_user}"
-        echo "${program_name} dashboard_user: ${set_dashboard_user}"
+        echo "${program_name} dashboard_user: ${COLOR_YELOW}${set_dashboard_user}"
         echo ""
         fun_input_dashboard_pwd
         [ -n "${input_dashboard_pwd}" ] && set_dashboard_pwd="${input_dashboard_pwd}"
-        echo "${program_name} dashboard_pwd: ${set_dashboard_pwd}"
+        echo "${program_name} dashboard_pwd: ${COLOR_YELOW}${set_dashboard_pwd}"
         echo ""
         fun_input_token
         [ -n "${input_token}" ] && set_token="${input_token}"
-        echo "${program_name} token: ${set_token}"
+        echo "${program_name} token: ${COLOR_YELOW}${set_token}"
         echo ""
         fun_input_subdomain_host
         [ -n "${input_subdomain_host}" ] && set_subdomain_host="${input_subdomain_host}"
-        echo "${program_name} subdomain_host: ${set_subdomain_host}"
+        echo "${program_name} subdomain_host: ${COLOR_YELOW}${set_subdomain_host}"
         echo ""
         fun_input_max_pool_count
         [ -n "${input_number}" ] && set_max_pool_count="${input_number}"
-        echo "${program_name} max_pool_count: ${set_max_pool_count}"
+        echo "${program_name} max_pool_count: ${COLOR_YELOW}${set_max_pool_count}"
         echo ""
         echo -e "Please select ${COLOR_GREEN}log_level${COLOR_END}"
         echo    "1: info (default)"
@@ -435,7 +436,7 @@ pre_install_clang(){
                 str_log_level="info"
                 ;;
         esac
-        echo "log_level: ${str_log_level}"
+        echo "log_level: ${COLOR_YELOW}${str_log_level}"
         echo ""
         fun_input_log_max_days
         [ -n "${input_number}" ] && set_log_max_days="${input_number}"
@@ -463,7 +464,7 @@ pre_install_clang(){
                 str_log_file_flag="enable"
                 ;;
         esac
-        echo "log_file: ${str_log_file_flag}"
+        echo "log_file: ${COLOR_YELOW}${str_log_file_flag}"
         echo ""
         echo -e "Please select ${COLOR_GREEN}tcp_mux${COLOR_END}"
         echo    "1: enable (default)"
@@ -484,7 +485,7 @@ pre_install_clang(){
                 set_tcp_mux="true"
                 ;;
         esac
-        echo "tcp_mux: ${set_tcp_mux}"
+        echo "tcp_mux: ${COLOR_YELOW}${set_tcp_mux}"
         echo ""
         echo -e "Please select ${COLOR_GREEN}kcp support${COLOR_END}"
         echo    "1: enable (default)"
@@ -505,7 +506,7 @@ pre_install_clang(){
                 set_kcp="true"
                 ;;
         esac
-        echo "kcp support: ${set_kcp}"
+        echo "kcp support: ${COLOR_YELOW}${set_kcp}"
         echo ""
 
         echo "============== Check your input =============="
