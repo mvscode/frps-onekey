@@ -275,12 +275,12 @@ fun_check_number(){
         fun_input_${num_flag}
     fi
 }
-# input configuration data
+# # input configuration data
 fun_input_bind_port(){
     def_server_port="5443"
     echo ""
     echo -n -e "Please input ${program_name} ${COLOR_YELOW}bind_port${COLOR_END} [1-65535]"
-    read -e -p "(Default : ${def_server_port}):" serverport
+    read -e -p "(Default : ${def_server_port}):" input_serverport
     [ -z "${serverport}" ] && serverport="${def_server_port}"
     fun_check_port "bind" "${serverport}"
 }
