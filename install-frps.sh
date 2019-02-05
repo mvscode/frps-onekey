@@ -403,8 +403,8 @@ pre_install_clang(){
         echo -e ""
         fun_input_subdomain_host
         [ -n "${input_subdomain_host}" ] && set_subdomain_host="${input_subdomain_host}"
-        echo "${program_name} subdomain_host: ${COLOR_YELOW}${set_subdomain_host}${COLOR_END}"
-        echo ""
+        echo -e "${program_name} subdomain_host: ${COLOR_YELOW}${set_subdomain_host}${COLOR_END}"
+        echo -e ""
         fun_input_max_pool_count
         [ -n "${input_number}" ] && set_max_pool_count="${input_number}"
         echo -e "${program_name} max_pool_count: ${COLOR_YELOW}${set_max_pool_count}${COLOR_END}"
@@ -440,7 +440,7 @@ pre_install_clang(){
         echo -e ""
         fun_input_log_max_days
         [ -n "${input_number}" ] && set_log_max_days="${input_number}"
-        echo "${program_name} log_max_days: ${set_log_max_days}"
+        echo "${program_name} log_max_days: ${COLOR_YELOW}${set_log_max_days}${COLOR_END}"
         echo ""
         echo -e "Please select ${COLOR_GREEN}log_file${COLOR_END}"
         echo    "1: enable (default)"
