@@ -388,7 +388,7 @@ pre_install_clang(){
         echo    ""
         fun_input_dashboard_port
         [ -n    "${input_port}" ] && set_dashboard_port="${input_port}"
-        echo -e "${program_name} dashboard_port: ${COLOR_GREEN}${set_dashboard_port}${COLOR_END}"
+        echo -e "${program_name} dashboard_port: ${COLOR_GREEN}${set_dashboard_port}"
         echo    ""
         fun_input_dashboard_user
         [ -n    "${input_dashboard_user}" ] && set_dashboard_user="${input_dashboard_user}"
@@ -400,7 +400,7 @@ pre_install_clang(){
         echo    ""
         fun_input_token
         [ -n    "${input_token}" ] && set_token="${input_token}"
-        echo -e "${program_name} token: ${COLOR_GREEN}${set_token}{COLOR_END}"
+        echo -e "${program_name} token: ${COLOR_GREEN}${set_token}${COLOR_END}"
         echo    ""
         fun_input_subdomain_host
         [ -n    "${input_subdomain_host}" ] && set_subdomain_host="${input_subdomain_host}"
