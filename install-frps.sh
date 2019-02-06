@@ -10,7 +10,7 @@ export github_download_url="https://github.com/fatedier/frp/releases/download"
 #   System Required:  CentOS Debian or Ubuntu (32bit/64bit)
 #   Description:  A tool to auto-compile & install frps on Linux
 #   Author: Clang
-#   Mender：jacko1045
+#   Mender：MvsCode
 #======================================================================
 program_name="frps"
 version="1.9.2"
