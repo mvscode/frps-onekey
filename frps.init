@@ -6,7 +6,7 @@
 #=========================================================
 #   System Required:  CentOS/Debian/Ubuntu (32bit/64bit)
 #   Description:  Manager for frps, Written by Clang
-#   Mender：jacko1045
+#   Mender：MvsCode
 #=========================================================
 ### BEGIN INIT INFO
 # Provides:          frps
@@ -35,7 +35,7 @@ fun_clangcn()
 {
     echo ""
     echo "+---------------------------------------------------------+"
-    echo "|     Manager for ${ProgramName}, Author Clang, Mender jacko1045    |"
+    echo "|     Manager for ${ProgramName}, Author Clang, Mender MvsCode    |"
     echo "+---------------------------------------------------------+"
     echo ""
 }
