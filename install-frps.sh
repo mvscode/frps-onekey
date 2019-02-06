@@ -4,7 +4,7 @@ PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
 export PATH
 export FRPS_VER=0.23.3
 export FRPS_INIT="https://raw.githubusercontent.com/MvsCode/frp-onekey/master/frps.init"
-export aliyun_download_url="https://code.aliyun.com/MvsCode/frp/raw/master/frp_0.23.3_linux_amd64.tar.gz"
+export aliyun_download_url="https://code.aliyun.com/MvsCode/frp/master/frp_0.23.3_linux_amd64.tar.gz"
 export github_download_url="https://github.com/fatedier/frp/releases/download"
 #======================================================================
 #   System Required:  CentOS Debian or Ubuntu (32bit/64bit)
