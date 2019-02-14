@@ -2,7 +2,7 @@ Frps onkey-install-shell Changelog<br>Frp版本更新说明
 ---------------------------------------
 
  <!-- vim-markdown-toc GFM -->
- test2
+ test3
 * ## [v0.24.1 [2019/02/12]](#v0.24.1[2019/02/12])
     * ### Fix
      > Fix Error clear frpc configure file when /api/config called without token set
