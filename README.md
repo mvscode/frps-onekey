@@ -35,8 +35,8 @@ Frps onkey-install-shell Changelog<br>Frp版本更新说明
  <!-- vim-markdown-toc GFM -->
 
 * ## [v0.25.3 [2019/03/26]](#v0.25.3[2019/03/26])
-    * ###Fix
-     >Fix panic error when reconnection with tls_enable is true.
+    * ### Fix
+     > Fix panic error when reconnection with tls_enable is true.
 
 * ## [v0.25.2 [2019/03/25]](#v0.25.2[2019/03/25])
     * ### Change
