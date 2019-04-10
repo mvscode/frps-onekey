@@ -37,7 +37,7 @@ Frps onkey-install-shell Changelog<br>Frp版本更新说明
     * ### New
      > Support Proxy Protocol.  
        New plugin https2http.
-   * ### Fix
+    * ### Fix
      > Fix router config conflict when frpc start by command line mode. #1165
 
 * ## [v0.25.3 [2019/03/26]](#v0.25.3[2019/03/26])
