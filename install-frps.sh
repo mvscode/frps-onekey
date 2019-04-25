@@ -814,7 +814,7 @@ update_program_server_clang(){
         checkos
         check_centosversion
         check_os_bit
-        fun_get_version
+    fun_get_version
         remote_init_version=`wget  -qO- ${FRPS_INIT} | sed -n '/'^version'/p' | cut -d\" -f2`
         local_init_version=`sed -n '/'^version'/p' ${program_init} | cut -d\" -f2`
         install_shell=${strPath}
@@ -831,7 +831,7 @@ update_program_server_clang(){
         fi
         [ ! -d ${str_program_dir} ] && mkdir -p ${str_program_dir}
         echo -e "Loading network version for ${program_name}, please wait..."
-        fun_getServer
+     fun_getServer
         fun_getVer >/dev/null 2>&1
         local_program_version=`${str_program_dir}/${program_name} --version`
         echo -e "${COLOR_GREEN}${program_name}  local version ${local_program_version}${COLOR_END}"
@@ -841,7 +841,7 @@ update_program_server_clang(){
             ${program_init} stop
             sleep 1
             rm -f /usr/bin/${program_name} ${str_program_dir}/${program_name}
-            fun_download_file
+      fun_download_file
             if [ "${OS}" == 'CentOS' ]; then
                 chmod +x ${program_init}
                 chkconfig --add ${program_name}
