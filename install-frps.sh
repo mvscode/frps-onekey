@@ -13,7 +13,7 @@ export github_download_url="https://github.com/fatedier/frp/releases/download"
 #   Mender：MvsCode
 #======================================================================
 program_name="frps"
-version="1.9.3"
+version="19.4.25"
 str_program_dir="/usr/local/${program_name}"
 program_init="/etc/init.d/${program_name}"
 program_config_file="frps.ini"
@@ -841,7 +841,7 @@ update_program_server_clang(){
             ${program_init} stop
             sleep 1
             rm -f /usr/bin/${program_name} ${str_program_dir}/${program_name}
-      fun_download_file
+     fun_download_file
             if [ "${OS}" == 'CentOS' ]; then
                 chmod +x ${program_init}
                 chkconfig --add ${program_name}
