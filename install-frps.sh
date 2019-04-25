@@ -16,7 +16,7 @@ program_name="frps"
 version="19.4.25"
 str_program_dir="/usr/local/${program_name}"
 program_init="/etc/init.d/${program_name}"
-program_config_file="frps.init"
+program_config_file="frps.ini"
 ver_file="/tmp/.frp_ver.sh"
 str_install_shell="https://raw.githubusercontent.com/MvsCode/frp-onekey/master/install-frps.sh"
 shell_update(){
@@ -815,7 +815,7 @@ update_program_server_clang(){
         check_centosversion
         check_os_bit
     fun_get_version
-        remote_init_version=`wget  -qO- ${frps.init} | sed -n '/'^version'/p' | cut -d\" -f2`
+        remote_init_version=`wget  -qO- ${FRPS.INIT} | sed -n '/'^version'/p' | cut -d\" -f2`
         local_init_version=`sed -n '/'^version'/p' ${program_init} | cut -d\" -f2`
         install_shell=${strPath}
         if [ ! -z ${remote_init_version} ];then
