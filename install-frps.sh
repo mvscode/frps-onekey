@@ -815,7 +815,7 @@ update_program_server_clang(){
         check_centosversion
         check_os_bit
     fun_get_version
-        remote_init_version=`wget  -qO- ${FRPS_INIT} | sed -n '/'^version'/p' | cut -d\" -f2`
+        remote_init_version=`wget  -qO- ${frps_init} | sed -n '/'^version'/p' | cut -d\" -f2`
         local_init_version=`sed -n '/'^version'/p' ${program_init} | cut -d\" -f2`
         install_shell=${strPath}
         if [ ! -z ${remote_init_version} ];then
