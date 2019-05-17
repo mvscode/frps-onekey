@@ -11,13 +11,13 @@ Frps服务端一键配置脚本，最新版本：0.27.0
 
 ### Install（安装）
 
-Github
+#### Github
 ```Bash
 wget https://raw.githubusercontent.com/MvsCode/frp-onekey/master/install-frps.sh -O ./install-frps.sh
 chmod 700 ./install-frps.sh
 ./install-frps.sh install
 ```
-Aliyun
+#### Aliyun
 ```Bash
 wget https://code.aliyun.com/MvsCode/frp-onekey/raw/master/install-frps.sh -O ./install-frps.sh
 chmod 700 ./install-frps.sh
