@@ -1,4 +1,4 @@
-**bold**_italic_[https://github.com/MvsCode/frp-onekey](https://github.com/MvsCode/frp-onekey)> 引用`code`- 列表  
+
 Frps服务端一键配置脚本，最新版本：0.27.0
 ===========
 
