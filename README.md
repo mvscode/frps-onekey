@@ -1,4 +1,4 @@
-https://img.shields.io/cocoapods/dm/AFNetworking.svg
+
 Frps服务端一键配置脚本，最新版本：0.27.0
 ===========
 
