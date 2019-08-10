@@ -1,5 +1,5 @@
 
-Frps服务端一键配置脚本，最新版本：0.28.0
+Frps服务端一键配置脚本，最新版本：0.28.2
 ===========
 
 *Frp 是一个高性能的反向代理应用，可以帮助您轻松地进行内网穿透，对外网提供服务，支持 tcp, http, https 等协议类型，并且 web 服务支持根据域名进行路由转发。*
@@ -40,6 +40,15 @@ Frps onkey-install-shell Changelog<br>Frp版本更新说明
 ---------------------------------------
 
  <!-- vim-markdown-toc GFM -->
+
+* ## [v0.28.2 [2019/08/10]](#v0.28.2[2019/08/10])
+    * ### Fix
+     > Fix a bug that health check worker may stop unexpected.
+
+* ## [v0.28.1 [2019/08/08]](#v0.28.1[2019/08/08])
+    * ### New
+     > Update standard http ReverseProxy to handle more upgrade protocol
+     > Update some vendor packages.
 
 * ## [v0.28.0 [2019/08/03]](#v0.28.0[2019/08/03])
     * ### New
