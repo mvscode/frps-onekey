@@ -1,5 +1,5 @@
 
-Frps服务端一键配置脚本，最新版本：0.28.2
+Frps服务端一键配置脚本，最新版本：0.29.0
 ===========
 
 *Frp 是一个高性能的反向代理应用，可以帮助您轻松地进行内网穿透，对外网提供服务，支持 tcp, http, https 等协议类型，并且 web 服务支持根据域名进行路由转发。*
@@ -40,6 +40,17 @@ Frps onkey-install-shell Changelog<br>Frp版本更新说明
 ---------------------------------------
 
  <!-- vim-markdown-toc GFM -->
+
+
+* ## [v0.29.0 [2019/08/30]](#v0.29.0[2019/08/30])
+    * ### New
+     > New disable_log_color configure to disable console log color.
+     > Plugin https2http support attatch headers by plugin_header_ prefix.
+    * ### Change
+     > Provide a high-level Go API.
+    * ### Fix
+     > max_pool_count is invalid.
+     > Judge error between IPv4 and IPv6 in proxy protocol
 
 * ## [v0.28.2 [2019/08/10]](#v0.28.2[2019/08/10])
     * ### Fix
