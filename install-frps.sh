@@ -3,8 +3,8 @@ PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
 ###export###
 export PATH
 export FRPS_VER=0.29.1
-export FRPS_INIT="https://raw.githubusercontent.com/MvsCode/frp-onekey/master/frps.init"
-export aliyun_download_url="https://code.aliyun.com/MvsCode/frp-onekey/raw/master"
+export FRPS_INIT="https://raw.githubusercontent.com/MvsCode/frps-onekey/master/frps.init"
+export aliyun_download_url="https://code.aliyun.com/MvsCode/frps-onekey/raw/master"
 export github_download_url="https://github.com/fatedier/frp/releases/download"
 #======================================================================
 #   System Required:  CentOS Debian or Ubuntu (32bit/64bit)
@@ -13,12 +13,12 @@ export github_download_url="https://github.com/fatedier/frp/releases/download"
 #   Mender : MvsCode
 #======================================================================
 program_name="frps"
-version="19.11.03"
+version="19.11.13"
 str_program_dir="/usr/local/${program_name}"
 program_init="/etc/init.d/${program_name}"
 program_config_file="frps.ini"
 ver_file="/tmp/.frp_ver.sh"
-str_install_shell="https://raw.githubusercontent.com/MvsCode/frp-onekey/master/install-frps.sh"
+str_install_shell="https://raw.githubusercontent.com/MvsCode/frps-onekey/master/install-frps.sh"
 shell_update(){
     fun_clangcn "clear"
     echo "Check updates for shell..."
