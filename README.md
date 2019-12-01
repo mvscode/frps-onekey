@@ -43,7 +43,7 @@ Frps onkey-install-shell Changelog<br>Frp版本更新说明
 
 * ## [v0.30.0 [2019/11/29]](#v0.30.0[2019/11/29])
     * ### New
-     > Support bandwidth limit for each proxy.
+     > Support bandwidth limit for each proxy.  
      > New plugin https2http, explore https service as http protocol.
 
 * ## [v0.29.1 [2019/11/03]](#v0.29.1[2019/11/03])
