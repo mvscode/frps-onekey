@@ -4,7 +4,7 @@
 # run 'update-rc.d -f frps defaults', or use the appropriate command on your
 # distro. For CentOS/Redhat run: 'chkconfig --add frps'
 #=========================================================
-#   System Required:  CentOS/Debian/Ubuntu (32bit/64bit)
+#   System Required:  CentOS/Debian/Ubuntu/Fedora (32bit/64bit)
 #   Description:  Manager for frps, Written by Clang
 #   Mender：MvsCode
 #=========================================================
@@ -25,7 +25,7 @@ NAME=frps
 BIN=${ProgramPath}/${NAME}
 CONFIGFILE=${ProgramPath}/frps.ini
 SCRIPTNAME=/etc/init.d/${NAME}
-version="1.1"
+version="09.20"
 program_version=`${BIN} --version`
 RET_VAL=0
 
@@ -116,6 +116,8 @@ checkos(){
         OS=Ubuntu
     elif grep -Eqi "Alpine" /etc/issue || grep -Eq "Alpine" /etc/*-release; then
         OS=Alpine
+    elif grep -Eqi "Fedora" /etc/issue || grep -Eq "Fedora" /etc/*-release; then
+        OS=Fedora
     else
         echo "Not support OS, Please reinstall OS and retry!"
         return 1

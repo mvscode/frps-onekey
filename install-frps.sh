@@ -13,7 +13,7 @@ export github_download_url="https://github.com/fatedier/frp/releases/download"
 #   Mender : MvsCode
 #======================================================================
 program_name="frps"
-version="20.02.05"
+version="20.02.09"
 str_program_dir="/usr/local/${program_name}"
 program_init="/etc/init.d/${program_name}"
 program_config_file="frps.ini"
@@ -92,6 +92,8 @@ checkos(){
         OS=Debian
     elif grep -Eqi "Ubuntu" /etc/issue || grep -Eq "Ubuntu" /etc/*-release; then
         OS=Ubuntu
+    elif grep -Eqi "Fedora" /etc/issue || grep -Eq "Fedora" /etc/*-release; then
+        OS=Fedora
     else
         echo "Not support OS, Please reinstall OS and retry!"
         exit 1
@@ -129,7 +131,7 @@ check_os_bit(){
 }
 check_centosversion(){
 if centosversion 5; then
-    echo "Not support CentOS 5.x, please change to CentOS 6,7 or Debian or Ubuntu and try again."
+    echo "Not support CentOS 5.x, please change to CentOS 6,7 or Debian or Ubuntu or Fedora and try again."
     exit 1
 fi
 }
