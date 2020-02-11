@@ -7,7 +7,7 @@ export FRPS_INIT="https://raw.githubusercontent.com/MvsCode/frps-onekey/master/f
 export aliyun_download_url="https://code.aliyun.com/MvsCode/frps-onekey/raw/master"
 export github_download_url="https://github.com/fatedier/frp/releases/download"
 #======================================================================
-#   System Required:  CentOS Debian or Ubuntu (32bit/64bit)
+#   System Required:  CentOS Debian Ubuntu or Fedora(32bit/64bit)
 #   Description:  A tool to auto-compile & install frps on Linux
 #   Author : Clang
 #   Mender : MvsCode
