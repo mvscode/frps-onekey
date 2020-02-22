@@ -7,6 +7,11 @@ Frps服务端一键配置脚本，Frp最新版本：0.31.2
 * 详情：fatedier (https://github.com/fatedier/frp)
 * 此脚本原作者：clangcn (https://github.com/clangcn/onekey-install-shell)
 
+## Note
+最近在github发现新的frps脚本，服务端的管理界面由官方替换成可操作性，就是直接在WEB进行Token，Submisson的配置。我没使用过，有兴趣的可以到这了解：https://github.com/Zo3i/frpMgr
+
+之前就有人想要自定义服务端的版本，其实是推荐大家跟随到最新版本，各有所取吧，有打算加入这个功能。
+
 ## Frps-Onekey-Install-Shell For CentOS/Debian/Ubuntu/Fedora (32bit/64bit)
 
 ### Install（安装）
