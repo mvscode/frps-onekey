@@ -47,8 +47,15 @@ Frps onkey-install-shell Changelog<br>Frp版本更新说明
  <!-- vim-markdown-toc GFM -->
 
 * ## [v0.32.0 [2020/03/11]](#v0.32.0[2020/03/11])
-    * ### No Logo
-     > No Logo.
+    * ### New
+     > Support tls_only = true in frps.ini to enforce frps only accept TLS connection.
+     > Set detailed_errors_to_client = false in frps.ini to hide detailed error information to client.
+     > Support prometheus monitor.
+     > Optional OIDC authentication.
+     > New proxy type tcpmux. Support TCP port multiplexing over HTTP Connect tunnel.
+    * ### Fix
+     > Bandwidth limit configure not compared correctly when reloading.
+     > Incorrect connection count stats.
 
 * ## [v0.31.2 [2020/02/05]](#v0.31.2[2020/02/05])
     * ### Fix
