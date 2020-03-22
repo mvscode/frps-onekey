@@ -48,14 +48,18 @@ Frps onkey-install-shell Changelog<br>Frp版本更新说明
 
 * ## [v0.32.0 [2020/03/11]](#v0.32.0[2020/03/11])
     * ### New
-     > Support tls_only = true in frps.ini to enforce frps only accept TLS connection.    
+     > Support tls_only = true in frps.ini to enforce frps only accept TLS connection.
+     
      > Set detailed_errors_to_client = false in frps.ini to hide detailed error information to client.  
      
-     Support prometheus monitor.  
-      Optional OIDC authentication.  
-      New proxy type tcpmux. Support TCP port multiplexing over HTTP Connect tunnel.
+     > Support prometheus monitor.
+     
+     > Optional OIDC authentication.  
+     
+     > New proxy type tcpmux. Support TCP port multiplexing over HTTP Connect tunnel.
     * ### Fix
-     > Bandwidth limit configure not compared correctly when reloading.  
+     > Bandwidth limit configure not compared correctly when reloading.
+     
      > Incorrect connection count stats.
 
 * ## [v0.31.2 [2020/02/05]](#v0.31.2[2020/02/05])
@@ -74,7 +78,8 @@ Frps onkey-install-shell Changelog<br>Frp版本更新说明
 
 * ## [v0.30.0 [2019/11/29]](#v0.30.0[2019/11/29])
     * ### New
-     > Support bandwidth limit for each proxy.  
+     > Support bandwidth limit for each proxy.
+     
      > New plugin https2http, explore https service as http protocol.
 
 * ## [v0.29.1 [2019/11/03]](#v0.29.1[2019/11/03])
@@ -84,11 +89,13 @@ Frps onkey-install-shell Changelog<br>Frp版本更新说明
 * ## [v0.29.0 [2019/08/30]](#v0.29.0[2019/08/30])
     * ### New
      > New disable_log_color configure to disable console log color.
+     
      > Plugin https2http support attatch headers by plugin_header_ prefix.
     * ### Change
      > Provide a high-level Go API.
     * ### Fix
      > max_pool_count is invalid.
+     
      > Judge error between IPv4 and IPv6 in proxy protocol
 
 * ## [v0.28.2 [2019/08/10]](#v0.28.2[2019/08/10])
@@ -98,6 +105,7 @@ Frps onkey-install-shell Changelog<br>Frp版本更新说明
 * ## [v0.28.1 [2019/08/08]](#v0.28.1[2019/08/08])
     * ### New
      > Update standard http ReverseProxy to handle more upgrade protocol
+     
      > Update some vendor packages.
 
 * ## [v0.28.0 [2019/08/03]](#v0.28.0[2019/08/03])
@@ -112,13 +120,15 @@ Frps onkey-install-shell Changelog<br>Frp版本更新说明
 
 * ## [v0.27.0 [2019/04/25]](#v0.27.0[2019/04/25])
     * ### New
-     > Proxy Protocol support plugin unix_domain_socket.  
+     > Proxy Protocol support plugin unix_domain_socket.
+     
      > frps support custom 404 page.
 
 * ## [v0.26.0 [2019/04/10]](#v0.26.0[2019/04/10])
     * ### New
-     > Support Proxy Protocol.  
-       New plugin https2http.
+     > Support Proxy Protocol.
+     
+     > New plugin https2http.
     * ### Fix
      > Fix router config conflict when frpc start by command line mode. #1165
 
