@@ -49,6 +49,7 @@ Frps onkey-install-shell Changelog<br>Frp版本更新说明
 * ## [v0.32.0 [2020/03/11]](#v0.32.0[2020/03/11])
     * ### New
      > Support tls_only = true in frps.ini to enforce frps only accept TLS connection.  
+     
      > Set detailed_errors_to_client = false in frps.ini to hide detailed error information to client.  
       Support prometheus monitor.  
       Optional OIDC authentication.  
