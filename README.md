@@ -54,9 +54,8 @@ Frps onkey-install-shell Changelog<br>Frp版本更新说明
       Optional OIDC authentication.  
       New proxy type tcpmux. Support TCP port multiplexing over HTTP Connect tunnel.
     * ### Fix
-     > 
-      Bandwidth limit configure not compared correctly when reloading.  
-      Incorrect connection count stats.
+     > Bandwidth limit configure not compared correctly when reloading.  
+     > Incorrect connection count stats.
 
 * ## [v0.31.2 [2020/02/05]](#v0.31.2[2020/02/05])
     * ### Fix
