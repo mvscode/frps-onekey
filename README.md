@@ -46,7 +46,8 @@ Frps onkey-install-shell Changelog<br>Frp版本更新说明
 
  <!-- vim-markdown-toc GFM -->
 
-* ## [Shell Upadte [2020/03/24]](#Shell Update[2020/03/24])
+* ## [Shell Upadte [2020/03/24]]
+(#Shell Update[2020/03/24])
     * ### Add
      > Add new download url-gitee，just support install package
 
