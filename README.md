@@ -46,6 +46,10 @@ Frps onkey-install-shell Changelog<br>Frp版本更新说明
 
  <!-- vim-markdown-toc GFM -->
 
+* ## [Shell Upadte [2020/03/24]]
+    * ### Add
+     > Add new download url-gitee，just support install package
+
 * ## [v0.32.0 [2020/03/11]](#v0.32.0[2020/03/11])
     * ### New
      > Support tls_only = true in frps.ini to enforce frps only accept TLS connection.
