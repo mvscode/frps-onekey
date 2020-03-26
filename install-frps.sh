@@ -177,7 +177,7 @@ fun_getServer(){
     echo -e "[1].aliyun "
     echo -e "[2].gitee "
     echo -e "[3].github (default)"
-    read -e -p "Enter your choice (1, 2 or exit. default [${def_server_url}]): " set_server_url
+    read -e -p "Enter your choice (1, 2 , 3 or exit. default [${def_server_url}]): " set_server_url
     [ -z "${set_server_url}" ] && set_server_url="${def_server_url}"
     case "${set_server_url}" in
         1|[Aa][Ll][Ii][Yy][Uu][Nn])
@@ -187,7 +187,7 @@ fun_getServer(){
             program_download_url=${gitee_download_url}
             ;;
         3|[Ee][Rr][Rr][Oo][Rr])
-            program_download_url=${gitub_download_url}
+            program_download_url=${github_download_url}
             ;;
         [eE][xX][iI][tT])
             exit 1
