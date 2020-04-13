@@ -5,6 +5,7 @@ export PATH
 export FRPS_VER=0.32.1
 export FRPS_INIT="https://raw.githubusercontent.com/MvsCode/frps-onekey/master/frps.init"
 export aliyun_download_url="https://code.aliyun.com/MvsCode/frps-onekey/raw/master"
+export gitee_download_url="https://gitee.com/MvsCode/frps-onekey/raw/master"
 export github_download_url="https://github.com/fatedier/frp/releases/download"
 #======================================================================
 #   System Required:  CentOS Debian Ubuntu or Fedora(32bit/64bit)
@@ -180,7 +181,10 @@ fun_getServer(){
         1|[Aa][Ll][Ii][Yy][Uu][Nn])
             program_download_url=${aliyun_download_url}
             ;;
-        2|[Gg][Ii][Tt][Hh][Uu][Bb])
+        2|[Gg][Ii][Tt][Ee][Ee])
+            program_download_url=${gitee_download_url}
+            ;;
+        3|[Gg][Ii][Tt][Hh][Uu][Bb])
             program_download_url=${github_download_url}
             ;;
         [eE][xX][iI][tT])
