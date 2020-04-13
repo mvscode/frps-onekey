@@ -4,7 +4,7 @@ PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
 export PATH
 export FRPS_VER=0.32.1
 export FRPS_INIT="https://raw.githubusercontent.com/MvsCode/frps-onekey/master/frps.init"
-export aliyun_download_url="https://code.aliyun.com/MvsCode/frps-onekey/raw/master"
+export aliyun_download_url="https://gitee.com/mvscode/frps-onekey/blob/master"
 export gitee_download_url="https://gitee.com/mvscode/frps-onekey/raw/master"
 export github_download_url="https://github.com/fatedier/frp/releases/download"
 #======================================================================
