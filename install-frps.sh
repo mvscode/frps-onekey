@@ -180,7 +180,7 @@ fun_getServer(){
         1|[Aa][Ll][Ii][Yy][Uu][Nn])
             program_download_url=${aliyun_download_url}
             ;;
-        2|[Ee][Rr][Rr][Oo][Rr])
+        2|[Gg][Ii][Tt][Hh][Uu][Bb])
             program_download_url=${github_download_url}
             ;;
         [eE][xX][iI][tT])
