@@ -174,7 +174,7 @@ fun_getServer(){
     echo ""
     echo -e "Please select ${program_name} download url:"
     echo -e "[1].aliyun "
-    echo -e "[3].github (default)"
+    echo -e "[2].github (default)"
     read -e -p "Enter your choice (1, 2 ,or exit. default [${def_server_url}]): " set_server_url
     [ -z "${set_server_url}" ] && set_server_url="${def_server_url}"
     case "${set_server_url}" in
