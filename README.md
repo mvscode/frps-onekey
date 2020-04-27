@@ -46,8 +46,7 @@ Frps onkey-install-shell Changelog<br>Frp版本更新说明
 
  <!-- vim-markdown-toc GFM -->
 
-* ## [v0.33.0 [2020/04/27]](#v0.33.1
-0[2020/04/27])
+* ## [v0.33.0 [2020/04/27]](#v0.33.0[2020/04/27])
     * ### NEW
      > Server plugin add NewUserConn interface.
 
