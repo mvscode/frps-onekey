@@ -47,6 +47,7 @@ Frps onkey-install-shell Changelog<br>Frp版本更新说明
  <!-- vim-markdown-toc GFM -->
 
 * ## [v0.33.0 [2020/04/27]](#v0.33.0[2020/04/27])
+
     * ### NEW
      > Server plugin add NewUserConn interface.
 
@@ -54,7 +55,7 @@ Frps onkey-install-shell Changelog<br>Frp版本更新说明
 
      > Support load balancing for tcpmux.
 
-    * ### Fix
+    * ### FIX
      > Fix invalid of AuthenticateNewWorkConns in frpc.
       
      > Fix a panic problem if accept many connections concurrently.
