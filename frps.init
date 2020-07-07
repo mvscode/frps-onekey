@@ -42,7 +42,7 @@ fun_clangcn()
 
 fun_check_run(){
     PID=`ps -ef | grep -v grep | grep -i "${BIN}" | awk '{print $2}'`
-    if [ ! -z $PID ]; then
+    if [ ! -z"$PID"]; then
         return 0
     else
         return 1
