@@ -85,7 +85,7 @@ get_char(){
 }
 # Check OS
 checkos(){
-    if  grep -Eqi "CentOS" /etc/issue || grep -Eq "CentOS" /etc/*-release; then
+    if   grep -Eqi "CentOS" /etc/issue || grep -Eq "CentOS" /etc/*-release; then
         OS=CentOS
     elif grep -Eqi "Debian" /etc/issue || grep -Eq "Debian" /etc/*-release; then
         OS=Debian
