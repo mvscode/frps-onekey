@@ -41,6 +41,20 @@ Frps onkey-install-shell Changelog<br>Frp版本更新说明
 
  <!-- vim-markdown-toc GFM -->
 
+* ## [v0.34.0 [2020/09/19]](#v0.34.0[2020/09/19])
+    * ### NEW
+     > Support TLS certificate and mutual TLS authentication.
+
+     > Support set max UDP package size, default is 1500.
+
+     > New e2e test framework.
+
+    * ### FIX
+
+     > UDP and SUDP proxy don't support compression and encrytion.
+
+     > Call server plugins in fixed order.
+
 * ## [v0.33.0 [2020/04/27]](#v0.33.0[2020/04/27])
     * ### NEW
      > Server plugin add NewUserConn interface.
