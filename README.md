@@ -17,9 +17,9 @@ wget https://raw.githubusercontent.com/MvsCode/frps-onekey/master/install-frps.s
 chmod 700 ./install-frps.sh
 ./install-frps.sh install
 ```
-#### Aliyun
+#### Gitee
 ```Bash
-wget https://code.aliyun.com/MvsCode/frps-onekey/raw/master/install-frps.sh -O ./install-frps.sh
+wget https://gitee.com/MvsCode/frps-onekey/raw/master/install-frps.sh -O ./install-frps.sh
 chmod 700 ./install-frps.sh
 ./install-frps.sh install
 ```
@@ -40,6 +40,10 @@ Frps onkey-install-shell Changelog<br>Frp版本更新说明
 ---------------------------------------
 
  <!-- vim-markdown-toc GFM -->
+ 
+* ## Shell Upadte [2021/01/24]
+    * ### Amend
+     > Aliyun download url replace by Gitee download url
 
 * ## [v0.35.0 [2021/01/20]](#v0.35.0[2021/01/20])
     * ### NEW
