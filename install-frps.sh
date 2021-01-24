@@ -13,7 +13,7 @@ export github_download_url="https://github.com/fatedier/frp/releases/download"
 #   Mender : MvsCode
 #======================================================================
 program_name="frps"
-version="210120"
+version="210124"
 str_program_dir="/usr/local/${program_name}"
 program_init="/etc/init.d/${program_name}"
 program_config_file="frps.ini"
@@ -187,7 +187,7 @@ fun_getServer(){
             exit 1
             ;;
         *)
-            program_download_url=${github_download_url}
+            program_download_url=${gitee_download_url}
             ;;
     esac
     echo    "-----------------------------------"
