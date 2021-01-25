@@ -178,7 +178,7 @@ fun_getServer(){
     [ -z "${set_server_url}" ] && set_server_url="${def_server_url}"
     case "${set_server_url}" in
         1|[Gg][Ii][Tt][Ee][Ee])
-            program_download_url=${aliyun_download_url}
+            program_download_url=${gitee_download_url}
             ;;
         2|[Gg][Ii][Tt][Hh][Uu][Bb])
             program_download_url=${github_download_url}
