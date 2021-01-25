@@ -4,6 +4,7 @@ PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
 export PATH
 export FRPS_VER=0.35.1
 export FRPS_INIT="https://raw.githubusercontent.com/MvsCode/frps-onekey/master/frps.init"
+export aliyun_download_url="https://code.aliyun.com/MvsCode/frps-onekey/raw/master"
 export gitee_download_url="https://gitee.com/mvscode/frps-onekey/raw/master"
 export github_download_url="https://github.com/fatedier/frp/releases/download"
 #======================================================================
@@ -172,22 +173,26 @@ fun_getServer(){
     def_server_url="github"
     echo ""
     echo -e "Please select ${program_name} download url:"
-    echo -e "[1].Gitee"
-    echo -e "[2].github (default)"
+    echo -e "[1].aliyun"
+    echo -e "[2].gitee"
+    echo -e "[3].github (default)"
     read -e -p "Enter your choice (1, 2 or exit. default [${def_server_url}]): " set_server_url
     [ -z "${set_server_url}" ] && set_server_url="${def_server_url}"
     case "${set_server_url}" in
-        1|[Gg][Ii][Tt][Ee][Ee])
+        1|[Aa][Ll][Ii][Yy][Uu][Nn])
+            program_download_url=${aliyun_download_url}
+            ;;
+        2|[Gg][Ii][Tt][Ee][Ee])
             program_download_url=${gitee_download_url}
             ;;
-        2|[Gg][Ii][Tt][Hh][Uu][Bb])
+        3|[Gg][Ii][Tt][Hh][Uu][Bb])
             program_download_url=${github_download_url}
             ;;
         [eE][xX][iI][tT])
             exit 1
             ;;
         *)
-            program_download_url=${gitee_download_url}
+            program_download_url=${aliyun_download_url}
             ;;
     esac
     echo    "-----------------------------------"
