@@ -41,8 +41,7 @@ Frps onkey-install-shell Changelog<br>Frp版本更新说明
 
  <!-- vim-markdown-toc GFM -->
 
-* ## [v0.35.1 [2021/01/25]](#v0.35.
-1[2021/01/25])
+* ## [v0.35.1 [2021/01/25]](#v0.35.1[2021/01/25])
     * ### FIX
      > Reduce binary file size.
 
