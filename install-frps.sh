@@ -169,11 +169,11 @@ fun_randstr(){
     echo ${strRandomPass}
 }
 fun_getServer(){
-    def_server_url="github"
+    def_server_url="aliyun"
     echo ""
     echo -e "Please select ${program_name} download url:"
-    echo -e "[1].aliyun"
-    echo -e "[2].github (default)"
+    echo -e "[1].aliyun (default)"
+    echo -e "[2].github "
     read -e -p "Enter your choice (1, 2 or exit. default [${def_server_url}]): " set_server_url
     [ -z "${set_server_url}" ] && set_server_url="${def_server_url}"
     case "${set_server_url}" in
