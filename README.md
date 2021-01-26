@@ -23,12 +23,7 @@ wget https://raw.githubusercontent.com/MvsCode/frps-onekey/master/install-frps.s
 chmod 700 ./install-frps.sh
 ./install-frps.sh install
 ```
-#### Gitee
-```Bash
-wget https://gitee.com/MvsCode/frps-onekey/raw/master/install-frps.sh -O ./install-frps.sh
-chmod 700 ./install-frps.sh
-./install-frps.sh install
-```
+
 
 ### Uninstall（卸载）
 ```Bash
