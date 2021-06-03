@@ -45,11 +45,14 @@ Frps onkey-install-shell Changelog<br>Frp版本更新说明
 * ## [v0.37.0 [2021/06/03]](#v0.37.0[2021/06/03])
     * ### NEW
      > frpc add subcommand verify to validate configures before running.
+     
      > frpc support includes option to split multiple proxy configs into different files.
+     
      > Support sudp in dashboard.
 
     * ### FIX
      > Use empty string as default value for dashboard user and password.
+     
      > login_fail_exit is not valid when protocol = kcp.
      
 * ## [v0.36.2 [2021/03/22]](#v0.36.2[2021/03/22])
