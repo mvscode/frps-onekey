@@ -45,7 +45,8 @@ Frps onkey-install-shell Changelog<br>Frp版本更新说明
   * ## [v0.42.0 [2022/04/22]](#v0.42.0[2022/04/22])
     * ### NEW
      > Added new parameter config_dir in frpc to run multiple client instances in one process.
-    * ### 
+   
+    * ### FIX 
     > Equal sign in environment variables causes parsing error.
  
  * ## [v0.41.0 [2022/03/24]](#v0.41.0[2022/03/24])
