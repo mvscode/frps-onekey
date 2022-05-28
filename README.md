@@ -45,7 +45,9 @@ Frps onkey-install-shell Changelog<br>Frp版本更新说明
   * ## [v0.43.0 [2022/05/28]](#v0.43.0[2022/05/28])
     * ### NEW
      > Added route_by_http_user in http and tcpmux proxy to support routing to different clients by HTTP basic auth user.
+    
      > CONNECT method can be forwarded in http type proxy.
+     
      > Added tcpmux_passthrough in tcpmux proxy. If true, CONNECT request will be forwarded to frpc.
 
  
