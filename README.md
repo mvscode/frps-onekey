@@ -1,5 +1,5 @@
 
-Frps服务端一键配置脚本，Frp最新版本：0.43.0
+Frps服务端一键配置脚本，Frp最新版本：0.44.0
 ===========
 
 *Frp 是一个高性能的反向代理应用，可以帮助您轻松地进行内网穿透，对外网提供服务，支持 tcp, http, https 等协议类型，并且 web 服务支持根据域名进行路由转发。*
@@ -42,6 +42,15 @@ Frps onkey-install-shell Changelog<br>Frp版本更新说明
 
  <!-- vim-markdown-toc GFM -->
 
+  * ## [v0.44.0 [2022/07/11]](#v0.44.0[2022/07/11])
+    * ### NEW
+     > Use auto generated certificates if plugin_key_path and plugin_crt_path are empty for plugin https2https and https2http.
+    
+     > Server dashboard supports TLS configs.
+
+    * ### FIX 
+     > xtcp error with IPv6 address.
+
   * ## [v0.43.0 [2022/05/28]](#v0.43.0[2022/05/28])
     * ### NEW
      > Added route_by_http_user in http and tcpmux proxy to support routing to different clients by HTTP basic auth user.
@@ -49,7 +58,6 @@ Frps onkey-install-shell Changelog<br>Frp版本更新说明
      > CONNECT method can be forwarded in http type proxy.
      
      > Added tcpmux_passthrough in tcpmux proxy. If true, CONNECT request will be forwarded to frpc.
-
  
   * ## [v0.42.0 [2022/04/22]](#v0.42.0[2022/04/22])
     * ### NEW
