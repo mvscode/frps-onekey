@@ -42,6 +42,10 @@ Frps onkey-install-shell Changelog<br>Frp版本更新说明
 
  <!-- vim-markdown-toc GFM -->
 
+* ## [v0.4.0 [2022/11/03]](#v0.45.0[2022/11/03])
+    * ### Improve
+     > Adjust http group load balancing to forward requests to each frpc proxy round robin. Previous behavior is always forwarding requests to a single proxy in the case of single concurrency.
+
   * ## [v0.44.0 [2022/07/11]](#v0.44.0[2022/07/11])
     * ### NEW
      > Use auto generated certificates if plugin_key_path and plugin_crt_path are empty for plugin https2https and https2http.
