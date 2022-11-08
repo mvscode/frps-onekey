@@ -42,7 +42,7 @@ Frps onkey-install-shell Changelog<br>Frp版本更新说明
 
  <!-- vim-markdown-toc GFM -->
 
-* ## [v0.45.0 [2022/11/03]](#v0.45.0[2022/11/03])
+  * ## [v0.45.0 [2022/11/03]](#v0.45.0[2022/11/03])
     * ### Improve
      > Adjust http group load balancing to forward requests to each frpc proxy round robin. Previous behavior is always forwarding requests to a single proxy in the case of single concurrency.
 
