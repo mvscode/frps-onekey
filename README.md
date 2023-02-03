@@ -11,9 +11,9 @@ Frps服务端一键配置脚本，Frp最新版本：0.46.1
 
 ### Install（安装）
 
-#### Aliyun（已失效）
+#### Gitee
 ```Bash
-wget https://code.aliyun.com/MvsCode/frps-onekey/raw/master/install-frps.sh -O ./install-frps.sh
+wget https://gitee.com/mvscode/frps-onekey/raw/master/install-frps.sh -O ./install-frps.sh
 chmod 700 ./install-frps.sh
 ./install-frps.sh install
 ```
