@@ -177,7 +177,7 @@ fun_getServer(){
     read -e -p "Enter your choice (1, 2 or exit. default [${def_server_url}]): " set_server_url
     [ -z "${set_server_url}" ] && set_server_url="${def_server_url}"
     case "${set_server_url}" in
-        1|[Aa][Ll][Ii][Yy][Uu][Nn])
+        1|[Ga][Ii][Tt][Ee][Ee])
             program_download_url=${gitee_download_url}
             ;;
         2|[Gg][Ii][Tt][Hh][Uu][Bb])
