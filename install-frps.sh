@@ -2,7 +2,7 @@
 PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
 ###export###
 export PATH
-export FRPS_VER=0.46.1
+export FRPS_VER=0.47.0
 export FRPS_INIT="https://raw.githubusercontent.com/MvsCode/frps-onekey/master/frps.init"
 export gitee_download_url="https://gitee.com/mvscode/frps-onekey/releases/download"
 export github_download_url="https://github.com/fatedier/frp/releases/download"
@@ -13,7 +13,7 @@ export github_download_url="https://github.com/fatedier/frp/releases/download"
 #   Mender : MvsCode
 #======================================================================
 program_name="frps"
-version="230203"
+version="230210"
 str_program_dir="/usr/local/${program_name}"
 program_init="/etc/init.d/${program_name}"
 program_config_file="frps.ini"
