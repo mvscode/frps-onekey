@@ -1,5 +1,5 @@
 
-Frps服务端一键配置脚本，Frp最新版本：0.46.1
+Frps服务端一键配置脚本，Frp最新版本：0.47.0
 ===========
 
 *Frp 是一个高性能的反向代理应用，可以帮助您轻松地进行内网穿透，对外网提供服务，支持 tcp, http, https 等协议类型，并且 web 服务支持根据域名进行路由转发。*
@@ -41,6 +41,15 @@ Frps onkey-install-shell Changelog<br>Frp版本更新说明
 ---------------------------------------
 
  <!-- vim-markdown-toc GFM -->
+ 
+  * ## [v0.47.0 [2023/02/10]](#v0.47.0[2023/02/10])
+    * ### New
+     > Added config bandwidth_limit_mode in frpc, default value is client which is current behavior. Optional value is server, to enable bandwidth limit in server. The major aim is to let server plugin has the ability to modify bandwidth limit for each proxy.
+    
+    * ### Improve
+     > dns_server supports ipv6.
+     
+     > frpc supports graceful shutdown for protocol quic.
  
   * ## [shell updated [2023/02/03]]
     * ### Add new download path
