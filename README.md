@@ -42,7 +42,7 @@ Frps onkey-install-shell Changelog<br>Frp版本更新说明
 
  <!-- vim-markdown-toc GFM -->
 
-* ## [v0.48.0 [2023/03/08]](#v0.48.0[2023/03/08])
+  * ## [v0.48.0 [2023/03/08]](#v0.48.0[2023/03/08])
     * ### New
      > The httpconnect type in tcpmux now supports authentication through the parameters http_user and http_pwd.
  
@@ -64,7 +64,7 @@ Frps onkey-install-shell Changelog<br>Frp版本更新说明
     * ### Add new download path
      > Add gitee as frps download file
 
- * ## [v0.46.1 [2023/01/15]](#v0.46.1[2023/01/15])
+  * ## [v0.46.1 [2023/01/15]](#v0.46.1[2023/01/15])
     * ### FIX
      > Server Plugin sends incorrect op name for NewWorkConn.
     
