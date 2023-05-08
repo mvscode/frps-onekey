@@ -129,7 +129,10 @@ check_os_bit(){
             fi
     else
         Is_64bit='n'
-        ARCHS="386"
+            if [[ `arch` = 'arm' ]] ; then
+                ARCHS="arm"
+            else
+                ARCHS="386"
     fi
 }
 check_centosversion(){
