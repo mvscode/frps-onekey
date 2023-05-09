@@ -1,0 +1,164 @@
+#! /bin/bash
+# chkconfig: 2345 55 25
+# Description: Startup script for frps on Debian. Place in /etc/init.d and
+# run 'update-rc.d -f frps defaults', or use the appropriate command on your
+# distro. For CentOS/Redhat run: 'chkconfig --add frps'
+#=========================================================
+#   System Required:  CentOS/Debian/Ubuntu/Fedora (32bit/64bit)
+#   Description:  Manager for frps, Written by Clang
+#   Mender：MvsCode
+#=========================================================
+### BEGIN INIT INFO
+# Provides:          frps
+# Required-Start:    $all
+# Required-Stop:     $all
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: starts the frps
+# Description:       starts frps using start-stop
+### END INIT INFO
+
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+ProgramName="Frps"
+ProgramPath="/usr/local/frps"
+NAME=frps
+BIN=${ProgramPath}/${NAME}
+CONFIGFILE=${ProgramPath}/frps.ini
+SCRIPTNAME=/etc/init.d/${NAME}
+version="03.20"
+program_version=`${BIN} --version`
+RET_VAL=0
+
+[ -x ${BIN} ] || exit 0
+strLog=""
+fun_clangcn()
+{
+    echo ""
+    echo "+---------------------------------------------------------+"
+    echo "|     Manager for ${ProgramName}, Author Clang, Mender MvsCode      |"
+    echo "+---------------------------------------------------------+"
+    echo ""
+}
+
+fun_check_run(){
+    PID=`ps -ef | grep -v grep | grep -i "${BIN}" | awk '{print $2}'`
+    if [ ! -z $PID  ]; then
+        return 0
+    else
+        return 1
+    fi
+}
+fun_load_config(){
+    if [ ! -r ${CONFIGFILE} ]; then
+        echo "config file ${CONFIGFILE} not found"
+        return 1
+    fi
+}
+fun_start()
+{
+    if [ "${arg1}" = "start" ]; then
+      fun_clangcn
+    fi
+    if fun_check_run; then
+        echo "${ProgramName} (pid $PID) already running."
+        return 0
+    fi
+    fun_load_config
+    echo -n "Starting ${ProgramName}(${program_version})..."
+    ${BIN} -c ${CONFIGFILE} >/dev/null 2>&1 &
+    sleep 1
+    if ! fun_check_run; then
+        echo "start failed"
+        return 1
+    fi
+    echo " done"
+    echo "${ProgramName} (pid $PID)is running."
+    return 0
+}
+
+fun_stop(){
+    if [ "${arg1}" = "stop" ] || [ "${arg1}" = "restart" ]; then
+      fun_clangcn
+    fi
+    if fun_check_run; then
+        echo -n "Stoping ${ProgramName} (pid $PID)... "
+        kill $PID
+        if [ "$?" != 0 ] ; then
+            echo " failed"
+            return 1
+        else
+            echo " done"
+        fi
+    else
+        echo "${ProgramName} is not running."
+    fi
+    return 0
+}
+fun_restart(){
+    fun_stop
+    fun_start
+}
+fun_status(){
+    PID=`ps -ef | grep -v grep | grep -i "${BIN}" | awk '{print $2}'`
+    if [ ! -z $PID ]; then
+        echo "${ProgramName} (pid $PID) is running..."
+    else
+        echo "${ProgramName} is stopped"
+        exit 0
+    fi
+}
+checkos(){
+    if   grep -Eqi "CentOS" /etc/issue || grep -Eq "CentOS" /etc/*-release; then
+        OS=CentOS
+    elif grep -Eqi "Debian" /etc/issue || grep -Eq "Debian" /etc/*-release; then
+        OS=Debian
+    elif grep -Eqi "Ubuntu" /etc/issue || grep -Eq "Ubuntu" /etc/*-release; then
+        OS=Ubuntu
+    elif grep -Eqi "Alpine" /etc/issue || grep -Eq "Alpine" /etc/*-release; then
+        OS=Alpine
+    elif grep -Eqi "Fedora" /etc/issue || grep -Eq "Fedora" /etc/*-release; then
+        OS=Fedora
+    else
+        echo "Not support OS, Please reinstall OS and retry!"
+        return 1
+    fi
+}
+fun_config(){
+    if [ -s ${CONFIGFILE} ]; then
+        vi ${CONFIGFILE}
+    else
+        echo "${ProgramName} configuration file not found!"
+        return 1
+    fi
+}
+fun_version(){
+    echo "${ProgramName} version ${program_version}"
+    return 0
+}
+fun_help(){
+    ${BIN} --help
+    return 0
+}
+
+arg1=$1
+[  -z ${arg1} ]
+case "${arg1}" in
+    start|stop|restart|status|config)
+        fun_${arg1}
+    ;;
+    [vV][eE][rR][sS][iI][oO][nN]|-[vV][eE][rR][sS][iI][oO][nN]|--[vV][eE][rR][sS][iI][oO][nN]|-[vV]|--[vV])
+        fun_version
+    ;;
+    [Cc]|[Cc][Oo][Nn][Ff]|[Cc][Oo][Nn][Ff][Ii][Gg]|-[Cc]|-[Cc][Oo][Nn][Ff]|-[Cc][Oo][Nn][Ff][Ii][Gg]|--[Cc]|--[Cc][Oo][Nn][Ff]|--[Cc][Oo][Nn][Ff][Ii][Gg])
+        fun_config
+    ;;
+    [Hh]|[Hh][Ee][Ll][Pp]|-[Hh]|-[Hh][Ee][Ll][Pp]|--[Hh]|--[Hh][Ee][Ll][Pp])
+        fun_help
+    ;;
+    *)
+        fun_clangcn
+        echo "Usage: $SCRIPTNAME {start|stop|restart|status|config|version}"
+        RET_VAL=1
+    ;;
+esac
+exit $RET_VAL
