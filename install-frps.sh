@@ -122,7 +122,11 @@ check_os_bit(){
     ARCHS=""
     if [[ `getconf WORD_BIT` = '32' && `getconf LONG_BIT` = '64' ]] ; then
         Is_64bit='y'
-        ARCHS="arm64"
+        if [[ "$(uname -m)" == "aarch64" ]]; then
+            ARCHS="arm64"
+        elif [[ "$(uname -m)" == "x86_64" ]]; then
+            ARCHS="amd64"
+        fi
     else
         Is_64bit='n'
         ARCHS="arm"
