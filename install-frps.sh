@@ -120,11 +120,11 @@ centosversion(){
 # Check OS bit
 check_os_bit(){
     ARCHS=""
-    if [[ "$(uname -m)" == "aarch64" ]]; then
+    if [[ "$(uname -m)" =~ "aarch64" ]]; then
         ARCHS="arm64"
-    elif [[ "$(uname -m)" == "x86_64" ]]; then
+    elif [[ "$(uname -m)" =~ "x86_64" ]]; then
         ARCHS="amd64"
-    elif [[ "$(uname -m)" == "arm" ]]; then
+    elif [[ "$(uname -m)" =~ "arm" ]]; then
         ARCHS="arm"
     else
         ARCHS="386"
