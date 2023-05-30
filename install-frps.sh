@@ -119,20 +119,10 @@ centosversion(){
 }
 # Check OS bit
 check_os_bit(){
-    ARCHS=""
     if [[ `getconf WORD_BIT` = '32' && `getconf LONG_BIT` = '64' ]] ; then
         Is_64bit='y'
-        ARCHS="amd64"
     else
         Is_64bit='n'
-        ARCHS="amd"
-    else    
-        Is_64bit='y'
-        ARCHS="arm64"
-    else
-        Is_64bit='n'
-        ARCHS="arm"
-        
     fi
 }
 check_centosversion(){
