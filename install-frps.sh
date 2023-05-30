@@ -126,7 +126,7 @@ check_os_bit(){
     else
         Is_64bit='n'
         ARCHS="amd"
-     else    
+    else    
         Is_64bit='y'
         ARCHS="arm64"
     else
