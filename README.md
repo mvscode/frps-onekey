@@ -44,7 +44,7 @@ Frps onkey-install-shell Changelog<br>Frp版本更新说明
 
   * ## [v0.49.0 [2023/05/30]](#v0.49.0[2023/05/30])
     * ### Notes
-     > 
+     > v0.49.0 版本修改比較大，詳情可以作者那查看
  
     * ### New
      > The frpc has added the nathole discover command for testing the NAT type of the current network.
