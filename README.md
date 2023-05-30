@@ -42,6 +42,22 @@ Frps onkey-install-shell Changelog<br>Frp版本更新说明
 
  <!-- vim-markdown-toc GFM -->
 
+  * ## [v0.49.0 [2023/05/30]](#v0.49.0[2023/05/30])
+    * ### Notes
+     > 
+ 
+    * ### New
+     > The frpc has added the nathole discover command for testing the NAT type of the current network.
+     
+     > XTCP has been refactored, resulting in a significant improvement in the success rate of penetration.
+
+     > When verifying passwords, use subtle.ConstantTimeCompare and introduce a certain delay when the password is incorrect.
+
+    * ### Fix
+
+     > Fix the problem of lagging when opening multiple table entries in the frps dashboard.
+
+
   * ## [v0.48.0 [2023/03/08]](#v0.48.0[2023/03/08])
     * ### New
      > The httpconnect type in tcpmux now supports authentication through the parameters http_user and http_pwd.
