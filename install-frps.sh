@@ -13,7 +13,7 @@ export github_download_url="https://github.com/fatedier/frp/releases/download"
 #   Mender : MvsCode
 #======================================================================
 program_name="frps"
-version="20230627"
+version="0.50.0"
 str_program_dir="/usr/local/${program_name}"
 program_init="/etc/init.d/${program_name}"
 program_config_file="frps.ini"
