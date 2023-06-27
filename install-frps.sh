@@ -26,18 +26,14 @@ shell_update(){
     if [ ! -z ${remote_shell_version} ]; then
         if [[ "${version}" != "${remote_shell_version}" ]];then
             echo -e "${COLOR_GREEN}Found a new version,update now!!!${COLOR_END}"
-            echo
             echo -n "Update shell ..."
             if ! wget -N  -qO $0 ${str_install_shell}; then
                 echo -e " [${COLOR_RED}failed${COLOR_END}]"
-                echo
                 exit 1
             else
                 chmod +x install-frps.sh
                 echo -e " [${COLOR_GREEN}OK${COLOR_END}]"
-                echo
                 echo -e "${COLOR_GREEN}Please Re-run${COLOR_END} ${COLOR_PINK}$0 ${clang_action}${COLOR_END}"
-                echo
             fi
             exit 1
         fi
