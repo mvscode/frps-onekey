@@ -25,7 +25,7 @@ NAME=frps
 BIN=${ProgramPath}/${NAME}
 CONFIGFILE=${ProgramPath}/frps.ini
 SCRIPTNAME=/etc/init.d/${NAME}
-version="03.20"
+version="0.50.0"
 program_version=`${BIN} --version`
 RET_VAL=0
 
