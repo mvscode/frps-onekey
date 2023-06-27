@@ -13,27 +13,31 @@ export github_download_url="https://github.com/fatedier/frp/releases/download"
 #   Mender : MvsCode
 #======================================================================
 program_name="frps"
-version="0.50.0"
+version="20230627"
 str_program_dir="/usr/local/${program_name}"
 program_init="/etc/init.d/${program_name}"
 program_config_file="frps.ini"
 ver_file="/tmp/.frp_ver.sh"
-str_install_shell="https://raw.githubusercontent.com/fangkuaiwu/frps-onekey/master/install-frps.sh"
+str_install_shell="https://raw.githubusercontent.com/mvscode/frps-onekey/master/install-frps.sh"
 shell_update(){
     fun_clangcn "clear"
     echo "Check updates for shell..."
-    remote_shell_version=`wget  -qO- ${str_install_shell} | sed -n '/'^version'/p' | cut -d\" -f2`
+    remote_shell_version=`wget --no-check-certificate -qO- ${str_install_shell} | sed -n '/'^version'/p' | cut -d\" -f2`
     if [ ! -z ${remote_shell_version} ]; then
         if [[ "${version}" != "${remote_shell_version}" ]];then
             echo -e "${COLOR_GREEN}Found a new version,update now!!!${COLOR_END}"
+            echo
             echo -n "Update shell ..."
-            if ! wget -N  -qO $0 ${str_install_shell}; then
+            if ! wget --no-check-certificate -qO $0 ${str_install_shell}; then
                 echo -e " [${COLOR_RED}failed${COLOR_END}]"
+                echo
                 exit 1
             else
-                chmod +x install-frps.sh
                 echo -e " [${COLOR_GREEN}OK${COLOR_END}]"
+                echo
                 echo -e "${COLOR_GREEN}Please Re-run${COLOR_END} ${COLOR_PINK}$0 ${clang_action}${COLOR_END}"
+                echo
+                exit 1
             fi
             exit 1
         fi
