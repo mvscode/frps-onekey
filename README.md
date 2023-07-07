@@ -42,6 +42,21 @@ Frps onkey-install-shell Changelog<br>Frp版本更新说明
 
  <!-- vim-markdown-toc GFM -->
 
+   * ## [v0.51.0 [2023/07/07]](#v0.51.0[2023/07/07])
+    * ### Features
+     > frpc supports connecting to frps via the wss protocol by enabling the configuration protocol = wss.
+     
+     > frpc supports stopping the service through the stop command.
+     
+    * ### Improvements
+    
+     > service.Run supports passing in context.    
+     
+    * ### Fixes
+    
+     > Fix an issue caused by a bug in yamux that prevents wss from working properly in certain plugins.
+    
+
   * ## [v0.50.0 [2023/06/27]](#v0.50.0[2023/06/27])
     * ### Notes
      > For enhanced security, the default values for tls_enable and disable_custom_tls_first_byte have been set to true.If you wish to revert to the previous default values, you need to manually set the values of these two parameters to false.
