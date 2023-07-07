@@ -43,17 +43,15 @@ Frps onkey-install-shell Changelog<br>Frp版本更新说明
  <!-- vim-markdown-toc GFM -->
 
    * ## [v0.51.0 [2023/07/07]](#v0.51.0[2023/07/07])
-    * ### Features
+   * ### Features
      > frpc supports connecting to frps via the wss protocol by enabling the configuration protocol = wss.
      
      > frpc supports stopping the service through the stop command.
      
-    * ### Improvements
-    
+   * ### Improvements
      > service.Run supports passing in context.    
      
-    * ### Fixes
-    
+   * ### Fixes
      > Fix an issue caused by a bug in yamux that prevents wss from working properly in certain plugins.
     
 
