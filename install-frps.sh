@@ -5,7 +5,7 @@ export PATH
 export FRPS_VER=0.51.0
 export FRPS_INIT="https://raw.githubusercontent.com/MvsCode/frps-onekey/master/frps.init"
 export gitee_download_url="https://gitee.com/Mvscode/frps-onekey/releases/download"
-export github_download_url="https://github.com/Mvscode/fatedier/frp/releases/download"
+export github_download_url="https://github.com/fatedier/frp/releases/download"
 #======================================================================
 #   System Required:  CentOS Debian Ubuntu or Fedora(32bit/64bit)
 #   Description:  A tool to auto-compile & install frps on Linux
