@@ -42,7 +42,7 @@ Frps onkey-install-shell Changelog<br>Frp版本更新说明
 
  <!-- vim-markdown-toc GFM -->
 
-   * ## [v0.51.1 [2023/07/23]](#v0.51.1[2023/07/23])
+   * ## [v0.51.3 [2023/08/31]](#v0.51.3[2023/08/31])
    * ### Features
      > Support Go 1.21.
     
