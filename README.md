@@ -41,7 +41,12 @@ Frps onkey-install-shell Changelog<br>Frp版本更新说明
 ---------------------------------------
 
  <!-- vim-markdown-toc GFM -->
- 
+
+   * ## [v0.51.1 [2023/07/23]](#v0.51.1[2023/07/23])
+   * ### Features
+     > Support Go 1.21.
+    
+  
    * ## [v0.51.1 [2023/07/23]](#v0.51.1[2023/07/23])
    * ### Fixes
      > Fix the issue of not disabling tcp keepalive when configuring tcp_keepalive = -1 in frps.
