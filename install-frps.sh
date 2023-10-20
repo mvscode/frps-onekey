@@ -197,7 +197,7 @@ fun_getServer(){
 fun_getVer(){
     echo -e "Loading network version for ${program_name}, please wait..."
     program_latest_filename="frp_${FRPS_VER}_linux_${ARCHS}.tar.gz"
-    program_latest_file_url="${program_download_url}/v${VER}/${program_latest_filename}"
+    program_latest_file_url="${program_download_url}/v${FRPS_VER}/${program_latest_filename}"
     if [ -z "${program_latest_filename}" ]; then
         echo -e "${COLOR_RED}Load network version failed!!!${COLOR_END}"
     else
@@ -213,7 +213,7 @@ fun_download_file(){
             exit 1
         fi
         tar xzf ${program_latest_filename}
-        mv frp_${VER}_linux_${ARCHS}/frps ${str_program_dir}/${program_name}
+        mv frp_${FRPS_VER}_linux_${ARCHS}/frps ${str_program_dir}/${program_name}
         rm -fr ${program_latest_filename} frp_${FRPS_VER}_linux_${ARCHS}
     fi
     chown root:root -R ${str_program_dir}
