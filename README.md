@@ -13,7 +13,7 @@ Frps服务端一键配置脚本，Frp最新版本：0.52.1
 
 #### Gitee
 ```Bash
-wget https://gitee.com/mvscode/frps-onekey/raw/master/install-frps.sh -O ./install-frps.sh
+wget https://gitee.com/mvscode/frps-onekey/raw/dev/install-frps.sh -O ./install-frps.sh
 chmod 700 ./install-frps.sh
 ./install-frps.sh install
 ```
