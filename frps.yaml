@@ -5,7 +5,7 @@
   NAME: "frps"
   BIN: "${ProgramPath}/${NAME}"
   CONFIGFILE: "${ProgramPath}/frps.yaml"
-  SCRIPTNAME: "/etc/yaml.d/${NAME}"
+  SCRIPTNAME: "/etc/init.d/${NAME}"
   version: "2023"
   program_version: "`${BIN} --version`"
   RET_VAL: "0"
