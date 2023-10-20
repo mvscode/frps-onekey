@@ -3,7 +3,7 @@ PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
 ###export###
 export PATH
 export FRPS_VER=0.52.1
-export FRPS_yaml="https://raw.githubusercontent.com/MvsCode/frps-onekey/dev/frps.frps.yaml"
+export FRPS_YAML="https://raw.githubusercontent.com/MvsCode/frps-onekey/dev/frps.yaml"
 export gitee_download_url="https://gitee.com/Mvscode/frps-onekey/releases/download"
 export github_download_url="https://github.com/fatedier/frp/releases/download"
 #======================================================================
