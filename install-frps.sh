@@ -207,14 +207,14 @@ fun_getVer(){
 fun_download_file(){
     # download
     if [ ! -s ${str_program_dir}/${program_name} ]; then
-        rm -fr ${program_latest_filename} frp_${VER}_linux_${ARCHS}
+        rm -fr ${program_latest_filename} frp_${FRPS_VER}_linux_${ARCHS}
         if ! wget  -q ${program_latest_file_url} -O ${program_latest_filename}; then
             echo -e " ${COLOR_RED}failed${COLOR_END}"
             exit 1
         fi
         tar xzf ${program_latest_filename}
         mv frp_${VER}_linux_${ARCHS}/frps ${str_program_dir}/${program_name}
-        rm -fr ${program_latest_filename} frp_${VER}_linux_${ARCHS}
+        rm -fr ${program_latest_filename} frp_${FRPS_VER}_linux_${ARCHS}
     fi
     chown root:root -R ${str_program_dir}
     if [ -s ${str_program_dir}/${program_name} ]; then
