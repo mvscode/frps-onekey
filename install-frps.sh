@@ -816,13 +816,13 @@ update_program_server_clang(){
         check_centosversion
         check_os_bit
     fun_getVer
-        remote_init_version=`wget  -qO- ${FRPS_init} | sed -n '/'^version'/p' | cut -d\" -f2`
+        remote_init_version=`wget  -qO- ${FRPS_YAML} | sed -n '/'^version'/p' | cut -d\" -f2`
         local_init_version=`sed -n '/'^version'/p' ${program_init} | cut -d\" -f2`
         install_shell=${strPath}
         if [ ! -z ${remote_init_version} ];then
             if [[ "${local_init_version}" != "${remote_init_version}" ]];then
                 echo "========== Update ${program_name} ${program_init} =========="
-                if ! wget  ${FRPS_init} -O ${program_init}; then
+                if ! wget  ${FRPS_YAML} -O ${program_init}; then
                     echo "Failed to download ${program_name}.init file!"
                     exit 1
                 else
