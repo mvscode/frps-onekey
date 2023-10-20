@@ -1,88 +1,28 @@
-PATH: '/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin'
-ProgramName: Frps
-ProgramPath: /usr/local/frps
-NAME: frps
-BIN: '${ProgramPath}/${NAME}'
-CONFIGFILE: '${ProgramPath}/frps.ini'
-SCRIPTNAME: '/etc/init.d/${NAME}'
-version: '2023'
-program_version: '`${BIN} --version`'
-RET_VAL: '0'
-'[ -x ${BIN} ] || exit 0': true
-strLog: ''
-fun_clangcn(): true
-'{': true
-echo "": true
-echo "+---------------------------------------------------------+": true
-'echo "|     Manager for ${ProgramName}, Author Clang, Mender MvsCode      |"': true
-'}': true
-'fun_check_run(){': true
-PID: '`ps -ef | grep -v grep | grep -i "${BIN}" | awk ''{print $2}''`'
-'if [ ! -z $PID  ]': true
-return 0: true
-else: true
-return 1: true
-fi: true
-'fun_load_config(){': true
-'if [ ! -r ${CONFIGFILE} ]': true
-'echo "config file ${CONFIGFILE} not found"': true
-fun_start(): true
-'if [ "${arg1}"': '"stop" ] || [ "${arg1}" = "restart" ]'
-fun_clangcn: true
-if fun_check_run: true
-'echo "${ProgramName} (pid $PID) already running."': true
-fun_load_config: true
-'echo -n "Starting ${ProgramName}(${program_version})..."': true
-'${BIN} -c ${CONFIGFILE} >/dev/null 2>&1 &': true
-sleep 1: true
-if ! fun_check_run: true
-echo "start failed": true
-echo " done": true
-'echo "${ProgramName} (pid $PID)is running."': true
-'fun_stop(){': true
-'echo -n "Stoping ${ProgramName} (pid $PID)... "': true
-kill $PID: true
-'if [ "$?" !': '0 ]'
-echo " failed": true
-'echo "${ProgramName} is not running."': true
-'fun_restart(){': true
-fun_stop: true
-fun_start: true
-'fun_status(){': true
-'if [ ! -z $PID ]': true
-'echo "${ProgramName} (pid $PID) is running..."': true
-'echo "${ProgramName} is stopped"': true
-exit 0: true
-'checkos(){': true
-if   grep -Eqi "CentOS" /etc/issue || grep -Eq "CentOS" /etc/*-release: true
-OS: Fedora
-elif grep -Eqi "Debian" /etc/issue || grep -Eq "Debian" /etc/*-release: true
-elif grep -Eqi "Ubuntu" /etc/issue || grep -Eq "Ubuntu" /etc/*-release: true
-elif grep -Eqi "Alpine" /etc/issue || grep -Eq "Alpine" /etc/*-release: true
-elif grep -Eqi "Fedora" /etc/issue || grep -Eq "Fedora" /etc/*-release: true
-'echo "Not support OS, Please reinstall OS and retry!"': true
-'fun_config(){': true
-'if [ -s ${CONFIGFILE} ]': true
-'vi ${CONFIGFILE}': true
-'echo "${ProgramName} configuration file not found!"': true
-'fun_version(){': true
-'echo "${ProgramName} version ${program_version}"': true
-'fun_help(){': true
-'${BIN} --help': true
-arg1: $1
-'-z ${arg1}':
-  'case "${arg1}" in': true
-  start|stop|restart|status|config): true
-  'fun_${arg1}': true
-  '[vV][eE][rR][sS][iI][oO][nN]|-[vV][eE][rR][sS][iI][oO][nN]|--[vV][eE][rR][sS][iI][oO][nN]|-[vV]|--[vV])': true
-  fun_version: true
-  '[Cc]|[Cc][Oo][Nn][Ff]|[Cc][Oo][Nn][Ff][Ii][Gg]|-[Cc]|-[Cc][Oo][Nn][Ff]|-[Cc][Oo][Nn][Ff][Ii][Gg]|--[Cc]|--[Cc][Oo][Nn][Ff]|--[Cc][Oo][Nn][Ff][Ii][Gg])': true
-  fun_config: true
-  '[Hh]|[Hh][Ee][Ll][Pp]|-[Hh]|-[Hh][Ee][Ll][Pp]|--[Hh]|--[Hh][Ee][Ll][Pp])': true
-  fun_help: true
-  '*)': true
-  fun_clangcn: true
-  'echo "Usage: $SCRIPTNAME {start|stop|restart|status|config|version}"': true
-  RET_VAL: '1'
-  esac: true
-  exit $RET_VAL: true
+PATH: "/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin"
+ProgramName: "Frps"
+ProgramPath: "/usr/local/frps"
+NAME: "frps"
+BIN: "${ProgramPath}/${NAME}"
+CONFIGFILE: "${ProgramPath}/frps.ini"
+SCRIPTNAME: "/etc/init.d/${NAME}"
+version: "2023"
+program_version: "`${BIN} --version`"
+RET_VAL: "0"
+-x ${BIN}:
+  strLog: """"
+  PID: "`ps -ef | grep -v grep | grep -i "${BIN}" | awk '{print $2}'`"
+  if [ "${arg1}": ""start" ]; then"
+  if [ "${arg1}" = "stop" ] || [ "${arg1}": ""restart" ]; then"
+  if [ "$?" !: "0 ] ; then"
+  PID: "`ps -ef | grep -v grep | grep -i "${BIN}" | awk '{print $2}'`"
+  OS: "CentOS"
+  OS: "Debian"
+  OS: "Ubuntu"
+  OS: "Alpine"
+  OS: "Fedora"
+  arg1: "$1"
+-z ${arg1}:
+vV][eE][rR][sS][iI][oO][nN]|-[vV][eE][rR][sS][iI][oO][nN]|--[vV][eE][rR][sS][iI][oO][nN]|-[vV]|--[vV:
+Cc]|[Cc][Oo][Nn][Ff]|[Cc][Oo][Nn][Ff][Ii][Gg]|-[Cc]|-[Cc][Oo][Nn][Ff]|-[Cc][Oo][Nn][Ff][Ii][Gg]|--[Cc]|--[Cc][Oo][Nn][Ff]|--[Cc][Oo][Nn][Ff][Ii][Gg:
+Hh]|[Hh][Ee][Ll][Pp]|-[Hh]|-[Hh][Ee][Ll][Pp]|--[Hh]|--[Hh][Ee][Ll][Pp:
+  RET_VAL: "1"
