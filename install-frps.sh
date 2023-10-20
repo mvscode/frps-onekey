@@ -16,7 +16,7 @@ program_name="frps"
 version="20231020"
 str_program_dir="/usr/local/${program_name}"
 program_init="/etc/init.d/${program_name}"
-program_config_file="frps.yaml"
+program_config_file="frps.init"
 ver_file="/tmp/.frp_ver.sh"
 str_install_shell="https://raw.githubusercontent.com/Mvscode/frps-onekey/dev/install-frps.sh"
 shell_update(){
@@ -52,7 +52,7 @@ fun_clangcn(){
     echo ""
     echo "+------------------------------------------------------------+"
     echo "|   frps for Linux Server, Author Clang ，Mender MvsCode     |" 
-    echo "|      A tool to auto-compile & install frps on Linux  2yaml |"
+    echo "|      A tool to auto-compile & install frps on Linux  2init |"
     echo "+------------------------------------------------------------+"
     echo ""
 }
@@ -350,7 +350,7 @@ pre_install_clang(){
     fun_clangcn
     echo -e "Check your server setting, please wait..."
     disable_selinux
-    if [ -s ${str_program_dir}/${program_name} ] && [ -s ${program_yaml} ]; then
+    if [ -s ${str_program_dir}/${program_name} ] && [ -s ${program_init} ]; then
         echo "${program_name} is installed!"
     else
         clear
@@ -605,31 +605,31 @@ fi
     echo " done"
 
     echo -n "download ${program_name} ..."
-    rm -f ${str_program_dir}/${program_name} ${program_yaml}
+    rm -f ${str_program_dir}/${program_name} ${program_init}
     fun_download_file
     echo " done"
-    echo -n "download ${program_yaml}..."
-    if [ ! -s ${program_yaml} ]; then
-        if ! wget  -q ${FRPS_yaml} -O ${program_yaml}; then
+    echo -n "download ${program_init}..."
+    if [ ! -s ${program_init} ]; then
+        if ! wget  -q ${FRPS_init} -O ${program_init}; then
             echo -e " ${COLOR_RED}failed${COLOR_END}"
             exit 1
         fi
     fi
-    [ ! -x ${program_yaml} ] && chmod +x ${program_yaml}
+    [ ! -x ${program_init} ] && chmod +x ${program_init}
     echo " done"
 
     echo -n "setting ${program_name} boot..."
-    [ ! -x ${program_yaml} ] && chmod +x ${program_yaml}
+    [ ! -x ${program_init} ] && chmod +x ${program_init}
     if [ "${OS}" == 'CentOS' ]; then
-        chmod +x ${program_yaml}
+        chmod +x ${program_init}
         chkconfig --add ${program_name}
     else
-        chmod +x ${program_yaml}
+        chmod +x ${program_init}
         update-rc.d -f ${program_name} defaults
     fi
     echo " done"
-    [ -s ${program_yaml} ] && ln -s ${program_yaml} /usr/bin/${program_name}
-    ${program_yaml} start
+    [ -s ${program_init} ] && ln -s ${program_init} /usr/bin/${program_name}
+    ${program_init} start
     fun_clangcn
     #install successfully
     echo ""
@@ -673,7 +673,7 @@ configure_program_server_clang(){
 ############################### uninstall ##################################
 uninstall_program_server_clang(){
     fun_clangcn
-    if [ -s ${program_yaml} ] || [ -s ${str_program_dir}/${program_name} ] ; then
+    if [ -s ${program_init} ] || [ -s ${str_program_dir}/${program_name} ] ; then
         echo "============== Uninstall ${program_name} =============="
         str_uninstall="n"
         echo -n -e "${COLOR_YELOW}You want to uninstall?${COLOR_END}"
@@ -693,13 +693,13 @@ uninstall_program_server_clang(){
             echo "You select [No],shell exit!"
         else
             checkos
-            ${program_yaml} stop
+            ${program_init} stop
             if [ "${OS}" == 'CentOS' ]; then
                 chkconfig --del ${program_name}
             else
                 update-rc.d -f ${program_name} remove
             fi
-            rm -f ${program_yaml} /var/run/${program_name}.pid /usr/bin/${program_name}
+            rm -f ${program_init} /var/run/${program_name}.pid /usr/bin/${program_name}
             rm -fr ${str_program_dir}
             echo "${program_name} uninstall success!"
         fi
@@ -809,24 +809,24 @@ update_config_clang(){
 }
 update_program_server_clang(){
     fun_clangcn "clear"
-    if [ -s ${program_yaml} ] || [ -s ${str_program_dir}/${program_name} ] ; then
+    if [ -s ${program_init} ] || [ -s ${str_program_dir}/${program_name} ] ; then
         echo "============== Update ${program_name} =============="
         update_config_clang
         checkos
         check_centosversion
         check_os_bit
     fun_getVer
-        remote_yaml_version=`wget  -qO- ${FRPS_yaml} | sed -n '/'^version'/p' | cut -d\" -f2`
-        local_yaml_version=`sed -n '/'^version'/p' ${program_yaml} | cut -d\" -f2`
+        remote_init_version=`wget  -qO- ${FRPS_init} | sed -n '/'^version'/p' | cut -d\" -f2`
+        local_init_version=`sed -n '/'^version'/p' ${program_init} | cut -d\" -f2`
         install_shell=${strPath}
-        if [ ! -z ${remote_yaml_version} ];then
-            if [[ "${local_yaml_version}" != "${remote_yaml_version}" ]];then
-                echo "========== Update ${program_name} ${program_yaml} =========="
-                if ! wget  ${FRPS_yaml} -O ${program_yaml}; then
-                    echo "Failed to download ${program_name}.yaml file!"
+        if [ ! -z ${remote_init_version} ];then
+            if [[ "${local_init_version}" != "${remote_init_version}" ]];then
+                echo "========== Update ${program_name} ${program_init} =========="
+                if ! wget  ${FRPS_init} -O ${program_init}; then
+                    echo "Failed to download ${program_name}.init file!"
                     exit 1
                 else
-                    echo -e "${COLOR_GREEN}${program_yaml} Update successfully !!!${COLOR_END}"
+                    echo -e "${COLOR_GREEN}${program_init} Update successfully !!!${COLOR_END}"
                 fi
             fi
         fi
@@ -839,20 +839,20 @@ update_program_server_clang(){
         echo -e "${COLOR_GREEN}${program_name} remote version ${FRPS_VER}${COLOR_END}"
         if [[ "${local_program_version}" != "${FRPS_VER}" ]];then
             echo -e "${COLOR_GREEN}Found a new version,update now!!!${COLOR_END}"
-            ${program_yaml} stop
+            ${program_init} stop
             sleep 1
             rm -f /usr/bin/${program_name} ${str_program_dir}/${program_name}
      fun_download_file
             if [ "${OS}" == 'CentOS' ]; then
-                chmod +x ${program_yaml}
+                chmod +x ${program_init}
                 chkconfig --add ${program_name}
             else
-                chmod +x ${program_yaml}
+                chmod +x ${program_init}
                 update-rc.d -f ${program_name} defaults
             fi
-            [ -s ${program_yaml} ] && ln -s ${program_yaml} /usr/bin/${program_name}
-            [ ! -x ${program_yaml} ] && chmod 755 ${program_yaml}
-            ${program_yaml} start
+            [ -s ${program_init} ] && ln -s ${program_init} /usr/bin/${program_name}
+            [ ! -x ${program_init} ] && chmod 755 ${program_init}
+            ${program_init} start
             echo "${program_name} version `${str_program_dir}/${program_name} --version`"
             echo "${program_name} update success!"
         else
@@ -872,7 +872,7 @@ check_centosversion
 check_os_bit
 pre_install_packs
 shell_update
-# yamlialization
+# initialization
 action=$1
 [  -z $1 ]
 case "$action" in
