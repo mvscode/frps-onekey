@@ -52,7 +52,7 @@ fun_clangcn(){
     echo ""
     echo "+------------------------------------------------------------+"
     echo "|   frps for Linux Server, Author Clang ，Mender MvsCode     |" 
-    echo "|      A tool to auto-compile & install frps on Linux        |"
+    echo "|      A tool to auto-compile & install frps on Linux  2yaml |"
     echo "+------------------------------------------------------------+"
     echo ""
 }
