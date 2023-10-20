@@ -610,7 +610,7 @@ fi
     echo " done"
     echo -n "download ${program_init}..."
     if [ ! -s ${program_init} ]; then
-        if ! wget  -q ${init} -O ${program_init}; then
+        if ! wget  -q ${FRPS_YAML} -O ${program_init}; then
             echo -e " ${COLOR_RED}failed${COLOR_END}"
             exit 1
         fi
