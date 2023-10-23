@@ -3,9 +3,12 @@ PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
 ###export###
 export PATH
 export FRPS_VER=0.52.1
+export FRPS_VER_32BIT="0.51.3"
 export FRPS_INIT="https://raw.githubusercontent.com/MvsCode/frps-onekey/master/frps.init"
 export gitee_download_url="https://gitee.com/Mvscode/frps-onekey/releases/download"
 export github_download_url="https://github.com/fatedier/frp/releases/download"
+export gitee_latest_version_api="https://gitee.com/api/v5/repos/MvsCode/frps-onekey/releases/latest"
+export github_latest_version_api="https://api.github.com/repos/fatedier/frp/releases/latest"
 #======================================================================
 #   System Required:  CentOS Debian Ubuntu or Fedora(32bit/64bit)
 #   Description:  A tool to auto-compile & install frps on Linux
@@ -118,15 +121,22 @@ centosversion(){
     fi
 }
 # Check OS bit
-check_os_bit(){
-    ARCHS=""
-    if [[ `getconf WORD_BIT` = '32' && `getconf LONG_BIT` = '64' ]] ; then
-        Is_64bit='y'
-        ARCHS="amd64"
-    else
-        Is_64bit='n'
-        ARCHS="386"
-    fi
+check_os_bit() {
+    local arch
+    arch=$(uname -m)
+
+    case $arch in
+        x86_64)      Is_64bit='y'; ARCHS="amd64";;
+        i386|i486|i586|i686) Is_64bit='n'; ARCHS="386"; FRPS_VER="$FRPS_VER_32BIT";;
+        aarch64)     Is_64bit='y'; ARCHS="arm64";;
+        arm*|armv*)  Is_64bit='n'; ARCHS="arm"; FRPS_VER="$FRPS_VER_32BIT";;
+        mips)        Is_64bit='n'; ARCHS="mips"; FRPS_VER="$FRPS_VER_32BIT";;
+        mips64)      Is_64bit='y'; ARCHS="mips64";;
+        mips64el)    Is_64bit='y'; ARCHS="mips64le";;
+        mipsel)      Is_64bit='n'; ARCHS="mipsle"; FRPS_VER="$FRPS_VER_32BIT";;
+        riscv64)     Is_64bit='y'; ARCHS="riscv64";;
+        *)           echo "Unknown architecture";;
+    esac
 }
 check_centosversion(){
 if centosversion 5; then
@@ -178,10 +188,12 @@ fun_getServer(){
     [ -z "${set_server_url}" ] && set_server_url="${def_server_url}"
     case "${set_server_url}" in
         1|[Ga][Ii][Tt][Ee][Ee])
-            program_download_url=${gitee_download_url}
+            program_download_url=${gitee_download_url};
+            choice=1
             ;;
         2|[Gg][Ii][Tt][Hh][Uu][Bb])
-            program_download_url=${github_download_url}
+            program_download_url=${github_download_url};
+            choice=2
             ;;
         [eE][xX][iI][tT])
             exit 1
@@ -196,6 +208,16 @@ fun_getServer(){
 }
 fun_getVer(){
     echo -e "Loading network version for ${program_name}, please wait..."
+    case $choice in
+        1)  LATEST_RELEASE=$(curl -s ${gitee_latest_version_api} | grep -oP '"tag_name":"\Kv[^"]+' | cut -c2-);;
+        2)  LATEST_RELEASE=$(curl -s ${github_latest_version_api} | grep '"tag_name":' | cut -d '"' -f 4 | cut -c 2-);;
+    esac
+    if [[ ! -z "$LATEST_RELEASE" ]]; then
+        FRPS_VER="$LATEST_RELEASE"
+        echo "FRPS_VER set to: $FRPS_VER"
+    else
+        echo "Failed to retrieve the latest version."
+    fi
     program_latest_filename="frp_${FRPS_VER}_linux_${ARCHS}.tar.gz"
     program_latest_file_url="${program_download_url}/v${FRPS_VER}/${program_latest_filename}"
     if [ -z "${program_latest_filename}" ]; then
