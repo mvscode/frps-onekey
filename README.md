@@ -37,7 +37,7 @@ chmod 700 ./install-frps.sh
 ```Bash
 Usage: /etc/init.d/frps {start|stop|restart|status|config|version}
 ```
-Frps onkey-install-shell Changelog<br>Frp版本更新说明
+Frps onkey-install-shell
 ---------------------------------------
 
  <!-- vim-markdown-toc GFM -->
