@@ -48,4 +48,4 @@ Frps onkey-install-shell
     > Added architecture detection for arm, arm64, mips, mips64, mips64le, mipsle, and riscv64.
     
     > Integrated functionality to retrieve the latest software version from both Gitee and GitHub.
-   * ## The Frps Version update details will no longer be updated today
+   * ## The Frps Version update details will no longer be indicated today
