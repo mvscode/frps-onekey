@@ -43,8 +43,9 @@ Frps onkey-install-shell Changelog<br>Frp版本更新说明
  <!-- vim-markdown-toc GFM -->
    * ## The install shell had Support multiple architectures and fetch latest version from Gitee/GitHub
    * ## Thank muxinxy much https://github.com/MvsCode/frps-onekey/pull/92#issue-1957164654
-   * ### Added architecture detection for arm, arm64, mips, mips64, mips64le, mipsle, and riscv64.
-   * ### Integrated functionality to retrieve the latest software version from both Gitee and GitHub.
+    > Added architecture detection for arm, arm64, mips, mips64, mips64le, mipsle, and riscv64.
+    
+    > Integrated functionality to retrieve the latest software version from both Gitee and GitHub.
 
 
 
