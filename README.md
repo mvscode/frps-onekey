@@ -1,5 +1,5 @@
 
-Frps服务端一键配置脚本，Frp最新版本：0.52.1
+Frps服务端一键配置脚本，脚本已支持获取rp最新版本
 ===========
 
 *Frp 是一个高性能的反向代理应用，可以帮助您轻松地进行内网穿透，对外网提供服务，支持 tcp, http, https 等协议类型，并且 web 服务支持根据域名进行路由转发。*
@@ -41,6 +41,12 @@ Frps onkey-install-shell Changelog<br>Frp版本更新说明
 ---------------------------------------
 
  <!-- vim-markdown-toc GFM -->
+   * ## The install shell had Support multiple architectures and fetch latest version from Gitee/GitHub
+   * ## Thank muxinxy much https://github.com/MvsCode/frps-onekey/pull/92#issue-1957164654
+   * ### Added architecture detection for arm, arm64, mips, mips64, mips64le, mipsle, and riscv64.
+   * ### Integrated functionality to retrieve the latest software version from both Gitee and GitHub.
+
+
 
    * ## [v0.51.3 [2023/08/31]](#v0.51.3[2023/08/31])
    * ### Features
