@@ -1,5 +1,4 @@
 #!/bin/bash
-# TODO: muti-arch support
 PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
 ###export###
 export PATH
@@ -642,30 +641,34 @@ install_program_server_clang(){
     echo "${program_name} install path:$PWD"
 
     echo -n "config file for ${program_name} ..."
-# Config file
-# Generate configuration based on conditions
-generate_common_config
 
-# Append specific configurations based on conditions
-if [[ "${set_kcp}" == "false" ]]; then
-    if [[ "${set_quic}" == "true" ]]; then
-        cat <<-EOF
+    # Generate configuration based on conditions
+    generate_common_config > "${str_program_dir}/${program_config_file}.tmp"
+
+    # Append specific configurations based on conditions
+    if [[ "${set_kcp}" == "false" ]]; then
+        if [[ "${set_quic}" == "true" ]]; then
+            cat <<-EOF >> "${str_program_dir}/${program_config_file}.tmp"
 # if not set, quic is disabled in frps
 quicBindPort = ${set_quic_bind_port}
 EOF
-    fi
-else
-    cat <<-EOF
+        fi
+    else
+        cat <<-EOF >> "${str_program_dir}/${program_config_file}.tmp"
 # if not set, kcp is disabled in frps
 kcpBindPort = ${set_bind_port}
 EOF
-    if [[ "${set_quic}" == "true" ]]; then
-        cat <<-EOF
+        if [[ "${set_quic}" == "true" ]]; then
+            cat <<-EOF >> "${str_program_dir}/${program_config_file}.tmp"
 # if not set, quic is disabled in frps
 quicBindPort = ${set_quic_bind_port}
 EOF
+        fi
     fi
-fi > "${str_program_dir}/${program_config_file}"
+    
+    # Move the temporary file to the final destination
+    mv "${str_program_dir}/${program_config_file}.tmp" "${str_program_dir}/${program_config_file}"
+
     echo " done"
 
     echo -n "download ${program_name} ..."
@@ -773,7 +776,7 @@ uninstall_program_server_clang(){
     exit 0
 }
 ############################### update ##################################
-# TODO: add quic support and support toml configuration file
+# TODO: update toml file configuration
 update_config_clang(){
     if [ ! -r "${str_program_dir}/${program_config_file}" ]; then
         echo "config file ${str_program_dir}/${program_config_file} not found."
