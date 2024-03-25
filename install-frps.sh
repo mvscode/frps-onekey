@@ -1,12 +1,13 @@
 #!/bin/bash
+# TODO: muti-arch support
 PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
 ###export###
 export PATH
 export FRPS_VER="$LATEST_RELEASE"
 export FRPS_VER_32BIT="$LATEST_RELEASE"
-export FRPS_INIT="https://raw.githubusercontent.com/MvsCode/frps-onekey/master/frps.init"
+export FRPS_INIT="https://raw.githubusercontent.com/xiwangly2/frps-onekey/master/frps.init"
 export gitee_download_url="https://gitee.com/Mvscode/frps-onekey/releases/download"
-export github_download_url="https://github.com/fatedier/frp/releases/download"
+export github_download_url="https://github.com/fatedier/frp/releases/latest"
 export gitee_latest_version_api="https://gitee.com/api/v5/repos/MvsCode/frps-onekey/releases/latest"
 export github_latest_version_api="https://api.github.com/repos/fatedier/frp/releases/latest"
 #======================================================================
@@ -318,7 +319,7 @@ fun_input_bind_port(){
 fun_input_quic_bind_port(){
     def_server_port="7443"
     echo ""
-    echo -n -e "Please input ${program_name} ${COLOR_GREEN}bind_port${COLOR_END} [1-65535]"
+    echo -n -e "Please input ${program_name} ${COLOR_GREEN}bind_port${COLOR_END} [1-65535]( != bind_port!!!)"
     read -e -p "(Default Server Port: ${def_server_port}):" serverport
     [ -z "${serverport}" ] && serverport="${def_server_port}"
     fun_check_port "bind" "${serverport}"
@@ -417,7 +418,7 @@ pre_install_clang(){
         echo -e ""
         fun_input_quic_bind_port
         [ -n "${input_port}" ] && set_quic_bind_port="${input_port}"
-        echo -e "${program_name} quic_bind_port( != bind_port!!!): ${COLOR_YELOW}${set_quic_bind_port}${COLOR_END}"
+        echo -e "${program_name} quic_bind_port: ${COLOR_YELOW}${set_quic_bind_port}${COLOR_END}"
         echo -e ""
         fun_input_vhost_http_port
         [ -n "${input_port}" ] && set_vhost_http_port="${input_port}"
@@ -551,6 +552,11 @@ pre_install_clang(){
         echo -e "kcp support: ${COLOR_YELOW}${set_kcp}${COLOR_END}"
         echo -e ""
 
+        echo -e "Please select ${COLOR_GREEN}quic support${COLOR_END}"
+        echo    "1: enable (default)"
+        echo    "2: disable"
+        echo "-------------------------"  
+        read -e -p "Enter your choice (1, 2 or exit. default [1]): " str_quic
         case "${str_quic}" in
             1|[yY]|[yY][eE][sS]|[oO][nN]|[tT][rR][uU][eE]|[eE][nN][aA][bB][lL][eE])
                 set_quic="true"
@@ -565,7 +571,7 @@ pre_install_clang(){
                 set_quic="true"
                 ;;
         esac
-        echo -e "kcp support: ${COLOR_YELOW}${set_quic}${COLOR_END}"
+        echo -e "quic support: ${COLOR_YELOW}${set_quic}${COLOR_END}"
         echo -e ""
 
         echo "============== Check your input =============="
@@ -848,9 +854,9 @@ update_config_clang(){
                 echo "quic support: ${set_quic}"
                 def_quic_bind_port=( $( __readINI ${str_program_dir}/${program_config_file} common bind_port ) )
                 if [[ "${set_quic}" == "false" ]]; then
-                    sed -i "/^bindPort =.*/a\# udp port used for kcp protocol, it can be same with 'bindPort'\n# if not set, kcp is disabled in frps\n#kcpBindPort = ${def_kcp_bind_port}\n" ${str_program_dir}/${program_config_file}
+                    sed -i "/^bindPort =.*/a\# udp port used for quic protocol, it can be same with 'bindPort'\n# if not set, kcp is disabled in frps\n#kcpBindPort = ${def_quic_bind_port}\n" ${str_program_dir}/${program_config_file}
                 else
-                    sed -i "/^bindPort =.*/a\# udp port used for kcp protocol, it can be same with 'bindPort'\n# if not set, kcp is disabled in frps\nkcpBindPort = ${def_kcp_bind_port}\n" ${str_program_dir}/${program_config_file}
+                    sed -i "/^bindPort =.*/a\# udp port used for quic protocol, it can be same with 'bindPort'\n# if not set, kcp is disabled in frps\nkcpBindPort = ${def_quic_bind_port}\n" ${str_program_dir}/${program_config_file}
                 fi
             fi
             if [ -z "${search_tcp_mux}" ];then
