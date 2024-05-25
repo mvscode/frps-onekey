@@ -143,39 +143,33 @@ check_centosversion() {
         exit 1
     fi
 }
-# Disable selinux
-disable_selinux(){
-    if [ -s /etc/selinux/config ] && grep 'SELINUX=enforcing' /etc/selinux/config; then
+disable_selinux() {
+    if [ -s /etc/selinux/config ] && grep -q 'SELINUX=enforcing' /etc/selinux/config; then
         sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
         setenforce 0
     fi
 }
-pre_install_packs(){
-    local wget_flag=''
-    local killall_flag=''
-    local netstat_flag=''
-    wget --version > /dev/null 2>&1
-    wget_flag=$?
-    killall -V >/dev/null 2>&1
-    killall_flag=$?
-    netstat --version >/dev/null 2>&1
-    netstat_flag=$?
-    if [[ ${wget_flag} -gt 1 ]] || [[ ${killall_flag} -gt 1 ]] || [[ ${netstat_flag} -gt 6 ]];then
-        echo -e "${COLOR_GREEN} Install support packs...${COLOR_END}"
+
+pre_install_packs() {
+    local packages=()
+    for command in wget killall netstat; do
+        if ! command -v "$command" &>/dev/null; then
+            packages+=("$command")
+        fi
+    done
+    if [ "${#packages[@]}" -gt 0 ]; then
+        echo -e "${COLOR_GREEN} Installing support packages: ${packages[*]}${COLOR_END}"
         if [ "${OS}" == 'CentOS' ]; then
-            yum install -y wget psmisc net-tools
+            yum install -y "${packages[@]}"
         else
-            apt-get -y update && apt-get -y install wget psmisc net-tools
+            apt-get -y update && apt-get -y install "${packages[@]}"
         fi
     fi
 }
-# Random password
-fun_randstr(){
-    strNum=$1
-    [ -z "${strNum}" ] && strNum="16"
-    strRandomPass=""
-    strRandomPass=`tr -cd '[:alnum:]' < /dev/urandom | fold -w ${strNum} | head -n1`
-    echo ${strRandomPass}
+
+fun_randstr() {
+    local length="${1:-16}"
+    echo "$(tr -cd '[:alnum:]' < /dev/urandom | fold -w "$length" | head -n1)"
 }
 fun_getServer(){
     def_server_url="github"
