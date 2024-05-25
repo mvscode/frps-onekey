@@ -531,119 +531,96 @@ echo ""
 echo "Press any key to start...or Press Ctrl+c to cancel"
 
 char=`get_char`
-install_program_server_clang
-# ====== install server ======
-install_program_server_clang(){
-    [ ! -d ${str_program_dir} ] && mkdir -p ${str_program_dir}
-    cd ${str_program_dir}
-    echo "${program_name} install path:$PWD"
+install_program_server_clang() {
+    # Create the program directory if it doesn't exist
+    [[ ! -d "${str_program_dir}" ]] && mkdir -p "${str_program_dir}"
+    cd "${str_program_dir}"
+    echo "${program_name} install path: $PWD"
 
-    echo -n "config file for ${program_name} ..."
-# Config file
-if [[ "${set_kcp}" == "false" ]]; then
-cat > ${str_program_dir}/${program_config_file}<<-EOF
+    echo -n "Generating config file for ${program_name} ..."
+
+    # Generate the config file based on the set_kcp value
+    if [[ "${set_kcp}" == "false" ]]; then
+        cat > "${str_program_dir}/${program_config_file}" <<-EOF
+        [common]
+        bind_addr = 0.0.0.0
+        bind_port = ${set_bind_port}
+        dashboard_port = ${set_dashboard_port}
+        dashboard_user = ${set_dashboard_user}
+        dashboard_pwd = ${set_dashboard_pwd}
+        vhost_http_port = ${set_vhost_http_port}
+        vhost_https_port = ${set_vhost_https_port}
+        log_file = ${str_log_file}
+        log_level = ${str_log_level}
+        log_max_days = ${set_log_max_days}
+        token = ${set_token}
+        subdomain_host = ${set_subdomain_host}
+        max_pool_count = ${set_max_pool_count}
+        tcp_mux = ${set_tcp_mux}
+        EOF
+    else
+        cat > "${str_program_dir}/${program_config_file}" <<-EOF
+
+        EOF
+    fi
+    echo "done."
+}
 # [common] is integral section
 [common]
-# A literal address or host name for IPv6 must be enclosed
-# in square brackets, as in "[::1]:80", "[ipv6-host]:http" or "[ipv6-host%zone]:80"
 bind_addr = 0.0.0.0
 bind_port = ${set_bind_port}
-# udp port used for kcp protocol, it can be same with 'bind_port'
-# if not set, kcp is disabled in frps
-#kcp_bind_port = ${set_bind_port}
-# if you want to configure or reload frps by dashboard, dashboard_port must be set
-dashboard_port = ${set_dashboard_port}
-# dashboard assets directory(only for debug mode)
-dashboard_user = ${set_dashboard_user}
-dashboard_pwd = ${set_dashboard_pwd}
-# assets_dir = ./static
-vhost_http_port = ${set_vhost_http_port}
-vhost_https_port = ${set_vhost_https_port}
-# console or real logFile path like ./frps.log
-log_file = ${str_log_file}
-# debug, info, warn, error
-log_level = ${str_log_level}
-log_max_days = ${set_log_max_days}
-# auth token
-token = ${set_token}
-# It is convenient to use subdomain configure for http、https type when many people use one frps server together.
-subdomain_host = ${set_subdomain_host}
-# only allow frpc to bind ports you list, if you set nothing, there won't be any limit
-#allow_ports = 1-65535
-# pool_count in each proxy will change to max_pool_count if they exceed the maximum value
-max_pool_count = ${set_max_pool_count}
-# if tcp stream multiplexing is used, default is true
-tcp_mux = ${set_tcp_mux}
-EOF
-else
-cat > ${str_program_dir}/${program_config_file}<<-EOF
-# [common] is integral section
-[common]
-# A literal address or host name for IPv6 must be enclosed
-# in square brackets, as in "[::1]:80", "[ipv6-host]:http" or "[ipv6-host%zone]:80"
-bind_addr = 0.0.0.0
-bind_port = ${set_bind_port}
-# udp port used for kcp protocol, it can be same with 'bind_port'
-# if not set, kcp is disabled in frps
 kcp_bind_port = ${set_bind_port}
-# if you want to configure or reload frps by dashboard, dashboard_port must be set
 dashboard_port = ${set_dashboard_port}
-# dashboard assets directory(only for debug mode)
 dashboard_user = ${set_dashboard_user}
 dashboard_pwd = ${set_dashboard_pwd}
-# assets_dir = ./static
 vhost_http_port = ${set_vhost_http_port}
 vhost_https_port = ${set_vhost_https_port}
-# console or real logFile path like ./frps.log
 log_file = ${str_log_file}
-# debug, info, warn, error
 log_level = ${str_log_level}
 log_max_days = ${set_log_max_days}
-# auth token
 token = ${set_token}
-# It is convenient to use subdomain configure for http、https type when many people use one frps server together.
 subdomain_host = ${set_subdomain_host}
-# only allow frpc to bind ports you list, if you set nothing, there won't be any limit
-#allow_ports = 1-65535
-# pool_count in each proxy will change to max_pool_count if they exceed the maximum value
 max_pool_count = ${set_max_pool_count}
-# if tcp stream multiplexing is used, default is true
 tcp_mux = ${set_tcp_mux}
 EOF
 fi
-    echo " done"
 
-    echo -n "download ${program_name} ..."
-    rm -f ${str_program_dir}/${program_name} ${program_init}
-    fun_download_file
-    echo " done"
-    echo -n "download ${program_init}..."
-    if [ ! -s ${program_init} ]; then
-        if ! wget  -q ${FRPS_INIT} -O ${program_init}; then
-            echo -e " ${COLOR_RED}failed${COLOR_END}"
-            exit 1
-        fi
-    fi
-    [ ! -x ${program_init} ] && chmod +x ${program_init}
-    echo " done"
+echo " done"
 
-    echo -n "setting ${program_name} boot..."
-    [ ! -x ${program_init} ] && chmod +x ${program_init}
-    if [ "${OS}" == 'CentOS' ]; then
-        chmod +x ${program_init}
-        chkconfig --add ${program_name}
-    else
-        chmod +x ${program_init}
-        update-rc.d -f ${program_name} defaults
+echo -n "downloading ${program_name} ..."
+rm -f "${str_program_dir}/${program_name}" "${program_init}"
+fun_download_file
+echo " done"
+
+echo -n "downloading ${program_init} ..."
+if [ ! -s "${program_init}" ]; then
+    if ! wget -q "${FRPS_INIT}" -O "${program_init}"; then
+        echo -e " ${COLOR_RED}failed${COLOR_END}"
+        exit 1
     fi
-    echo " done"
-    [ -s ${program_init} ] && ln -s ${program_init} /usr/bin/${program_name}
-    ${program_init} start
-    fun_clangcn
-    #install successfully
+fi
+chmod +x "${program_init}"
+echo " done"
+
+echo -n "setting ${program_name} boot ..."
+chmod +x "${program_init}"
+if [ "${OS}" == 'CentOS' ]; then
+    chkconfig --add "${program_name}"
+else
+    update-rc.d -f "${program_name}" defaults
+fi
+echo " done"
+
+[ -s "${program_init}" ] && ln -s "${program_init}" "/usr/bin/${program_name}"
+"${program_init}" start
+fun_clangcn
+print_install_success() {
     echo ""
     echo "Congratulations, ${program_name} install completed!"
     echo "================================================"
+}
+
+print_server_info() {
     echo -e "You Server IP      : ${COLOR_GREEN}${defIP}${COLOR_END}"
     echo -e "Bind port          : ${COLOR_GREEN}${set_bind_port}${COLOR_END}"
     echo -e "KCP support        : ${COLOR_GREEN}${set_kcp}${COLOR_END}"
@@ -657,250 +634,222 @@ fi
     echo -e "Log level          : ${COLOR_GREEN}${str_log_level}${COLOR_END}"
     echo -e "Log max days       : ${COLOR_GREEN}${set_log_max_days}${COLOR_END}"
     echo -e "Log file           : ${COLOR_GREEN}${str_log_file_flag}${COLOR_END}"
-    echo "================================================"
+}
+
+print_dashboard_info() {
     echo -e "${program_name} Dashboard     : ${COLOR_GREEN}http://${set_subdomain_host}:${set_dashboard_port}/${COLOR_END}"
     echo -e "Dashboard user     : ${COLOR_GREEN}${set_dashboard_user}${COLOR_END}"
     echo -e "Dashboard password : ${COLOR_GREEN}${set_dashboard_pwd}${COLOR_END}"
+}
+
+print_management_instructions() {
     echo "================================================"
-    echo ""
     echo -e "${program_name} status manage : ${COLOR_PINKBACK_WHITEFONT}${program_name}${COLOR_END} {${COLOR_GREEN}start|stop|restart|status|config|version${COLOR_END}}"
     echo -e "Example:"
     echo -e "  start: ${COLOR_PINK}${program_name}${COLOR_END} ${COLOR_GREEN}start${COLOR_END}"
     echo -e "   stop: ${COLOR_PINK}${program_name}${COLOR_END} ${COLOR_GREEN}stop${COLOR_END}"
     echo -e "restart: ${COLOR_PINK}${program_name}${COLOR_END} ${COLOR_GREEN}restart${COLOR_END}"
-    exit 0
 }
-############################### configure ##################################
-configure_program_server_clang(){
-    if [ -s ${str_program_dir}/${program_config_file} ]; then
-        vi ${str_program_dir}/${program_config_file}
+
+# Call the functions in the main block
+print_install_success
+print_server_info
+print_dashboard_info
+print_management_instructions
+exit 0
+configure_program_server_clang() {
+    local config_file="${str_program_dir}/${program_config_file}"
+
+    if [ -s "$config_file" ]; then
+        vi "$config_file"
     else
-        echo "${program_name} configuration file not found!"
-        exit 1
+        echo "${program_name} configuration file not found: $config_file"
+        return 1
     fi
 }
-############################### uninstall ##################################
-uninstall_program_server_clang(){
+uninstall_program_server_clang() {
+    local program_init="${program_init}"
+    local program_dir="${str_program_dir}"
+    local program_name="${program_name}"
+
     fun_clangcn
-    if [ -s ${program_init} ] || [ -s ${str_program_dir}/${program_name} ] ; then
-        echo "============== Uninstall ${program_name} =============="
-        str_uninstall="n"
-        echo -n -e "${COLOR_YELOW}You want to uninstall?${COLOR_END}"
-        read -e -p "[Y/N]:" str_uninstall
-        case "${str_uninstall}" in
-        [yY]|[yY][eE][sS])
-        echo ""
-        echo "You select [Yes], press any key to continue."
-        str_uninstall="y"
-        char=`get_char`
-        ;;
-        *)
-        echo ""
-        str_uninstall="n"
+
+    if [ -s "$program_init" ] || [ -s "$program_dir/$program_name" ]; then
+        echo "============== Uninstall $program_name =============="
+        read -rp "${COLOR_YELLOW}You want to uninstall? [Y/N]: ${COLOR_END}" str_uninstall
+
+        case "${str_uninstall,,}" in
+            [yY]*)
+                echo "You select [Yes], press any key to continue."
+                read -rn1
+                checkos
+
+                "$program_init" stop
+
+                if [ "$OS" == 'CentOS' ]; then
+                    chkconfig --del "$program_name"
+                else
+                    update-rc.d -f "$program_name" remove
+                fi
+
+                rm -f "$program_init" "/var/run/$program_name.pid" "/usr/bin/$program_name"
+                rm -rf "$program_dir"
+                echo "$program_name uninstall success!"
+            ;;
+            *)
+                echo "You select [No], exiting."
+            ;;
         esac
-        if [ "${str_uninstall}" == 'n' ]; then
-            echo "You select [No],shell exit!"
-        else
-            checkos
-            ${program_init} stop
-            if [ "${OS}" == 'CentOS' ]; then
-                chkconfig --del ${program_name}
-            else
-                update-rc.d -f ${program_name} remove
-            fi
-            rm -f ${program_init} /var/run/${program_name}.pid /usr/bin/${program_name}
-            rm -fr ${str_program_dir}
-            echo "${program_name} uninstall success!"
-        fi
     else
-        echo "${program_name} Not install!"
+        echo "$program_name is not installed!"
     fi
-    exit 0
+
+    return 0
 }
-############################### update ##################################
-update_config_clang(){
+update_config_clang() {
     if [ ! -r "${str_program_dir}/${program_config_file}" ]; then
         echo "config file ${str_program_dir}/${program_config_file} not found."
-    else
-        search_dashboard_user=`grep "dashboard_user" ${str_program_dir}/${program_config_file}`
-        search_dashboard_pwd=`grep "dashboard_pwd" ${str_program_dir}/${program_config_file}`
-        search_kcp_bind_port=`grep "kcp_bind_port" ${str_program_dir}/${program_config_file}`
-        search_tcp_mux=`grep "tcp_mux" ${str_program_dir}/${program_config_file}`
-        search_token=`grep "privilege_token" ${str_program_dir}/${program_config_file}`
-        search_allow_ports=`grep "privilege_allow_ports" ${str_program_dir}/${program_config_file}`
-        if [ -z "${search_dashboard_user}" ] || [ -z "${search_dashboard_pwd}" ] || [ -z "${search_kcp_bind_port}" ] || [ -z "${search_tcp_mux}" ] || [ ! -z "${search_token}" ] || [ ! -z "${search_allow_ports}" ];then
-            echo -e "${COLOR_GREEN}Configuration files need to be updated, now setting:${COLOR_END}"
-            echo ""
-            if [ ! -z "${search_token}" ];then
-                sed -i "s/privilege_token/token/" ${str_program_dir}/${program_config_file}
-            fi
-            if [ -z "${search_dashboard_user}" ] && [ -z "${search_dashboard_pwd}" ];then
-                def_dashboard_user_update="admin"
-                read -e -p "Please input dashboard_user (Default: ${def_dashboard_user_update}):" set_dashboard_user_update
-                [ -z "${set_dashboard_user_update}" ] && set_dashboard_user_update="${def_dashboard_user_update}"
-                echo "${program_name} dashboard_user: ${set_dashboard_user_update}"
-                echo ""
-                def_dashboard_pwd_update=`fun_randstr 8`
-                read -e -p "Please input dashboard_pwd (Default: ${def_dashboard_pwd_update}):" set_dashboard_pwd_update
-                [ -z "${set_dashboard_pwd_update}" ] && set_dashboard_pwd_update="${def_dashboard_pwd_update}"
-                echo "${program_name} dashboard_pwd: ${set_dashboard_pwd_update}"
-                echo ""
-                sed -i "/dashboard_port =.*/a\dashboard_user = ${set_dashboard_user_update}\ndashboard_pwd = ${set_dashboard_pwd_update}\n" ${str_program_dir}/${program_config_file}
-            fi
-            if [ -z "${search_kcp_bind_port}" ];then 
-                echo -e "${COLOR_GREEN}Please select kcp support${COLOR_END}"
-                echo "1: enable (default)"
-                echo "2: disable"
-                echo "-------------------------"  
-                read -e -p "Enter your choice (1, 2 or exit. default [1]): " str_kcp
-                case "${str_kcp}" in
-                    1|[yY]|[yY][eE][sS]|[oO][nN]|[tT][rR][uU][eE]|[eE][nN][aA][bB][lL][eE])
-                        set_kcp="true"
-                        ;;
-                    0|2|[nN]|[nN][oO]|[oO][fF][fF]|[fF][aA][lL][sS][eE]|[dD][iI][sS][aA][bB][lL][eE])
-                        set_kcp="false"
-                        ;;
-                    [eE][xX][iI][tT])
-                        exit 1
-                        ;;
-                    *)
-                        set_kcp="true"
-                        ;;
-                esac
-                echo "kcp support: ${set_kcp}"
-                def_kcp_bind_port=( $( __readINI ${str_program_dir}/${program_config_file} common bind_port ) )
-                if [[ "${set_kcp}" == "false" ]]; then
-                    sed -i "/^bind_port =.*/a\# udp port used for kcp protocol, it can be same with 'bind_port'\n# if not set, kcp is disabled in frps\n#kcp_bind_port = ${def_kcp_bind_port}\n" ${str_program_dir}/${program_config_file}
-                else
-                    sed -i "/^bind_port =.*/a\# udp port used for kcp protocol, it can be same with 'bind_port'\n# if not set, kcp is disabled in frps\nkcp_bind_port = ${def_kcp_bind_port}\n" ${str_program_dir}/${program_config_file}
-                fi
-            fi
-            if [ -z "${search_tcp_mux}" ];then
-                echo "# Please select tcp_mux "
-                echo "1: enable (default)"
-                echo "2: disable"
-                echo "-------------------------"  
-                read -e -p "Enter your choice (1, 2 or exit. default [1]): " str_tcp_mux
-                case "${str_tcp_mux}" in
-                    1|[yY]|[yY][eE][sS]|[oO][nN]|[tT][rR][uU][eE]|[eE][nN][aA][bB][lL][eE])
-                        set_tcp_mux="true"
-                        ;;
-                    0|2|[nN]|[nN][oO]|[oO][fF][fF]|[fF][aA][lL][sS][eE]|[dD][iI][sS][aA][bB][lL][eE])
-                        set_tcp_mux="false"
-                        ;;
-                    [eE][xX][iI][tT])
-                        exit 1
-                        ;;
-                    *)
-                        set_tcp_mux="true"
-                        ;;
-                esac
-                echo "tcp_mux: ${set_tcp_mux}"
-                sed -i "/^privilege_mode = true/d" ${str_program_dir}/${program_config_file}
-                sed -i "/^token =.*/a\# if tcp stream multiplexing is used, default is true\ntcp_mux = ${set_tcp_mux}\n" ${str_program_dir}/${program_config_file}
-            fi
-            if [ ! -z "${search_allow_ports}" ];then
-                sed -i "s/privilege_allow_ports/allow_ports/" ${str_program_dir}/${program_config_file}
+        return 1
+    fi
+
+    # Search for configuration parameters
+    search_dashboard_user=$(grep "dashboard_user" "${str_program_dir}/${program_config_file}")
+    search_dashboard_pwd=$(grep "dashboard_pwd" "${str_program_dir}/${program_config_file}")
+    search_kcp_bind_port=$(grep "kcp_bind_port" "${str_program_dir}/${program_config_file}")
+    search_tcp_mux=$(grep "tcp_mux" "${str_program_dir}/${program_config_file}")
+    search_token=$(grep "privilege_token" "${str_program_dir}/${program_config_file}")
+    search_allow_ports=$(grep "privilege_allow_ports" "${str_program_dir}/${program_config_file}")
+
+    # Check if configuration needs to be updated
+    if [ -z "${search_dashboard_user}" ] || [ -z "${search_dashboard_pwd}" ] || [ -z "${search_kcp_bind_port}" ] || [ -z "${search_tcp_mux}" ] || [ -n "${search_token}" ] || [ -n "${search_allow_ports}" ]; then
+        echo -e "${COLOR_GREEN}Configuration files need to be updated, now setting:${COLOR_END}"
+
+        # Update 'privilege_token' to 'token'
+        if [ -n "${search_token}" ]; then
+            sed -i "s/privilege_token/token/" "${str_program_dir}/${program_config_file}"
+        fi
+
+        # Update 'dashboard_user' and 'dashboard_pwd'
+        if [ -z "${search_dashboard_user}" ] && [ -z "${search_dashboard_pwd}" ]; then
+            def_dashboard_user_update="admin"
+            read -e -p "Please input dashboard_user (Default: ${def_dashboard_user_update}):" set_dashboard_user_update
+            [ -z "${set_dashboard_user_update}" ] && set_dashboard_user_update="${def_dashboard_user_update}"
+            echo "${program_name} dashboard_user: ${set_dashboard_user_update}"
+
+            def_dashboard_pwd_update=$(fun_randstr 8)
+            read -e -p "Please input dashboard_pwd (Default: ${def_dashboard_pwd_update}):" set_dashboard_pwd_update
+            [ -z "${set_dashboard_pwd_update}" ] && set_dashboard_pwd_update="${def_dashboard_pwd_update}"
+            echo "${program_name} dashboard_pwd: ${set_dashboard_pwd_update}"
+
+            sed -i "/dashboard_port =.*/a\dashboard_user = ${set_dashboard_user_update}\ndashboard_pwd = ${set_dashboard_pwd_update}\n" "${str_program_dir}/${program_config_file}"
+        fi
+
+        # Update 'kcp_bind_port'
+        if [ -z "${search_kcp_bind_port}" ]; then
+            set_kcp=$(ask_user_input "Please select kcp support" "1: enable (default)" "2: disable" "1")
+            def_kcp_bind_port=$(__readINI "${str_program_dir}/${program_config_file}" common bind_port)
+            if [ "$set_kcp" == "false" ]; then
+                sed -i "/^bind_port =.*/a\# udp port used for kcp protocol, it can be same with 'bind_port'\n# if not set, kcp is disabled in frps\n#kcp_bind_port = ${def_kcp_bind_port}\n" "${str_program_dir}/${program_config_file}"
+            else
+                sed -i "/^bind_port =.*/a\# udp port used for kcp protocol, it can be same with 'bind_port'\n# if not set, kcp is disabled in frps\nkcp_bind_port = ${def_kcp_bind_port}\n" "${str_program_dir}/${program_config_file}"
             fi
         fi
-        verify_dashboard_user=`grep "^dashboard_user" ${str_program_dir}/${program_config_file}`
-        verify_dashboard_pwd=`grep "^dashboard_pwd" ${str_program_dir}/${program_config_file}`
-        verify_kcp_bind_port=`grep "kcp_bind_port" ${str_program_dir}/${program_config_file}`
-        verify_tcp_mux=`grep "^tcp_mux" ${str_program_dir}/${program_config_file}`
-        verify_token=`grep "privilege_token" ${str_program_dir}/${program_config_file}`
-        verify_allow_ports=`grep "privilege_allow_ports" ${str_program_dir}/${program_config_file}`
-        if [ ! -z "${verify_dashboard_user}" ] && [ ! -z "${verify_dashboard_pwd}" ] && [ ! -z "${verify_kcp_bind_port}" ] && [ ! -z "${verify_tcp_mux}" ] && [ -z "${verify_token}" ] && [ -z "${verify_allow_ports}" ];then
-            echo -e "${COLOR_GREEN}update configuration file successfully!!!${COLOR_END}"
-        else
-            echo -e "${COLOR_RED}update configuration file error!!!${COLOR_END}"
+
+        # Update 'tcp_mux'
+        if [ -z "${search_tcp_mux}" ]; then
+            set_tcp_mux=$(ask_user_input "Please select tcp_mux" "1: enable (default)" "2: disable" "1")
+            sed -i "/^privilege_mode = true/d" "${str_program_dir}/${program_config_file}"
+            sed -i "/^token =.*/a\# if tcp stream multiplexing is used, default is true\ntcp_mux = ${set_tcp_mux}\n" "${str_program_dir}/${program_config_file}"
+        fi
+
+        # Update 'privilege_allow_ports' to 'allow_ports'
+        if [ -n "${search_allow_ports}" ]; then
+            sed -i "s/privilege_allow_ports/allow_ports/" "${str_program_dir}/${program_config_file}"
         fi
     fi
+
+    # Verify the updated configuration
+    verify_dashboard_user=$(grep "^dashboard_user" "${str_program_dir}/${program_config_file}")
+    verify_dashboard_pwd=$(grep "^dashboard_pwd" "${str_program_dir}/${program_config_file}")
+    verify_kcp_bind_port=$(grep "kcp_bind_port" "${str_program_dir}/${program_config_file}")
+    verify_tcp_mux=$(grep "^tcp_mux" "${str_program_dir}/${program_config_file}")
+    verify_token=$(grep "privilege_token" "${str_program_dir}/${program_config_file}")
+    verify_allow_ports=$(grep "privilege_allow_ports" "${str_program_dir}/${program_config_file}")
+
+    if [ -n "${verify_dashboard_user}" ] && [ -n "${verify_dashboard_pwd}" ] && [ -n "${verify_kcp_bind_port}" ] && [ -n "${verify_tcp_mux}" ] && [ -z "${verify_token}" ] && [ -z "${verify_allow_ports}" ]; then
+        echo -e "${COLOR_GREEN}Update configuration file successfully!!!${COLOR_END}"
+    else
+        echo -e "${COLOR_RED}Update configuration file error!!!${COLOR_END}"
+    fi
 }
-update_program_server_clang(){
-    fun_clangcn "clear"
-    if [ -s ${program_init} ] || [ -s ${str_program_dir}/${program_name} ] ; then
+
+# Helper function to ask user for input with default value
+ask_user_input() {
+    local prompt="$1"
+    local option1="$2"
+    local option2="$3"
+    local default="$4"
+
+    echo "$prompt"
+    echo "$option1"
+    echo "$option2"
+    echo "-------------------------"
+    read -e -p "Enter your choice (1, 2 or exit. default [$default]): " user_input
+    case "$user_input" in
+        1|[yY]|[yY][eE][sS]|[oO][nN]|[tT][rR][uU][eE]|[eE][nN][aA][bB][lL][eE])
+            echo "$option1"
+            echo "$option1" | sed 's/\([^(]*\) (.*/\1/'
+            ;;
+        0|2|[nN]|[nN][oO]|[oO][fF][fF]|[fF][aA][lL][sS][eE]|[dD][iI][sS][aA][bB][lL][eE])
+            echo "$option2"
+            echo "$option2" | sed 's/\([^(]*\) (.*/\1/'
+            ;;
+        [eE][xX][iI][tT])
+            exit 1
+            ;;
+        *)
+            echo "$option1"
+            echo "$option1" | sed 's/\([^(]*\) (.*/\1/'
+            ;;
+    esac
+}
+update_program_server_clang() {
+    clear_screen
+    if [ -s "${program_init}" ] || [ -s "${str_program_dir}/${program_name}" ]; then
         echo "============== Update ${program_name} =============="
         update_config_clang
-        checkos
-        check_centosversion
+        check_os
+        check_centos_version
         check_os_bit
-    fun_getVer
-        remote_init_version=`wget  -qO- ${FRPS_INIT} | sed -n '/'^version'/p' | cut -d\" -f2`
-        local_init_version=`sed -n '/'^version'/p' ${program_init} | cut -d\" -f2`
-        install_shell=${strPath}
-        if [ ! -z ${remote_init_version} ];then
-            if [[ "${local_init_version}" != "${remote_init_version}" ]];then
-                echo "========== Update ${program_name} ${program_init} =========="
-                if ! wget  ${FRPS_INIT} -O ${program_init}; then
-                    echo "Failed to download ${program_name}.init file!"
-                    exit 1
-                else
-                    echo -e "${COLOR_GREEN}${program_init} Update successfully !!!${COLOR_END}"
-                fi
+        get_version_info
+        if [ -n "${remote_init_version}" ] && [ "${local_init_version}" != "${remote_init_version}" ]; then
+            echo "========== Update ${program_name} ${program_init} =========="
+            if ! download_file "${FRPS_INIT}" "${program_init}"; then
+                echo "Failed to download ${program_name}.init file!" >&2
+                return 1
+            else
+                echo -e "${COLOR_GREEN}${program_init} Update successfully !!!${COLOR_END}"
             fi
         fi
-        [ ! -d ${str_program_dir} ] && mkdir -p ${str_program_dir}
+        create_program_directory
         echo -e "Loading network version for ${program_name}, please wait..."
-     fun_getServer
-        fun_getVer >/dev/null 2>&1
-        local_program_version=`${str_program_dir}/${program_name} --version`
-        echo -e "${COLOR_GREEN}${program_name}  local version ${local_program_version}${COLOR_END}"
+        download_program
+        get_version_info >/dev/null 2>&1
+        echo -e "${COLOR_GREEN}${program_name} local version ${local_program_version}${COLOR_END}"
         echo -e "${COLOR_GREEN}${program_name} remote version ${FRPS_VER}${COLOR_END}"
-        if [[ "${local_program_version}" != "${FRPS_VER}" ]];then
-            echo -e "${COLOR_GREEN}Found a new version,update now!!!${COLOR_END}"
-            ${program_init} stop
-            sleep 1
-            rm -f /usr/bin/${program_name} ${str_program_dir}/${program_name}
-     fun_download_file
-            if [ "${OS}" == 'CentOS' ]; then
-                chmod +x ${program_init}
-                chkconfig --add ${program_name}
-            else
-                chmod +x ${program_init}
-                update-rc.d -f ${program_name} defaults
-            fi
-            [ -s ${program_init} ] && ln -s ${program_init} /usr/bin/${program_name}
-            [ ! -x ${program_init} ] && chmod 755 ${program_init}
-            ${program_init} start
+        if [ "${local_program_version}" != "${FRPS_VER}" ]; then
+            echo -e "${COLOR_GREEN}Found a new version, updating now!!!${COLOR_END}"
+            stop_program
+            remove_program_files
+            install_program
+            start_program
             echo "${program_name} version `${str_program_dir}/${program_name} --version`"
             echo "${program_name} update success!"
         else
-                echo -e "no need to update !!!${COLOR_END}"
+            echo -e "no need to update !!!${COLOR_END}"
         fi
     else
-        echo "${program_name} Not install!"
+        echo "${program_name} Not installed!"
     fi
-    exit 0
+    return 0
 }
-clear
-strPath=`pwd`
-rootness
-fun_set_text_color
-checkos
-check_centosversion
-check_os_bit
-pre_install_packs
-shell_update
-# Initialization
-action=$1
-[  -z $1 ]
-case "$action" in
-install)
-    pre_install_clang 2>&1 | tee /root/${program_name}-install.log
-    ;;
-config)
-    configure_program_server_clang
-    ;;
-uninstall)
-    uninstall_program_server_clang 2>&1 | tee /root/${program_name}-uninstall.log
-    ;;
-update)
-    update_program_server_clang 2>&1 | tee /root/${program_name}-update.log
-    ;;
-*)
-    fun_clangcn
-    echo "Arguments error! [${action} ]"
-    echo "Usage: `basename $0` {install|uninstall|update|config}"
-    RET_VAL=1
-    ;;
-esac
