@@ -171,69 +171,74 @@ fun_randstr() {
     local length="${1:-16}"
     echo "$(tr -cd '[:alnum:]' < /dev/urandom | fold -w "$length" | head -n1)"
 }
-fun_getServer(){
-    def_server_url="github"
-    echo ""
+fun_getServer() {
+    local def_server_url="github"
+    local set_server_url
+
     echo -e "Please select ${program_name} download url:"
-    echo -e "[1].gitee"
-    echo -e "[2].github (default)"
-    read -e -p "Enter your choice (1, 2 or exit. default [${def_server_url}]): " set_server_url
-    [ -z "${set_server_url}" ] && set_server_url="${def_server_url}"
-    case "${set_server_url}" in
-        1|[Ga][Ii][Tt][Ee][Ee])
-            program_download_url=${gitee_download_url};
+    echo -e "[1] gitee"
+    echo -e "[2] github (default)"
+    read -rp "Enter your choice (1, 2 or exit. default [${def_server_url}]): " set_server_url
+
+    case "${set_server_url:-2}" in
+        1|[Gg][Ii][Tt][Ee][Ee])
+            program_download_url="${gitee_download_url}"
             choice=1
             ;;
         2|[Gg][Ii][Tt][Hh][Uu][Bb])
-            program_download_url=${github_download_url};
+            program_download_url="${github_download_url}"
             choice=2
             ;;
         [eE][xX][iI][tT])
             exit 1
             ;;
         *)
-            program_download_url=${github_download_url}
+            program_download_url="${github_download_url}"
             ;;
     esac
-    echo    "-----------------------------------"
-    echo -e "       Your select: ${COLOR_YELOW}${set_server_url}${COLOR_END}    "
-    echo    "-----------------------------------"
+
+    echo -e "       Your select: ${COLOR_YELOW}${set_server_url:-$def_server_url}${COLOR_END}"
+    echo "-----------------------------------"
 }
-fun_getVer(){
+
+fun_getVer() {
     echo -e "Loading network version for ${program_name}, please wait..."
-    case $choice in
-        1)  LATEST_RELEASE=$(curl -s ${gitee_latest_version_api} | grep -oP '"tag_name":"\Kv[^"]+' | cut -c2-);;
-        2)  LATEST_RELEASE=$(curl -s ${github_latest_version_api} | grep '"tag_name":' | cut -d '"' -f 4 | cut -c 2-);;
+
+    case "$choice" in
+        1)  LATEST_RELEASE=$(curl -s "${gitee_latest_version_api}" | grep -oP '"tag_name":"\Kv[^"]+' | cut -c2-) ;;
+        2)  LATEST_RELEASE=$(curl -s "${github_latest_version_api}" | grep '"tag_name":' | cut -d '"' -f 4 | cut -c 2-) ;;
     esac
-    if [[ ! -z "$LATEST_RELEASE" ]]; then
+
+    if [ -n "$LATEST_RELEASE" ]; then
         FRPS_VER="$LATEST_RELEASE"
         echo "FRPS_VER set to: $FRPS_VER"
     else
         echo "Failed to retrieve the latest version."
     fi
+
     program_latest_filename="frp_${FRPS_VER}_linux_${ARCHS}.tar.gz"
     program_latest_file_url="${program_download_url}/v${FRPS_VER}/${program_latest_filename}"
-    if [ -z "${program_latest_filename}" ]; then
-        echo -e "${COLOR_RED}Load network version failed!!!${COLOR_END}"
-    else
-        echo -e "${program_name} Latest release file ${COLOR_GREEN}${program_latest_filename}${COLOR_END}"
-    fi
+
+    echo -e "${program_name} Latest release file ${COLOR_GREEN}${program_latest_filename}${COLOR_END}"
 }
-fun_download_file(){
-    # download
-    if [ ! -s ${str_program_dir}/${program_name} ]; then
-        rm -fr ${program_latest_filename} frp_${FRPS_VER}_linux_${ARCHS}
-        if ! wget  -q ${program_latest_file_url} -O ${program_latest_filename}; then
+
+fun_download_file() {
+    local program_path="${str_program_dir}/${program_name}"
+
+    if [ ! -s "$program_path" ]; then
+        rm -rf "$program_latest_filename" "frp_${FRPS_VER}_linux_${ARCHS}"
+        if ! wget -q "$program_latest_file_url" -O "$program_latest_filename"; then
             echo -e " ${COLOR_RED}failed${COLOR_END}"
             exit 1
         fi
-        tar xzf ${program_latest_filename}
-        mv frp_${FRPS_VER}_linux_${ARCHS}/frps ${str_program_dir}/${program_name}
-        rm -fr ${program_latest_filename} frp_${FRPS_VER}_linux_${ARCHS}
+        tar xzf "$program_latest_filename"
+        mv "frp_${FRPS_VER}_linux_${ARCHS}/frps" "$program_path"
+        rm -rf "$program_latest_filename" "frp_${FRPS_VER}_linux_${ARCHS}"
     fi
-    chown root:root -R ${str_program_dir}
-    if [ -s ${str_program_dir}/${program_name} ]; then
-        [ ! -x ${str_program_dir}/${program_name} ] && chmod 755 ${str_program_dir}/${program_name}
+
+    chown root:root -R "${str_program_dir}"
+    if [ -s "$program_path" ]; then
+        [ ! -x "$program_path" ] && chmod 755 "$program_path"
     else
         echo -e " ${COLOR_RED}failed${COLOR_END}"
         exit 1
