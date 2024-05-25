@@ -841,8 +841,7 @@ update_program_server_clang(){
         remote_init_version=`wget  -qO- ${FRPS_INIT} | sed -n '/'^version'/p' | cut -d\" -f2`
         local_init_version=`sed -n '/'^version'/p' ${program_init} | cut -d\" -f2`
         install_shell=${strPath}
-# Check if the remote_init_version variable is not empty
-if [ -n "${remote_init_version}" ]; then
+        if [ ! -z ${remote_init_version} ];then
             if [[ "${local_init_version}" != "${remote_init_version}" ]];then
                 echo "========== Update ${program_name} ${program_init} =========="
                 if ! wget  ${FRPS_INIT} -O ${program_init}; then
