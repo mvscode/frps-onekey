@@ -1,3 +1,4 @@
+#!/bin/bash
 #! /bin/bash
 # chkconfig: 2345 55 25
 # Description: Startup script for frps on Debian. Place in /etc/init.d and
@@ -22,156 +23,89 @@ PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 ProgramName="Frps"
 ProgramPath="/usr/local/frps"
 NAME=frps
-BIN="${ProgramPath}/${NAME}"
-CONFIGFILE="${ProgramPath}/frps.ini"
-SCRIPTNAME="/etc/init.d/${NAME}"
+BIN=${ProgramPath}/${NAME}
+CONFIGFILE=${ProgramPath}/frps.ini
+SCRIPTNAME=/etc/init.d/${NAME}
 version="2023"
-program_version=$("${BIN}" --version)
+program_version=$(${BIN} --version)
 RET_VAL=0
 
-[ -x "${BIN}" ] || exit 0
+[ -x ${BIN} ] || exit 0
 
-fun_clangcn() {
-    echo ""
+function clangcn() {
     echo "+---------------------------------------------------------+"
     echo "|     Manager for ${ProgramName}, Author Clang, Mender MvsCode      |"
     echo "+---------------------------------------------------------+"
-    echo ""
 }
 
-fun_check_run() {
-    if pgrep -f "${BIN}" >/dev/null; then
-        return 0
-    else
-        return 1
-    fi
+function check_run() {
+    PID=$(pgrep -f "${BIN}")
+    [ -n "$PID" ]
 }
 
-fun_load_config() {
-    if [ ! -r "${CONFIGFILE}" ]; then
-        echo "config file ${CONFIGFILE} not found"
-        return 1
-    fi
+function load_config() {
+    [ -r "${CONFIGFILE}" ] || { echo "config file ${CONFIGFILE} not found"; return 1; }
 }
 
-fun_start() {
-    if [ "${arg1}" = "start" ]; then
-        fun_clangcn
-    fi
-
-    if fun_check_run; then
-        echo "${ProgramName} is already running."
-        return 0
-    fi
-
-    fun_load_config
-
-    echo -n "Starting ${ProgramName} (${program_version})..."
-    "${BIN}" -c "${CONFIGFILE}" >/dev/null 2>&1 &
+function start() {
+    [ "${1}" = "start" ] && clangcn
+    check_run && { echo "${ProgramName} (pid $PID) already running."; return 0; }
+    load_config || return 1
+    echo -n "Starting ${ProgramName}(${program_version})..."
+    ${BIN} -c "${CONFIGFILE}" >/dev/null 2>&1 &
     sleep 1
-
-    if ! fun_check_run; then
-        echo "start failed"
-        return 1
-    fi
-
-    echo "done"
-    echo "${ProgramName} is running."
-    return 0
+    ! check_run && { echo "start failed"; return 1; }
+    echo " done"
+    echo "${ProgramName} (pid $PID) is running."
 }
 
-fun_stop() {
-    if [ "${arg1}" = "stop" ] || [ "${arg1}" = "restart" ]; then
-        fun_clangcn
-    fi
-
-    if fun_check_run; then
-        echo -n "Stopping ${ProgramName}... "
-        killall -q "${NAME}"
-        
-        if [ "$?" != 0 ]; then
-            echo "failed"
-            return 1
-        else
-            echo "done"
-        fi
-    else
-        echo "${ProgramName} is not running."
-    fi
-
-    return 0
+function stop() {
+    [ "${1}" = "stop" ] || [ "${1}" = "restart" ] && clangcn
+    check_run || { echo "${ProgramName} is not running."; return 0; }
+    echo -n "Stopping ${ProgramName} (pid $PID)... "
+    kill $PID
+    [ "$?" -eq 0 ] && echo " done" || echo " failed"
 }
 
-fun_restart() {
-    fun_stop
-    fun_start
+function restart() {
+    stop restart
+    start restart
 }
 
-fun_status() {
-    if fun_check_run; then
-        echo "${ProgramName} is running..."
-    else
-        echo "${ProgramName} is stopped"
-        exit 0
-    fi
+function status() {
+    PID=$(pgrep -f "${BIN}")
+    [ -n "$PID" ] && echo "${ProgramName} (pid $PID) is running..." || echo "${ProgramName} is stopped"
 }
 
-checkos() {
-    if grep -Eqi "CentOS" /etc/issue || grep -Eq "CentOS" /etc/*-release; then
-        OS=CentOS
-    elif grep -Eqi "Debian" /etc/issue || grep -Eq "Debian" /etc/*-release; then
-        OS=Debian
-    elif grep -Eqi "Ubuntu" /etc/issue || grep -Eq "Ubuntu" /etc/*-release; then
-        OS=Ubuntu
-    elif grep -Eqi "Alpine" /etc/issue || grep -Eq "Alpine" /etc/*-release; then
-        OS=Alpine
-    elif grep -Eqi "Fedora" /etc/issue || grep -Eq "Fedora" /etc/*-release; then
-        OS=Fedora
-    else
-        echo "Not supported OS. Please reinstall the OS and retry!"
-        return 1
-    fi
+function config() {
+    [ -s "${CONFIGFILE}" ] && vi "${CONFIGFILE}" || echo "${ProgramName} configuration file not found!"
 }
 
-fun_config() {
-    if [ -s "${CONFIGFILE}" ]; then
-        vi "${CONFIGFILE}"
-    else
-        echo "${ProgramName} configuration file not found!"
-        return 1
-    fi
-}
-
-fun_version() {
+function version() {
     echo "${ProgramName} version ${program_version}"
-    return 0
 }
 
-fun_help() {
-    "${BIN}" --help
-    return 0
+function help() {
+    ${BIN} --help
 }
 
-arg1=$1
-[ -z "${arg1}" ]
-case "${arg1}" in
-start|stop|restart|status|config)
-    fun_"${arg1}"
-    ;;
-[vV][eE][rR][sS][iI][oO][nN]|-[vV][eE][rR][sS][iI][oO][nN]|--[vV][eE][rR][sS][iI][oO][nN]|-[vV]|--[vV])
-    fun_version
-    ;;
-[Cc]|[Cc][Oo][Nn][Ff]|[Cc][Oo][Nn][Ff][Ii][Gg]|-[Cc]|-[Cc][Oo][Nn][Ff]|-[Cc][Oo][Nn][Ff][Ii][Gg]|--[Cc]|--[Cc][Oo][Nn][Ff]|--[Cc][Oo][Nn][Ff][Ii][Gg])
-    fun_config
-    ;;
-[Hh]|[Hh][Ee][Ll][Pp]|-[Hh]|-[Hh][Ee][Ll][Pp]|--[Hh]|--[Hh][Ee][Ll][Pp])
-    fun_help
-    ;;
-*)
-    fun_clangcn
-    echo "Usage: $SCRIPTNAME {start|stop|restart|status|config|version}"
-    RET_VAL=1
-    ;;
+case "${1:-}" in
+    start|stop|restart|status|config)
+        "$1"
+        ;;
+    [vV][eE][rR][sS][iI][oO][nN]|-[vV][eE][rR][sS][iI][oO][nN]|--[vV][eE][rR][sS][iI][oO][nN]|-[vV]|--[vV])
+        version
+        ;;
+    [Cc]|[Cc][Oo][Nn][Ff]|[Cc][Oo][Nn][Ff][iI][Gg]|-[Cc]|-[Cc][Oo][Nn][Ff]|-[Cc][Oo][Nn][Ff][iI][Gg]|--[Cc]|--[Cc][Oo][Nn][Ff]|--[Cc][Oo][Nn][Ff][iI][Gg])
+        config
+        ;;
+    [Hh]|[Hh][Ee][Ll][Pp]|-[Hh]|-[Hh][Ee][Ll][Pp]|--[Hh]|--[Hh][Ee][Ll][Pp])
+        help
+        ;;
+    *)
+        clangcn
+        echo "Usage: $SCRIPTNAME {start|stop|restart|status|config|version}"
+        RET_VAL=1
+        ;;
 esac
-
 exit $RET_VAL
