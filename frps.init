@@ -1,13 +1,15 @@
 #!/bin/bash
-# chkconfig: 2345 55 25
-# Description: Startup script for frps on Debian. Place in /etc/init.d and
-# run 'update-rc.d -f frps defaults', or use the appropriate command on your
-# distro. For CentOS/Redhat run: 'chkconfig --add frps'
+
+# Startup script for frps on Debian
+# Place in /etc/init.d and run 'update-rc.d -f frps defaults'
+# For CentOS/Redhat run: 'chkconfig --add frps'
+
 #=========================================================
 #   System Required:  CentOS/Debian/Ubuntu/Fedora (32bit/64bit)
 #   Description:  Manager for frps, Written by Clang
-#   Mender：MvsCode
+#   Maintainer：MvsCode
 #=========================================================
+
 ### BEGIN INIT INFO
 # Provides:          frps
 # Required-Start:    $all
@@ -18,30 +20,35 @@
 # Description:       starts frps using start-stop
 ### END INIT INFO
 
+# Paths and variables
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
-ProgramName="Frps"
-ProgramPath="/usr/local/frps"
-NAME=frps
-BIN="${ProgramPath}/${NAME}"
-CONFIGFILE="${ProgramPath}/frps.ini"
-SCRIPTNAME="/etc/init.d/${NAME}"
-version="2023"
-program_version=$(${BIN} --version)
+PROGRAM_NAME="Frps"
+PROGRAM_PATH="/usr/local/frps"
+SERVICE_NAME="frps"
+BIN="${PROGRAM_PATH}/${SERVICE_NAME}"
+CONFIGFILE="${PROGRAM_PATH}/frps.ini"
+SCRIPT_NAME="/etc/init.d/${SERVICE_NAME}"
+VERSION="2023"
+PROGRAM_VERSION=$(${BIN} --version)
 RET_VAL=0
 
+# Check if the binary exists
 [ -x "${BIN}" ] || exit 0
 
+# Print the header
 print_header() {
     echo "+---------------------------------------------------------+"
-    echo "|     Manager for ${ProgramName}, Author Clang, Mender MvsCode      |"
+    echo "|     Manager for ${PROGRAM_NAME}, Author Clang, Maintainer MvsCode      |"
     echo "+---------------------------------------------------------+"
 }
 
+# Check if the service is running
 check_run() {
     PID=$(pgrep -f "${BIN}")
     [ -n "$PID" ]
 }
 
+# Load the configuration file
 load_config() {
     if [ ! -r "${CONFIGFILE}" ]; then
         echo "config file ${CONFIGFILE} not found"
@@ -52,11 +59,11 @@ load_config() {
 start() {
     print_header
     if check_run; then
-        echo "${ProgramName} (pid $PID) already running."
+        echo "${PROGRAM_NAME} (pid $PID) already running."
         return 0
     fi
     load_config || return 1
-    echo -n "Starting ${ProgramName} (${program_version})..."
+    echo -n "Starting ${PROGRAM_NAME} (${PROGRAM_VERSION})..."
     ${BIN} -c "${CONFIGFILE}" >/dev/null 2>&1 &
     sleep 1
     if ! check_run; then
@@ -64,16 +71,16 @@ start() {
         return 1
     fi
     echo " done"
-    echo "${ProgramName} (pid $PID) is running."
+    echo "${PROGRAM_NAME} (pid $PID) is running."
 }
 
 stop() {
     print_header
     if ! check_run; then
-        echo "${ProgramName} is not running."
+        echo "${PROGRAM_NAME} is not running."
         return 0
     fi
-    echo -n "Stopping ${ProgramName} (pid $PID)... "
+    echo -n "Stopping ${PROGRAM_NAME} (pid $PID)... "
     kill $PID
     if [ $? -eq 0 ]; then
         echo " done"
@@ -89,9 +96,9 @@ restart() {
 
 status() {
     if check_run; then
-        echo "${ProgramName} (pid $PID) is running..."
+        echo "${PROGRAM_NAME} (pid $PID) is running..."
     else
-        echo "${ProgramName} is stopped"
+        echo "${PROGRAM_NAME} is stopped"
     fi
 }
 
@@ -99,12 +106,12 @@ config() {
     if [ -s "${CONFIGFILE}" ]; then
         vi "${CONFIGFILE}"
     else
-        echo "${ProgramName} configuration file not found!"
+        echo "${PROGRAM_NAME} configuration file not found!"
     fi
 }
 
 version() {
-    echo "${ProgramName} version ${program_version}"
+    echo "${PROGRAM_NAME} version ${PROGRAM_VERSION}"
 }
 
 help() {
@@ -126,7 +133,7 @@ case "${1:-}" in
         ;;
     *)
         print_header
-        echo "Usage: $SCRIPTNAME {start|stop|restart|status|config|version|help}"
+        echo "Usage: $SCRIPT_NAME {start|stop|restart|status|config|version|help}"
         RET_VAL=1
         ;;
 esac
