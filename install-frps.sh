@@ -846,64 +846,72 @@ update_config_clang(){
         fi
     fi
 }
-update_program_server_clang(){
+update_program_server_clang() {
     fun_clangcn "clear"
-    if [ -s ${program_init} ] || [ -s ${str_program_dir}/${program_name} ] ; then
-        echo "============== Update ${program_name} =============="
+
+    if [ -s "$program_init" ] || [ -s "$str_program_dir/$program_name" ]; then
+        echo "============== Update $program_name =============="
         update_config_clang
         checkos
         check_centosversion
         check_os_bit
-    fun_getVer
-        remote_init_version=`wget  -qO- ${FRPS_INIT} | sed -n '/'^version'/p' | cut -d\" -f2`
-        local_init_version=`sed -n '/'^version'/p' ${program_init} | cut -d\" -f2`
-        install_shell=${strPath}
-        if [ ! -z ${remote_init_version} ];then
-            if [[ "${local_init_version}" != "${remote_init_version}" ]];then
-                echo "========== Update ${program_name} ${program_init} =========="
-                if ! wget  ${FRPS_INIT} -O ${program_init}; then
-                    echo "Failed to download ${program_name}.init file!"
+        fun_getVer
+
+        remote_init_version=$(wget -qO- "$FRPS_INIT" | sed -n '/^version/p' | cut -d\" -f2)
+        local_init_version=$(sed -n '/^version/p' "$program_init" | cut -d\" -f2)
+        install_shell="$strPath"
+
+        if [ -n "$remote_init_version" ]; then
+            if [ "$local_init_version" != "$remote_init_version" ]; then
+                echo "========== Update $program_name $program_init =========="
+                if ! wget "$FRPS_INIT" -O "$program_init"; then
+                    echo "Failed to download $program_name.init file!"
                     exit 1
                 else
                     echo -e "${COLOR_GREEN}${program_init} Update successfully !!!${COLOR_END}"
                 fi
             fi
         fi
-        [ ! -d ${str_program_dir} ] && mkdir -p ${str_program_dir}
-        echo -e "Loading network version for ${program_name}, please wait..."
-     fun_getServer
+
+        [ ! -d "$str_program_dir" ] && mkdir -p "$str_program_dir"
+        echo -e "Loading network version for $program_name, please wait..."
+        fun_getServer
         fun_getVer >/dev/null 2>&1
-        local_program_version=`${str_program_dir}/${program_name} --version`
-        echo -e "${COLOR_GREEN}${program_name}  local version ${local_program_version}${COLOR_END}"
-        echo -e "${COLOR_GREEN}${program_name} remote version ${FRPS_VER}${COLOR_END}"
-        if [[ "${local_program_version}" != "${FRPS_VER}" ]];then
-            echo -e "${COLOR_GREEN}Found a new version,update now!!!${COLOR_END}"
-            ${program_init} stop
+        local_program_version="$($str_program_dir/$program_name --version)"
+        echo -e "${COLOR_GREEN}$program_name local version $local_program_version${COLOR_END}"
+        echo -e "${COLOR_GREEN}$program_name remote version $FRPS_VER${COLOR_END}"
+
+        if [ "$local_program_version" != "$FRPS_VER" ]; then
+            echo -e "${COLOR_GREEN}Found a new version, update now!!!${COLOR_END}"
+            "$program_init" stop
             sleep 1
-            rm -f /usr/bin/${program_name} ${str_program_dir}/${program_name}
-     fun_download_file
-            if [ "${OS}" == 'CentOS' ]; then
-                chmod +x ${program_init}
-                chkconfig --add ${program_name}
+            rm -f /usr/bin/$program_name "$str_program_dir/$program_name"
+            fun_download_file
+
+            if [ "$OS" == 'CentOS' ]; then
+                chmod +x "$program_init"
+                chkconfig --add "$program_name"
             else
-                chmod +x ${program_init}
-                update-rc.d -f ${program_name} defaults
+                chmod +x "$program_init"
+                update-rc.d -f "$program_name" defaults
             fi
-            [ -s ${program_init} ] && ln -s ${program_init} /usr/bin/${program_name}
-            [ ! -x ${program_init} ] && chmod 755 ${program_init}
-            ${program_init} start
-            echo "${program_name} version `${str_program_dir}/${program_name} --version`"
-            echo "${program_name} update success!"
+
+            [ -s "$program_init" ] && ln -s "$program_init" /usr/bin/$program_name
+            [ ! -x "$program_init" ] && chmod 755 "$program_init"
+            "$program_init" start
+            echo "$program_name version $($str_program_dir/$program_name --version)"
+            echo "$program_name update success!"
         else
-                echo -e "no need to update !!!${COLOR_END}"
+            echo -e "no need to update !!!${COLOR_END}"
         fi
     else
-        echo "${program_name} Not install!"
+        echo "$program_name Not install!"
     fi
     exit 0
 }
+
 clear
-strPath=`pwd`
+strPath=$(pwd)
 rootness
 fun_set_text_color
 checkos
@@ -911,26 +919,33 @@ check_centosversion
 check_os_bit
 pre_install_packs
 shell_update
+
 # Initialization
 action=$1
-[  -z $1 ]
-case "$action" in
-install)
-    pre_install_clang 2>&1 | tee /root/${program_name}-install.log
-    ;;
-config)
-    configure_program_server_clang
-    ;;
-uninstall)
-    uninstall_program_server_clang 2>&1 | tee /root/${program_name}-uninstall.log
-    ;;
-update)
-    update_program_server_clang 2>&1 | tee /root/${program_name}-update.log
-    ;;
-*)
+if [ -z "$action" ]; then
     fun_clangcn
-    echo "Arguments error! [${action} ]"
-    echo "Usage: `basename $0` {install|uninstall|update|config}"
+    echo "Arguments error! [$action ]"
+    echo "Usage: $(basename "$0") {install|uninstall|update|config}"
     RET_VAL=1
-    ;;
-esac
+else
+    case "$action" in
+    install)
+        pre_install_clang 2>&1 | tee /root/${program_name}-install.log
+        ;;
+    config)
+        configure_program_server_clang
+        ;;
+    uninstall)
+        uninstall_program_server_clang 2>&1 | tee /root/${program_name}-uninstall.log
+        ;;
+    update)
+        update_program_server_clang 2>&1 | tee /root/${program_name}-update.log
+        ;;
+    *)
+        fun_clangcn
+        echo "Arguments error! [$action ]"
+        echo "Usage: $(basename "$0") {install|uninstall|update|config}"
+        RET_VAL=1
+        ;;
+    esac
+fi
