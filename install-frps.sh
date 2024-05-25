@@ -22,13 +22,13 @@ program_init="/etc/init.d/${program_name}"
 program_config_file="frps.ini"
 ver_file="/tmp/.frp_ver.sh"
 str_install_shell="https://raw.githubusercontent.com/Mvscode/frps-onekey/master/install-frps.sh"shell_update(){
-shell_update(){    
-fun_clangcn "clear"
+shell_update(){
+    fun_clangcn "clear"
     echo "Check updates for shell..."
     remote_shell_version=`wget --no-check-certificate -qO- ${str_install_shell} | sed -n '/'^version'/p' | cut -d\" -f2`
     if [ ! -z ${remote_shell_version} ]; then
         if [[ "${version}" != "${remote_shell_version}" ]];then
-            echo -e "${COLOR_GREEN}Found a new version,update now!!!${COLOR_END}"
+            echo -e "${COLOR_GREEN}Found a new version, update now!!!${COLOR_END}"
             echo
             echo -n "Update shell ..."
             if ! wget --no-check-certificate -qO $0 ${str_install_shell}; then
