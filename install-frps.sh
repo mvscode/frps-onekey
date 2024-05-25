@@ -59,6 +59,7 @@ fun_clangcn(){
     echo "+------------------------------------------------------------+"
     echo ""
 }
+
 fun_set_text_color(){
     COLOR_RED='\E[1;31m'
     COLOR_GREEN='\E[1;32m'
@@ -69,6 +70,7 @@ fun_set_text_color(){
     COLOR_GREEN_LIGHTNING='\033[32m \033[05m'
     COLOR_END='\E[0m'
 }
+
 # Check if user is root
 rootness(){
     if [[ $EUID -ne 0 ]]; then
@@ -77,6 +79,7 @@ rootness(){
         exit 1
     fi
 }
+
 get_char(){
     SAVEDSTTY=`stty -g`
     stty -echo
