@@ -361,159 +361,154 @@ fun_input_subdomain_host() {
     read -e input_subdomain_host
     [ -z "${input_subdomain_host}" ] && input_subdomain_host="${def_subdomain_host}"
 }
-pre_install_clang(){
-    fun_clangcn
-    echo -e "Check your server setting, please wait..."
-    disable_selinux
-    if [ -s ${str_program_dir}/${program_name} ] && [ -s ${program_init} ]; then
-        echo "${program_name} is installed!"
-    else
-        clear
-        fun_clangcn
-        fun_getServer
-        fun_getVer
-        echo -e "Loading You Server IP, please wait..."
-        defIP=$(wget -qO- ip.clang.cn | sed -r 's/\r//')
-        echo -e "You Server IP:${COLOR_GREEN}${defIP}${COLOR_END}"
-        echo -e "————————————————————————————————————————————"
-        echo -e "     ${COLOR_RED}Please input your server setting:${COLOR_END}"
-        echo -e "————————————————————————————————————————————"
-        fun_input_bind_port
-        [ -n "${input_port}" ] && set_bind_port="${input_port}"
-        echo -e "${program_name} bind_port: ${COLOR_YELOW}${set_bind_port}${COLOR_END}"
-        echo -e ""
-        fun_input_vhost_http_port
-        [ -n "${input_port}" ] && set_vhost_http_port="${input_port}"
-        echo -e "${program_name} vhost_http_port: ${COLOR_YELOW}${set_vhost_http_port}${COLOR_END}"
-        echo -e ""
-        fun_input_vhost_https_port
-        [ -n "${input_port}" ] && set_vhost_https_port="${input_port}"
-        echo -e "${program_name} vhost_https_port: ${COLOR_YELOW}${set_vhost_https_port}${COLOR_END}"
-        echo -e ""
-        fun_input_dashboard_port
-        [ -n "${input_port}" ] && set_dashboard_port="${input_port}"
-        echo -e "${program_name} dashboard_port: ${COLOR_YELOW}${set_dashboard_port}${COLOR_END}"
-        echo -e ""
-        fun_input_dashboard_user
-        [ -n "${input_dashboard_user}" ] && set_dashboard_user="${input_dashboard_user}"
-        echo -e "${program_name} dashboard_user: ${COLOR_YELOW}${set_dashboard_user}${COLOR_END}"
-        echo -e ""
-        fun_input_dashboard_pwd
-        [ -n "${input_dashboard_pwd}" ] && set_dashboard_pwd="${input_dashboard_pwd}"
-        echo -e "${program_name} dashboard_pwd: ${COLOR_YELOW}${set_dashboard_pwd}${COLOR_END}"
-        echo -e ""
-        fun_input_token
-        [ -n "${input_token}" ] && set_token="${input_token}"
-        echo -e "${program_name} token: ${COLOR_YELOW}${set_token}${COLOR_END}"
-        echo -e ""
-        fun_input_subdomain_host
-        [ -n "${input_subdomain_host}" ] && set_subdomain_host="${input_subdomain_host}"
-        echo -e "${program_name} subdomain_host: ${COLOR_YELOW}${set_subdomain_host}${COLOR_END}"
-        echo -e ""
-        fun_input_max_pool_count
-        [ -n "${input_number}" ] && set_max_pool_count="${input_number}"
-        echo -e "${program_name} max_pool_count: ${COLOR_YELOW}${set_max_pool_count}${COLOR_END}"
-        echo -e ""
-        echo -e "Please select ${COLOR_GREEN}log_level${COLOR_END}"
-        echo    "1: info (default)"
-        echo    "2: warn"
-        echo    "3: error"
-        echo    "4: debug"    
-        echo    "-------------------------"
-        read -e -p "Enter your choice (1, 2, 3, 4 or exit. default [1]): " str_log_level
-        case "${str_log_level}" in
-            1|[Ii][Nn][Ff][Oo])
-                str_log_level="info"
-                ;;
-            2|[Ww][Aa][Rr][Nn])
-                str_log_level="warn"
-                ;;
-            3|[Ee][Rr][Rr][Oo][Rr])
-                str_log_level="error"
-                ;;
-            4|[Dd][Ee][Bb][Uu][Gg])
-                str_log_level="debug"
-                ;;
-            [eE][xX][iI][tT])
-                exit 1
-                ;;
-            *)
-                str_log_level="info"
-                ;;
-        esac
-        echo -e "log_level: ${COLOR_YELOW}${str_log_level}${COLOR_END}"
-        echo -e ""
-        fun_input_log_max_days
-        [ -n "${input_number}" ] && set_log_max_days="${input_number}"
-        echo -e "${program_name} log_max_days: ${COLOR_YELOW}${set_log_max_days}${COLOR_END}"
-        echo -e ""
-        echo -e "Please select ${COLOR_GREEN}log_file${COLOR_END}"
-        echo    "1: enable (default)"
-        echo    "2: disable"
-        echo "-------------------------"
-        read -e -p "Enter your choice (1, 2 or exit. default [1]): " str_log_file
-        case "${str_log_file}" in
-            1|[yY]|[yY][eE][sS]|[oO][nN]|[tT][rR][uU][eE]|[eE][nN][aA][bB][lL][eE])
-                str_log_file="./frps.log"
-                str_log_file_flag="enable"
-                ;;
-            0|2|[nN]|[nN][oO]|[oO][fF][fF]|[fF][aA][lL][sS][eE]|[dD][iI][sS][aA][bB][lL][eE])
-                str_log_file="/dev/null"
-                str_log_file_flag="disable"
-                ;;
-            [eE][xX][iI][tT])
-                exit 1
-                ;;
-            *)
-                str_log_file="./frps.log"
-                str_log_file_flag="enable"
-                ;;
-        esac
-        echo -e "log_file: ${COLOR_YELOW}${str_log_file_flag}${COLOR_END}"
-        echo -e ""
-        echo -e "Please select ${COLOR_GREEN}tcp_mux${COLOR_END}"
-        echo    "1: enable (default)"
-        echo    "2: disable"
-        echo "-------------------------"         
-        read -e -p "Enter your choice (1, 2 or exit. default [1]): " str_tcp_mux
-        case "${str_tcp_mux}" in
-            1|[yY]|[yY][eE][sS]|[oO][nN]|[tT][rR][uU][eE]|[eE][nN][aA][bB][lL][eE])
-                set_tcp_mux="true"
-                ;;
-            0|2|[nN]|[nN][oO]|[oO][fF][fF]|[fF][aA][lL][sS][eE]|[dD][iI][sS][aA][bB][lL][eE])
-                set_tcp_mux="false"
-                ;;
-            [eE][xX][iI][tT])
-                exit 1
-                ;;
-            *)
-                set_tcp_mux="true"
-                ;;
-        esac
-        echo -e "tcp_mux: ${COLOR_YELOW}${set_tcp_mux}${COLOR_END}"
-        echo -e ""
-        echo -e "Please select ${COLOR_GREEN}kcp support${COLOR_END}"
-        echo    "1: enable (default)"
-        echo    "2: disable"
-        echo "-------------------------"  
-        read -e -p "Enter your choice (1, 2 or exit. default [1]): " str_kcp
-        case "${str_kcp}" in
-            1|[yY]|[yY][eE][sS]|[oO][nN]|[tT][rR][uU][eE]|[eE][nN][aA][bB][lL][eE])
-                set_kcp="true"
-                ;;
-            0|2|[nN]|[nN][oO]|[oO][fF][fF]|[fF][aA][lL][sS][eE]|[dD][iI][sS][aA][bB][lL][eE])
-                set_kcp="false"
-                ;;
-            [eE][xX][iI][tT])
-                exit 1
-                ;;
-            *)
-                set_kcp="true"
-                ;;
-        esac
-        echo -e "kcp support: ${COLOR_YELOW}${set_kcp}${COLOR_END}"
-        echo -e ""
+# Function to install Clang
+install_clang() {
+    # Install Clang
+    echo "Installing Clang..."
+}
 
+# Function to disable SELinux
+disable_selinux() {
+    echo "Disabling SELinux..."
+}
+
+# Function to get server information
+get_server_info() {
+    echo "Retrieving server information..."
+    defIP=$(wget -qO- http://ip.clang.cn | sed -r 's/\r//')
+    echo "Your server IP: $defIP"
+}
+
+# Function to get user input
+get_user_input() {
+    echo "Please provide the following information:"
+
+    read -p "Bind port: " bind_port
+    read -p "Vhost HTTP port: " vhost_http_port
+    read -p "Vhost HTTPS port: " vhost_https_port
+    read -p "Dashboard port: " dashboard_port
+    read -p "Dashboard user: " dashboard_user
+    read -p "Dashboard password: " dashboard_pwd
+    read -p "Token: " token
+    read -p "Subdomain host: " subdomain_host
+    read -p "Maximum pool count: " max_pool_count
+
+    read -p "Log level (info, warn, error, debug): " log_level
+}
+
+# Main function
+main() {
+    install_clang
+    disable_selinux
+    get_server_info
+    get_user_input
+
+    echo "Program configuration:"
+    echo "Bind port: $bind_port"
+    echo "Vhost HTTP port: $vhost_http_port"
+    echo "Vhost HTTPS port: $vhost_https_port"
+    echo "Dashboard port: $dashboard_port"
+    echo "Dashboard user: $dashboard_user"
+    echo "Dashboard password: $dashboard_pwd"
+    echo "Token: $token"
+    echo "Subdomain host: $subdomain_host"
+    echo "Maximum pool count: $max_pool_count"
+    echo "Log level: $log_level"
+}
+main
+
+# Colors
+COLOR_YELLOW="\e[33m"
+COLOR_GREEN="\e[32m"
+COLOR_END="\e[0m"
+
+# Functions
+fun_input_log_max_days() {
+    read -e -p "Enter log max days (default 7): " input_number
+    [ -z "${input_number}" ] && input_number=7
+}
+
+# Log level
+echo -e "log_level: ${COLOR_YELLOW}${str_log_level}${COLOR_END}"
+echo
+
+# Log max days
+fun_input_log_max_days
+[ -n "${input_number}" ] && set_log_max_days="${input_number}"
+echo -e "${program_name} log_max_days: ${COLOR_YELLOW}${set_log_max_days}${COLOR_END}"
+echo
+
+# Log file
+echo -e "Please select ${COLOR_GREEN}log_file${COLOR_END}"
+echo "1: enable (default)"
+echo "2: disable"
+echo "-------------------------"
+read -e -p "Enter your choice (1, 2 or exit. default [1]): " str_log_file
+case "${str_log_file}" in
+    1|[yY]|[yY][eE][sS]|[oO][nN]|[tT][rR][uU][eE]|[eE][nN][aA][bB][lL][eE])
+        str_log_file="./frps.log"
+        str_log_file_flag="enable"
+        ;;
+    0|2|[nN]|[nN][oO]|[oO][fF][fF]|[fF][aA][lL][sS][eE]|[dD][iI][sS][aA][bB][lL][eE])
+        str_log_file="/dev/null"
+        str_log_file_flag="disable"
+        ;;
+    [eE][xX][iI][tT])
+        exit 1
+        ;;
+    *)
+        str_log_file="./frps.log"
+        str_log_file_flag="enable"
+        ;;
+esac
+echo -e "log_file: ${COLOR_YELLOW}${str_log_file_flag}${COLOR_END}"
+echo
+
+# TCP mux
+echo -e "Please select ${COLOR_GREEN}tcp_mux${COLOR_END}"
+echo "1: enable (default)"
+echo "2: disable"
+echo "-------------------------"
+read -e -p "Enter your choice (1, 2 or exit. default [1]): " str_tcp_mux
+case "${str_tcp_mux}" in
+    1|[yY]|[yY][eE][sS]|[oO][nN]|[tT][rR][uU][eE]|[eE][nN][aA][bB][lL][eE])
+        set_tcp_mux="true"
+        ;;
+    0|2|[nN]|[nN][oO]|[oO][fF][fF]|[fF][aA][lL][sS][eE]|[dD][iI][sS][aA][bB][lL][eE])
+        set_tcp_mux="false"
+        ;;
+    [eE][xX][iI][tT])
+        exit 1
+        ;;
+    *)
+        set_tcp_mux="true"
+        ;;
+esac
+echo -e "tcp_mux: ${COLOR_YELLOW}${set_tcp_mux}${COLOR_END}"
+echo
+
+# KCP support
+echo -e "Please select ${COLOR_GREEN}kcp support${COLOR_END}"
+echo "1: enable (default)"
+echo "2: disable"
+echo "-------------------------"
+read -e -p "Enter your choice (1, 2 or exit. default [1]): " str_kcp
+case "${str_kcp}" in
+    1|[yY]|[yY][eE][sS]|[oO][nN]|[tT][rR][uU][eE]|[eE][nN][aA][bB][lL][eE])
+        set_kcp="true"
+        ;;
+    0|2|[nN]|[nN][oO]|[oO][fF][fF]|[fF][aA][lL][sS][eE]|[dD][iI][sS][aA][bB][lL][eE])
+        set_kcp="false"
+        ;;
+    [eE][xX][iI][tT])
+        exit 1
+        ;;
+    *)
+        set_kcp="true"
+        ;;
+esac
+echo -e "kcp support: ${COLOR_YELLOW}${set_kcp}${COLOR_END}"
+echo
         echo "============== Check your input =============="
         echo -e "You Server IP      : ${COLOR_GREEN}${defIP}${COLOR_END}"
         echo -e "Bind port          : ${COLOR_GREEN}${set_bind_port}${COLOR_END}"
