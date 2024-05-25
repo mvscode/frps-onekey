@@ -282,86 +282,85 @@ fun_check_number() {
         fun_input_"$num_flag"
     fi
 }
-# input configuration data
-fun_input_bind_port(){
+# input configuration data code
+
+fun_input_bind_port() {
     def_server_port="5443"
-    echo ""
-    echo -n -e "Please input ${program_name} ${COLOR_GREEN}bind_port${COLOR_END} [1-65535]"
-    read -e -p "(Default Server Port: ${def_server_port}):" serverport
+    echo -n "Please input ${program_name} ${COLOR_GREEN}bind_port${COLOR_END} [1-65535] (Default Server Port: ${def_server_port}): "
+    read -e serverport
     [ -z "${serverport}" ] && serverport="${def_server_port}"
     fun_check_port "bind" "${serverport}"
 }
-fun_input_dashboard_port(){
+
+fun_input_dashboard_port() {
     def_dashboard_port="6443"
-    echo ""
-    echo -n -e "Please input ${program_name} ${COLOR_GREEN}dashboard_port${COLOR_END} [1-65535]"
-    read -e -p "(Default : ${def_dashboard_port}):" input_dashboard_port
+    echo -n "Please input ${program_name} ${COLOR_GREEN}dashboard_port${COLOR_END} [1-65535] (Default: ${def_dashboard_port}): "
+    read -e input_dashboard_port
     [ -z "${input_dashboard_port}" ] && input_dashboard_port="${def_dashboard_port}"
     fun_check_port "dashboard" "${input_dashboard_port}"
 }
-fun_input_vhost_http_port(){
+
+fun_input_vhost_http_port() {
     def_vhost_http_port="80"
-    echo ""
-    echo -n -e "Please input ${program_name} ${COLOR_GREEN}vhost_http_port${COLOR_END} [1-65535]"
-    read -e -p "(Default : ${def_vhost_http_port}):" input_vhost_http_port
+    echo -n "Please input ${program_name} ${COLOR_GREEN}vhost_http_port${COLOR_END} [1-65535] (Default: ${def_vhost_http_port}): "
+    read -e input_vhost_http_port
     [ -z "${input_vhost_http_port}" ] && input_vhost_http_port="${def_vhost_http_port}"
     fun_check_port "vhost_http" "${input_vhost_http_port}"
 }
-fun_input_vhost_https_port(){
+
+fun_input_vhost_https_port() {
     def_vhost_https_port="443"
-    echo ""
-    echo -n -e "Please input ${program_name} ${COLOR_GREEN}vhost_https_port${COLOR_END} [1-65535]"
-    read -e -p "(Default : ${def_vhost_https_port}):" input_vhost_https_port
+    echo -n "Please input ${program_name} ${COLOR_GREEN}vhost_https_port${COLOR_END} [1-65535] (Default: ${def_vhost_https_port}): "
+    read -e input_vhost_https_port
     [ -z "${input_vhost_https_port}" ] && input_vhost_https_port="${def_vhost_https_port}"
     fun_check_port "vhost_https" "${input_vhost_https_port}"
 }
-fun_input_log_max_days(){
-    def_max_days="30" 
+
+fun_input_log_max_days() {
+    def_max_days="30"
     def_log_max_days="3"
-    echo ""
-    echo -e "Please input ${program_name} ${COLOR_GREEN}log_max_days${COLOR_END} [1-${def_max_days}]"
-    read -e -p "(Default : ${def_log_max_days} day):" input_log_max_days
+    echo "Please input ${program_name} ${COLOR_GREEN}log_max_days${COLOR_END} [1-${def_max_days}] (Default: ${def_log_max_days} day): "
+    read -e input_log_max_days
     [ -z "${input_log_max_days}" ] && input_log_max_days="${def_log_max_days}"
     fun_check_number "log_max_days" "${def_max_days}" "${input_log_max_days}"
 }
-fun_input_max_pool_count(){
+
+fun_input_max_pool_count() {
     def_max_pool="200"
     def_max_pool_count="50"
-    echo ""
-    echo -e "Please input ${program_name} ${COLOR_GREEN}max_pool_count${COLOR_END} [1-${def_max_pool}]"
-    read -e -p "(Default : ${def_max_pool_count}):" input_max_pool_count
+    echo "Please input ${program_name} ${COLOR_GREEN}max_pool_count${COLOR_END} [1-${def_max_pool}] (Default: ${def_max_pool_count}): "
+    read -e input_max_pool_count
     [ -z "${input_max_pool_count}" ] && input_max_pool_count="${def_max_pool_count}"
     fun_check_number "max_pool_count" "${def_max_pool}" "${input_max_pool_count}"
 }
-fun_input_dashboard_user(){
+
+fun_input_dashboard_user() {
     def_dashboard_user="admin"
-    echo ""
-    echo -n -e "Please input ${program_name} ${COLOR_GREEN}dashboard_user${COLOR_END}"
-    read -e -p "(Default : ${def_dashboard_user}):" input_dashboard_user
+    echo -n "Please input ${program_name} ${COLOR_GREEN}dashboard_user${COLOR_END} (Default: ${def_dashboard_user}): "
+    read -e input_dashboard_user
     [ -z "${input_dashboard_user}" ] && input_dashboard_user="${def_dashboard_user}"
 }
-fun_input_dashboard_pwd(){
-    def_dashboard_pwd=`fun_randstr 8`
-    echo ""
-    echo -n -e "Please input ${program_name} ${COLOR_GREEN}dashboard_pwd${COLOR_END}"
-    read -e -p "(Default : ${def_dashboard_pwd}):" input_dashboard_pwd
+
+fun_input_dashboard_pwd() {
+    def_dashboard_pwd=$(fun_randstr 8)
+    echo -n "Please input ${program_name} ${COLOR_GREEN}dashboard_pwd${COLOR_END} (Default: ${def_dashboard_pwd}): "
+    read -e input_dashboard_pwd
     [ -z "${input_dashboard_pwd}" ] && input_dashboard_pwd="${def_dashboard_pwd}"
 }
-fun_input_token(){
-    def_token=`fun_randstr 16`
-    echo ""
-    echo -n -e "Please input ${program_name} ${COLOR_GREEN}token${COLOR_END}"
-    read -e -p "(Default : ${def_token}):" input_token
+
+fun_input_token() {
+    def_token=$(fun_randstr 16)
+    echo -n "Please input ${program_name} ${COLOR_GREEN}token${COLOR_END} (Default: ${def_token}): "
+    read -e input_token
     [ -z "${input_token}" ] && input_token="${def_token}"
 }
-fun_input_subdomain_host(){
+
+fun_input_subdomain_host() {
     def_subdomain_host=${defIP}
-    echo ""
-    echo -n -e "Please input ${program_name} ${COLOR_GREEN}subdomain_host${COLOR_END}"
-    read -e -p "(Default : ${def_subdomain_host}):" input_subdomain_host
+    echo -n "Please input ${program_name} ${COLOR_GREEN}subdomain_host${COLOR_END} (Default: ${def_subdomain_host}): "
+    read -e input_subdomain_host
     [ -z "${input_subdomain_host}" ] && input_subdomain_host="${def_subdomain_host}"
 }
-
 pre_install_clang(){
     fun_clangcn
     echo -e "Check your server setting, please wait..."
