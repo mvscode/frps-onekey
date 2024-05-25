@@ -509,30 +509,29 @@ case "${str_kcp}" in
 esac
 echo -e "kcp support: ${COLOR_YELLOW}${set_kcp}${COLOR_END}"
 echo
-        echo "============== Check your input =============="
-        echo -e "You Server IP      : ${COLOR_GREEN}${defIP}${COLOR_END}"
-        echo -e "Bind port          : ${COLOR_GREEN}${set_bind_port}${COLOR_END}"
-        echo -e "kcp support        : ${COLOR_GREEN}${set_kcp}${COLOR_END}"
-        echo -e "vhost http port    : ${COLOR_GREEN}${set_vhost_http_port}${COLOR_END}"
-        echo -e "vhost https port   : ${COLOR_GREEN}${set_vhost_https_port}${COLOR_END}"
-        echo -e "Dashboard port     : ${COLOR_GREEN}${set_dashboard_port}${COLOR_END}"
-        echo -e "Dashboard user     : ${COLOR_GREEN}${set_dashboard_user}${COLOR_END}"
-        echo -e "Dashboard password : ${COLOR_GREEN}${set_dashboard_pwd}${COLOR_END}"
-        echo -e "token              : ${COLOR_GREEN}${set_token}${COLOR_END}"
-        echo -e "subdomain_host     : ${COLOR_GREEN}${set_subdomain_host}${COLOR_END}"
-        echo -e "tcp_mux            : ${COLOR_GREEN}${set_tcp_mux}${COLOR_END}"
-        echo -e "Max Pool count     : ${COLOR_GREEN}${set_max_pool_count}${COLOR_END}"
-        echo -e "Log level          : ${COLOR_GREEN}${str_log_level}${COLOR_END}"
-        echo -e "Log max days       : ${COLOR_GREEN}${set_log_max_days}${COLOR_END}"
-        echo -e "Log file           : ${COLOR_GREEN}${str_log_file_flag}${COLOR_END}"
-        echo "=============================================="
-        echo ""
-        echo "Press any key to start...or Press Ctrl+c to cancel"
+        echo "============== Check your input ==============" \
+     "You Server IP      : ${COLOR_GREEN}${defIP}${COLOR_END}" \
+     "Bind port          : ${COLOR_GREEN}${set_bind_port}${COLOR_END}" \
+     "kcp support        : ${COLOR_GREEN}${set_kcp}${COLOR_END}" \
+     "vhost http port    : ${COLOR_GREEN}${set_vhost_http_port}${COLOR_END}" \
+     "vhost https port   : ${COLOR_GREEN}${set_vhost_https_port}${COLOR_END}" \
+     "Dashboard port     : ${COLOR_GREEN}${set_dashboard_port}${COLOR_END}" \
+     "Dashboard user     : ${COLOR_GREEN}${set_dashboard_user}${COLOR_END}" \
+     "Dashboard password : ${COLOR_GREEN}${set_dashboard_pwd}${COLOR_END}" \
+     "token              : ${COLOR_GREEN}${set_token}${COLOR_END}" \
+     "subdomain_host     : ${COLOR_GREEN}${set_subdomain_host}${COLOR_END}" \
+     "tcp_mux            : ${COLOR_GREEN}${set_tcp_mux}${COLOR_END}" \
+     "Max Pool count     : ${COLOR_GREEN}${set_max_pool_count}${COLOR_END}" \
+     "Log level          : ${COLOR_GREEN}${str_log_level}${COLOR_END}" \
+     "Log max days       : ${COLOR_GREEN}${set_log_max_days}${COLOR_END}" \
+     "Log file           : ${COLOR_GREEN}${str_log_file_flag}${COLOR_END}" \
+     "=============================================="
 
-        char=`get_char`
-        install_program_server_clang
-    fi
-}
+echo ""
+echo "Press any key to start...or Press Ctrl+c to cancel"
+
+char=`get_char`
+install_program_server_clang
 # ====== install server ======
 install_program_server_clang(){
     [ ! -d ${str_program_dir} ] && mkdir -p ${str_program_dir}
