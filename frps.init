@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# Startup script for frps on Debian
+# Startup script for frp service
 # Place in /etc/init.d and run 'update-rc.d -f frps defaults'
-# For CentOS/Redhat run: 'chkconfig --add frps'
+# For service run: 'chkconfig --add frps'
 
 #=========================================================
 #   System Required:  CentOS/Debian/Ubuntu/Fedora (32bit/64bit)
@@ -29,11 +29,11 @@ BIN="${PROGRAM_PATH}/${SERVICE_NAME}"
 CONFIGFILE="${PROGRAM_PATH}/frps.ini"
 SCRIPT_NAME="/etc/init.d/${SERVICE_NAME}"
 VERSION="2023"
-PROGRAM_VERSION=$(${BIN} --version)
+PROGRAM_VERSION=$("$BIN" --version)
 RET_VAL=0
 
 # Check if the binary exists
-[ -x "${BIN}" ] || exit 0
+[ -x "$BIN" ] || exit 0
 
 # Print the header
 print_header() {
@@ -44,16 +44,13 @@ print_header() {
 
 # Check if the service is running
 check_run() {
-    PID=$(pgrep -f "${BIN}")
+    local PID=$(pgrep -f "$BIN")
     [ -n "$PID" ]
 }
 
 # Load the configuration file
 load_config() {
-    if [ ! -r "${CONFIGFILE}" ]; then
-        echo "config file ${CONFIGFILE} not found"
-        return 1
-    fi
+    [ -r "$CONFIGFILE" ] || { echo "config file $CONFIGFILE not found"; return 1; }
 }
 
 start() {
@@ -64,7 +61,7 @@ start() {
     fi
     load_config || return 1
     echo -n "Starting ${PROGRAM_NAME} (${PROGRAM_VERSION})..."
-    ${BIN} -c "${CONFIGFILE}" >/dev/null 2>&1 &
+    "$BIN" -c "$CONFIGFILE" >/dev/null 2>&1 &
     sleep 1
     if ! check_run; then
         echo "start failed"
@@ -82,11 +79,7 @@ stop() {
     fi
     echo -n "Stopping ${PROGRAM_NAME} (pid $PID)... "
     kill $PID
-    if [ $? -eq 0 ]; then
-        echo " done"
-    else
-        echo " failed"
-    fi
+    [ $? -eq 0 ] && echo " done" || echo " failed"
 }
 
 restart() {
@@ -95,19 +88,11 @@ restart() {
 }
 
 status() {
-    if check_run; then
-        echo "${PROGRAM_NAME} (pid $PID) is running..."
-    else
-        echo "${PROGRAM_NAME} is stopped"
-    fi
+    check_run && echo "${PROGRAM_NAME} (pid $PID) is running..." || echo "${PROGRAM_NAME} is stopped"
 }
 
 config() {
-    if [ -s "${CONFIGFILE}" ]; then
-        vi "${CONFIGFILE}"
-    else
-        echo "${PROGRAM_NAME} configuration file not found!"
-    fi
+    [ -s "$CONFIGFILE" ] && vi "$CONFIGFILE" || echo "${PROGRAM_NAME} configuration file not found!"
 }
 
 version() {
@@ -115,7 +100,7 @@ version() {
 }
 
 help() {
-    ${BIN} --help
+    "$BIN" --help
 }
 
 case "${1:-}" in
