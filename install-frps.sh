@@ -22,23 +22,39 @@ program_init="/etc/init.d/${program_name}"
 program_config_file="frps.ini"
 ver_file="/tmp/.frp_ver.sh"
 str_install_shell="https://raw.githubusercontent.com/Mvscode/frps-onekey/master/install-frps.sh"
-shell_update(){
+shell_update() {
+    # Clear the terminal
     fun_clangcn "clear"
-    echo "Check updates for shell..."
-    remote_shell_version=`wget --no-check-certificate -qO- ${str_install_shell} | sed -n '/'^version'/p' | cut -d\" -f2`
-    if [ ! -z ${remote_shell_version} ]; then
-        if [[ "${version}" != "${remote_shell_version}" ]];then
-            echo -e "${COLOR_GREEN}Found a new version,update now!!!${COLOR_END}"
+
+    # Echo a message to indicate that we're checking for shell updates
+    echo "Checking for shell updates..."
+
+    # Fetch the remote shell version from the specified URL
+    remote_shell_version=$(wget --no-check-certificate -qO- "${str_install_shell}" | sed -n '/^version/p' | cut -d'"' -f2)
+
+    # Check if the remote shell version is not empty
+    if [ -n "${remote_shell_version}" ]; then
+        # Check if the local version is different from the remote version
+        if [[ "${version}" != "${remote_shell_version}" ]]; then
+            # Echo a message to indicate that a new version has been found
+            echo -e "${COLOR_GREEN}Found a new version, updating now!${COLOR_END}"
             echo
-            echo -n "Update shell ..."
-            if ! wget --no-check-certificate -qO $0 ${str_install_shell}; then
+
+            # Echo a message to indicate that we're updating the shell
+            echo -n "Updating shell..."
+
+            # Attempt to download the new version and overwrite the current script
+            if ! wget --no-check-certificate -qO "$0" "${str_install_shell}"; then
+                # Echo a message to indicate that the update failed
                 echo -e " [${COLOR_RED}failed${COLOR_END}]"
                 echo
                 exit 1
             else
+                # Echo a message to indicate that the update was successful
                 echo -e " [${COLOR_GREEN}OK${COLOR_END}]"
                 echo
-                echo -e "${COLOR_GREEN}Please Re-run${COLOR_END} ${COLOR_PINK}$0 ${clang_action}${COLOR_END}"
+                # Echo a message to instruct the user to re-run the script
+                echo -e "${COLOR_GREEN}Please re-run${COLOR_END} ${COLOR_PINK}$0 ${clang_action}${COLOR_END}"
                 echo
                 exit 1
             fi
