@@ -244,46 +244,42 @@ fun_download_file() {
         exit 1
     fi
 }
-function __readINI() {
- INIFILE=$1; SECTION=$2; ITEM=$3
- _readIni=`awk -F '=' '/\['$SECTION'\]/{a=1}a==1&&$1~/'$ITEM'/{print $2;exit}' $INIFILE`
-echo ${_readIni}
+__readINI() {
+    local INIFILE=$1 SECTION=$2 ITEM=$3 _readIni
+    _readIni=$(awk -F '=' -v section="$SECTION" -v item="$ITEM" '
+        /^\[/{
+            curr_section = substr($0, 2, length($0) - 2)
+        }
+        curr_section == section && $1 == item {
+            print $2
+            exit
+        }
+    ' "$INIFILE")
+    echo "$_readIni"
 }
-# Check port
-fun_check_port(){
-    port_flag=""
-    strCheckPort=""
-    input_port=""
-    port_flag="$1"
-    strCheckPort="$2"
-    if [ ${strCheckPort} -ge 1 ] && [ ${strCheckPort} -le 65535 ]; then
-        checkServerPort=`netstat -ntulp | grep "\b:${strCheckPort}\b"`
-        if [ -n "${checkServerPort}" ]; then
-            echo ""
-            echo -e "${COLOR_RED}Error:${COLOR_END} Port ${COLOR_GREEN}${strCheckPort}${COLOR_END} is ${COLOR_PINK}used${COLOR_END},view relevant port:"
-            netstat -ntulp | grep "\b:${strCheckPort}\b"
-            fun_input_${port_flag}_port
+fun_check_port() {
+    local port_flag=$1 strCheckPort=$2
+    if [ "$strCheckPort" -ge 1 ] && [ "$strCheckPort" -le 65535 ]; then
+        if netstat -ntulp | grep -q "\b:$strCheckPort\b"; then
+            echo -e "${COLOR_RED}Error:${COLOR_END} Port ${COLOR_GREEN}$strCheckPort${COLOR_END} is ${COLOR_PINK}used${COLOR_END}, view relevant port:"
+            netstat -ntulp | grep "\b:$strCheckPort\b"
+            fun_input_"$port_flag"_port
         else
-            input_port="${strCheckPort}"
+            input_port=$strCheckPort
         fi
     else
         echo "Input error! Please input correct numbers."
-        fun_input_${port_flag}_port
+        fun_input_"$port_flag"_port
     fi
 }
-fun_check_number(){
-    num_flag=""
-    strMaxNum=""
-    strCheckNum=""
-    input_number=""
-    num_flag="$1"
-    strMaxNum="$2"
-    strCheckNum="$3"
-    if [ ${strCheckNum} -ge 1 ] && [ ${strCheckNum} -le ${strMaxNum} ]; then
-        input_number="${strCheckNum}"
+
+fun_check_number() {
+    local num_flag=$1 strMaxNum=$2 strCheckNum=$3
+    if [ "$strCheckNum" -ge 1 ] && [ "$strCheckNum" -le "$strMaxNum" ]; then
+        input_number=$strCheckNum
     else
         echo "Input error! Please input correct numbers."
-        fun_input_${num_flag}
+        fun_input_"$num_flag"
     fi
 }
 # input configuration data
