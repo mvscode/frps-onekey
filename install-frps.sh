@@ -1,7 +1,8 @@
-#!/bin/bash
+# Set the PATH variable
 PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
-###export###
 export PATH
+
+# Set environment variables
 export FRPS_VER="$LATEST_RELEASE"
 export FRPS_VER_32BIT="$LATEST_RELEASE"
 export FRPS_INIT="https://raw.githubusercontent.com/MvsCode/frps-onekey/master/frps.init"
@@ -9,19 +10,17 @@ export gitee_download_url="https://gitee.com/Mvscode/frps-onekey/releases/downlo
 export github_download_url="https://github.com/fatedier/frp/releases/download"
 export gitee_latest_version_api="https://gitee.com/api/v5/repos/MvsCode/frps-onekey/releases/latest"
 export github_latest_version_api="https://api.github.com/repos/fatedier/frp/releases/latest"
-#======================================================================
-#   System Required:  CentOS Debian Ubuntu or Fedora(32bit/64bit)
-#   Description:  A tool to auto-compile & install frps on Linux
-#   Author : Clang
-#   Mender : MvsCode
-#======================================================================
+
+# Program information
 program_name="frps"
-version="20231028"
+version="202405"
 str_program_dir="/usr/local/${program_name}"
 program_init="/etc/init.d/${program_name}"
 program_config_file="frps.ini"
 ver_file="/tmp/.frp_ver.sh"
 str_install_shell="https://raw.githubusercontent.com/Mvscode/frps-onekey/master/install-frps.sh"
+
+# Function to check for shell updates
 shell_update() {
     # Clear the terminal
     fun_clangcn "clear"
