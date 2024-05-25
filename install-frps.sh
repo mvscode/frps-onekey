@@ -843,9 +843,6 @@ update_program_server_clang(){
         install_shell=${strPath}
 # Check if the remote_init_version variable is not empty
 if [ -n "${remote_init_version}" ]; then
-    # Code block to execute if the condition is true
-    ...
-fi
             if [[ "${local_init_version}" != "${remote_init_version}" ]];then
                 echo "========== Update ${program_name} ${program_init} =========="
                 if ! wget  ${FRPS_INIT} -O ${program_init}; then
