@@ -89,63 +89,59 @@ get_char(){
     stty echo
     stty $SAVEDSTTY
 }
-# Check OS
-checkos(){
-    if   grep -Eqi "CentOS" /etc/issue || grep -Eq "CentOS" /etc/*-release; then
-        OS=CentOS
+checkos() {
+    if grep -Eqi "CentOS" /etc/issue || grep -Eq "CentOS" /etc/*-release; then
+        OS="CentOS"
     elif grep -Eqi "Debian" /etc/issue || grep -Eq "Debian" /etc/*-release; then
-        OS=Debian
+        OS="Debian"
     elif grep -Eqi "Ubuntu" /etc/issue || grep -Eq "Ubuntu" /etc/*-release; then
-        OS=Ubuntu
+        OS="Ubuntu"
     elif grep -Eqi "Fedora" /etc/issue || grep -Eq "Fedora" /etc/*-release; then
-        OS=Fedora
+        OS="Fedora"
     else
-        echo "Not support OS, Please reinstall OS and retry!"
+        echo "Not supported OS, please reinstall OS and retry!"
         exit 1
     fi
 }
-# Get version
-getversion(){
-    if [[ -s /etc/redhat-release ]];then
-        grep -oE  "[0-9.]+" /etc/redhat-release
+
+getversion() {
+    if [ -s /etc/redhat-release ]; then
+        echo "$(grep -oE '[0-9.]+' /etc/redhat-release)"
     else
-        grep -oE  "[0-9.]+" /etc/issue
+        echo "$(grep -oE '[0-9.]+' /etc/issue)"
     fi
 }
-# CentOS version
-centosversion(){
-    local code=$1
-    local version="`getversion`"
-    local main_ver=${version%%.*}
-    if [ $main_ver == $code ];then
+
+centosversion() {
+    local main_ver="${1%%.*}"
+    local version="$(getversion)"
+    if [ "${version%%.*}" -eq "$main_ver" ]; then
         return 0
     else
         return 1
     fi
 }
-# Check OS bit
-check_os_bit() {
-    local arch
-    arch=$(uname -m)
 
-    case $arch in
+check_os_bit() {
+    case "$(uname -m)" in
         x86_64)      Is_64bit='y'; ARCHS="amd64";;
-        i386|i486|i586|i686) Is_64bit='n'; ARCHS="386"; FRPS_VER="$FRPS_VER_32BIT";;
+        i?86)        Is_64bit='n'; ARCHS="386"; FRPS_VER="$FRPS_VER_32BIT";;
         aarch64)     Is_64bit='y'; ARCHS="arm64";;
-        arm*|armv*)  Is_64bit='n'; ARCHS="arm"; FRPS_VER="$FRPS_VER_32BIT";;
+        arm*)        Is_64bit='n'; ARCHS="arm"; FRPS_VER="$FRPS_VER_32BIT";;
         mips)        Is_64bit='n'; ARCHS="mips"; FRPS_VER="$FRPS_VER_32BIT";;
         mips64)      Is_64bit='y'; ARCHS="mips64";;
         mips64el)    Is_64bit='y'; ARCHS="mips64le";;
         mipsel)      Is_64bit='n'; ARCHS="mipsle"; FRPS_VER="$FRPS_VER_32BIT";;
         riscv64)     Is_64bit='y'; ARCHS="riscv64";;
-        *)           echo "Unknown architecture";;
+        *)           echo "Unknown architecture"; exit 1;;
     esac
 }
-check_centosversion(){
-if centosversion 5; then
-    echo "Not support CentOS 5.x, please change to CentOS 6,7 or Debian or Ubuntu or Fedora and try again."
-    exit 1
-fi
+
+check_centosversion() {
+    if centosversion 5; then
+        echo "Not supported CentOS 5.x, please change to CentOS 6, 7 or Debian, Ubuntu, or Fedora and try again."
+        exit 1
+    fi
 }
 # Disable selinux
 disable_selinux(){
