@@ -22,69 +22,92 @@ PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 ProgramName="Frps"
 ProgramPath="/usr/local/frps"
 NAME=frps
-BIN=${ProgramPath}/${NAME}
-CONFIGFILE=${ProgramPath}/frps.ini
-SCRIPTNAME=/etc/init.d/${NAME}
+BIN="${ProgramPath}/${NAME}"
+CONFIGFILE="${ProgramPath}/frps.ini"
+SCRIPTNAME="/etc/init.d/${NAME}"
 version="2023"
 program_version=$(${BIN} --version)
 RET_VAL=0
 
-[ -x ${BIN} ] || exit 0
+[ -x "${BIN}" ] || exit 0
 
-function clangcn() {
+print_header() {
     echo "+---------------------------------------------------------+"
     echo "|     Manager for ${ProgramName}, Author Clang, Mender MvsCode      |"
     echo "+---------------------------------------------------------+"
 }
 
-function check_run() {
+check_run() {
     PID=$(pgrep -f "${BIN}")
     [ -n "$PID" ]
 }
 
-function load_config() {
-    [ -r "${CONFIGFILE}" ] || { echo "config file ${CONFIGFILE} not found"; return 1; }
+load_config() {
+    if [ ! -r "${CONFIGFILE}" ]; then
+        echo "config file ${CONFIGFILE} not found"
+        return 1
+    fi
 }
 
-function start() {
-    [ "${1}" = "start" ] && clangcn
-    check_run && { echo "${ProgramName} (pid $PID) already running."; return 0; }
+start() {
+    print_header
+    if check_run; then
+        echo "${ProgramName} (pid $PID) already running."
+        return 0
+    fi
     load_config || return 1
-    echo -n "Starting ${ProgramName}(${program_version})..."
+    echo -n "Starting ${ProgramName} (${program_version})..."
     ${BIN} -c "${CONFIGFILE}" >/dev/null 2>&1 &
     sleep 1
-    ! check_run && { echo "start failed"; return 1; }
+    if ! check_run; then
+        echo "start failed"
+        return 1
+    fi
     echo " done"
     echo "${ProgramName} (pid $PID) is running."
 }
 
-function stop() {
-    [ "${1}" = "stop" ] || [ "${1}" = "restart" ] && clangcn
-    check_run || { echo "${ProgramName} is not running."; return 0; }
+stop() {
+    print_header
+    if ! check_run; then
+        echo "${ProgramName} is not running."
+        return 0
+    fi
     echo -n "Stopping ${ProgramName} (pid $PID)... "
     kill $PID
-    [ "$?" -eq 0 ] && echo " done" || echo " failed"
+    if [ $? -eq 0 ]; then
+        echo " done"
+    else
+        echo " failed"
+    fi
 }
 
-function restart() {
-    stop restart
-    start restart
+restart() {
+    stop
+    start
 }
 
-function status() {
-    PID=$(pgrep -f "${BIN}")
-    [ -n "$PID" ] && echo "${ProgramName} (pid $PID) is running..." || echo "${ProgramName} is stopped"
+status() {
+    if check_run; then
+        echo "${ProgramName} (pid $PID) is running..."
+    else
+        echo "${ProgramName} is stopped"
+    fi
 }
 
-function config() {
-    [ -s "${CONFIGFILE}" ] && vi "${CONFIGFILE}" || echo "${ProgramName} configuration file not found!"
+config() {
+    if [ -s "${CONFIGFILE}" ]; then
+        vi "${CONFIGFILE}"
+    else
+        echo "${ProgramName} configuration file not found!"
+    fi
 }
 
-function version() {
+version() {
     echo "${ProgramName} version ${program_version}"
 }
 
-function help() {
+help() {
     ${BIN} --help
 }
 
@@ -92,18 +115,18 @@ case "${1:-}" in
     start|stop|restart|status|config)
         "$1"
         ;;
-    [vV][eE][rR][sS][iI][oO][nN]|-[vV][eE][rR][sS][iI][oO][nN]|--[vV][eE][rR][sS][iI][oO][nN]|-[vV]|--[vV])
+    version|VERSION|-v|--version)
         version
         ;;
-    [Cc]|[Cc][Oo][Nn][Ff]|[Cc][Oo][Nn][Ff][iI][Gg]|-[Cc]|-[Cc][Oo][Nn][Ff]|-[Cc][Oo][Nn][Ff][iI][Gg]|--[Cc]|--[Cc][Oo][Nn][Ff]|--[Cc][Oo][Nn][Ff][iI][Gg])
+    config|CONFIG|conf|CONF|-c|--config)
         config
         ;;
-    [Hh]|[Hh][Ee][Ll][Pp]|-[Hh]|-[Hh][Ee][Ll][Pp]|--[Hh]|--[Hh][Ee][Ll][Pp])
+    help|HELP|-h|--help)
         help
         ;;
     *)
-        clangcn
-        echo "Usage: $SCRIPTNAME {start|stop|restart|status|config|version}"
+        print_header
+        echo "Usage: $SCRIPTNAME {start|stop|restart|status|config|version|help}"
         RET_VAL=1
         ;;
 esac
