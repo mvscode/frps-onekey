@@ -1,3 +1,4 @@
+[<img alt="github" src="https://img.shields.io/badge/github-/MvsCode/frps-onekey-8da0cb?style=for-the-badge&labelColor=555555&logo=github" height="20">](https://github.com/MvsCode/frps-onekey)
 
 Frps服务端一键配置脚本，脚本已支持获取Frp最新版本
 ===========
