@@ -3,8 +3,8 @@ Frps服务端一键配置脚本，脚本已支持获取Frp最新版本
 ===========
 
 [<img alt="github" src="https://img.shields.io/badge/github/MvsCode/frps_onekey-8da0cb?style=for-the-badge&labelColor=555555&logo=github" height="22">](https://github.com/MvsCode/frps_onekey)
-[![Stars](https://img.shields.io/github/stars/MvsCode/frps-onekey?style=social)](https://github.com/MvsCode/frps-onekey/stargazers)
-[![Forks](https://img.shields.io/github/forks/MvsCode/frps-onekey?style=social)](https://github.com/MvsCode/frps-onekey/network/members)
+[![Stars](https://img.shields.io/github/stars/MvsCode/frps-onekey?style=for-the-badge)](https://github.com/MvsCode/frps-onekey/stargazers)
+[![Forks](https://img.shields.io/github/forks/MvsCode/frps-onekey?style=for-the-badge)](https://github.com/MvsCode/frps-onekey/network/members)
 
 
 
