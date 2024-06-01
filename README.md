@@ -11,7 +11,7 @@ Frps服务端一键配置脚本，脚本已支持获取Frp最新版本
 
 *Frp 是一个高性能的反向代理应用，可以帮助您轻松地进行内网穿透，对外网提供服务，支持 tcp, http, https 等协议类型，并且 web 服务支持根据域名进行路由转发。*
 
-* 详情：fatedier[<img alt="github" src="https://img.shields.io/badge/github/fatedier/frp-8da0cb?style=for-the-badge&labelColor=555555&logo=github" height="20">](https://github.com/MvsCode/frps_onekey)
+* 详情：fatedier[<img alt="github" src="https://img.shields.io/badge/github/fatedier/frp-8da0cb?style=for-the-badge&labelColor=555555&logo=github" height="20">](https://github.com/fatedier/frp)
 * 此脚本原作者：clangcn (https://github.com/clangcn/onekey-install-shell)
 
 ## Frps-Onekey-Install-Shell For CentOS/Debian/Ubuntu/Fedora (32bit/64bit)
