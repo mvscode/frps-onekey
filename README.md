@@ -6,14 +6,12 @@ Frps服务端一键配置脚本，脚本已支持获取Frp最新版本
 [![Stars][stars-shield]][stars-url]
 [![Forks][forks-shield]][forks-url]
 
-[repo-shield]: https://img.shields.io/badge/GitHub-MvsCode%2Ffrps--onekey-brightgreen?style=for-the-badge&logo=github
+[repo-shield]: https://img.shields.io/badge/GitHub-MvsCode%2Ffrps--onekey-brightgreen?style=flat-square&logo=github
 [repo-url]: https://github.com/MvsCode/frps-onekey
-[stars-shield]: https://img.shields.io/github/stars/MvsCode/frps-onekey.svg?style=for-the-badge&logo=github&color=yellow
+[stars-shield]: https://img.shields.io/github/stars/MvsCode/frps-onekey.svg?style=flat-square&logo=github&color=yellow
 [stars-url]: https://github.com/MvsCode/frps-onekey/stargazers
-[forks-shield]: https://img.shields.io/github/forks/MvsCode/frps-onekey.svg?style=for-the-badge&logo=github&color=green
+[forks-shield]: https://img.shields.io/github/forks/MvsCode/frps-onekey.svg?style=flat-square&logo=github&color=green
 [forks-url]: https://github.com/MvsCode/frps-onekey/network/members
-
-
 
 
 *Frp 是一个高性能的反向代理应用，可以帮助您轻松地进行内网穿透，对外网提供服务，支持 tcp, http, https 等协议类型，并且 web 服务支持根据域名进行路由转发。*
