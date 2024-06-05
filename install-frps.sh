@@ -423,7 +423,7 @@ pre_install_clang(){
         echo -e "${program_name} dashboard_user: ${COLOR_YELOW}${set_dashboard_user}${COLOR_END}"
         echo -e ""
         fun_input_dashboard_pwd
-        [ -z "${input_dashboard_pwd}" ] && set_dashboard_pwd="${input_dashboard_pwd}"
+        [ -n "${input_dashboard_pwd}" ] && set_dashboard_pwd="${input_dashboard_pwd}"
         echo -e "${program_name} dashboard_pwd: ${COLOR_YELOW}${set_dashboard_pwd}${COLOR_END}"
         echo -e ""
         fun_input_token
