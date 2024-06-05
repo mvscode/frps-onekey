@@ -15,10 +15,10 @@ export github_latest_version_api="https://api.github.com/repos/fatedier/frp/rele
 
 # Program information
 program_name="frps"
-version="202405"
+version="202406"
 str_program_dir="/usr/local/${program_name}"
 program_init="/etc/init.d/${program_name}"
-program_config_file="frps.ini"
+program_config_file="frps.toml"
 ver_file="/tmp/.frp_ver.sh"
 str_install_shell="https://raw.githubusercontent.com/Mvscode/frps-onekey/master/install-frps.sh"
 
@@ -71,7 +71,7 @@ fun_clangcn(){
     fi
     echo ""
     echo "+------------------------------------------------------------+"
-    echo "|   frps for Linux Server, Author Clang ，Mender MvsCode     |" 
+    echo "|   frps for Linux Server, Author Clang ï¼Mender MvsCode     |" 
     echo "|      A tool to auto-compile & install frps on Linux        |"
     echo "+------------------------------------------------------------+"
     echo ""
@@ -399,9 +399,9 @@ pre_install_clang(){
         echo -e "Loading You Server IP, please wait..."
         defIP=$(wget -qO- ip.clang.cn | sed -r 's/\r//')
         echo -e "You Server IP:${COLOR_GREEN}${defIP}${COLOR_END}"
-        echo -e "————————————————————————————————————————————"
+        echo -e "ââââââââââââââââââââââââââââââââââââââââââââ"
         echo -e "     ${COLOR_RED}Please input your server setting:${COLOR_END}"
-        echo -e "————————————————————————————————————————————"
+        echo -e "ââââââââââââââââââââââââââââââââââââââââââââ"
         fun_input_bind_port
         [ -n "${input_port}" ] && set_bind_port="${input_port}"
         echo -e "${program_name} bind_port: ${COLOR_YELOW}${set_bind_port}${COLOR_END}"
@@ -563,7 +563,85 @@ pre_install_clang(){
     fi
 }
 # ====== install server ======
-install_program_server_clang() { [ ! -d ${str_program_dir} ] && mkdir -p ${str_program_dir} cd ${str_program_dir} echo "${program_name} install path:$PWD" echo -n "config file for ${program_name}..." # 生成配置文件frps.toml cat > ${str_program_dir}/${program_config_file} << EOF [common] bind_addr = "0.0.0.0" bind_port = ${set_bind_port} kcp_bind_port = ${set_bind_port} dashboard_port = ${set_dashboard_port} dashboard_user = "${set_dashboard_user}" dashboard_pwd = "${set_dashboard_pwd}" vhost_http_port = ${set_vhost_http_port} vhost_https_port = ${set_vhost_https_port} log_file = "${str_log_file_flag}" log_level = "${str_log_level}" log_max_days = ${set_log_max_days} token = "${set_token}" subdomain_host = "${set_subdomain_host}" max_pool_count = ${set_max_pool_count} tcp_mux = ${set_tcp_mux} EOF echo " done"
+install_program_server_clang(){
+    [ ! -d ${str_program_dir} ] && mkdir -p ${str_program_dir}
+    cd ${str_program_dir}
+    echo "${program_name} install path:$PWD"
+
+    echo -n "config file for ${program_name} ..."
+# Config file
+if [[ "${set_kcp}" == "false" ]]; then
+cat > ${str_program_dir}/${program_config_file}<<-EOF
+# [common] is integral section
+[common]
+# A literal address or host name for IPv6 must be enclosed
+# in square brackets, as in "[::1]:80", "[ipv6-host]:http" or "[ipv6-host%zone]:80"
+bind_addr = 0.0.0.0
+bind_port = ${set_bind_port}
+# udp port used for kcp protocol, it can be same with 'bind_port'
+# if not set, kcp is disabled in frps
+#kcp_bind_port = ${set_bind_port}
+# if you want to configure or reload frps by dashboard, dashboard_port must be set
+dashboard_port = ${set_dashboard_port}
+# dashboard assets directory(only for debug mode)
+dashboard_user = ${set_dashboard_user}
+dashboard_pwd = ${set_dashboard_pwd}
+# assets_dir = ./static
+vhost_http_port = ${set_vhost_http_port}
+vhost_https_port = ${set_vhost_https_port}
+# console or real logFile path like ./frps.log
+log_file = ${str_log_file}
+# debug, info, warn, error
+log_level = ${str_log_level}
+log_max_days = ${set_log_max_days}
+# auth token
+token = ${set_token}
+# It is convenient to use subdomain configure for httpãhttps type when many people use one frps server together.
+subdomain_host = ${set_subdomain_host}
+# only allow frpc to bind ports you list, if you set nothing, there won't be any limit
+#allow_ports = 1-65535
+# pool_count in each proxy will change to max_pool_count if they exceed the maximum value
+max_pool_count = ${set_max_pool_count}
+# if tcp stream multiplexing is used, default is true
+tcp_mux = ${set_tcp_mux}
+EOF
+else
+cat > ${str_program_dir}/${program_config_file}<<-EOF
+# [common] is integral section
+[common]
+# A literal address or host name for IPv6 must be enclosed
+# in square brackets, as in "[::1]:80", "[ipv6-host]:http" or "[ipv6-host%zone]:80"
+bind_addr = 0.0.0.0
+bind_port = ${set_bind_port}
+# udp port used for kcp protocol, it can be same with 'bind_port'
+# if not set, kcp is disabled in frps
+kcp_bind_port = ${set_bind_port}
+# if you want to configure or reload frps by dashboard, dashboard_port must be set
+dashboard_port = ${set_dashboard_port}
+# dashboard assets directory(only for debug mode)
+dashboard_user = ${set_dashboard_user}
+dashboard_pwd = ${set_dashboard_pwd}
+# assets_dir = ./static
+vhost_http_port = ${set_vhost_http_port}
+vhost_https_port = ${set_vhost_https_port}
+# console or real logFile path like ./frps.log
+log_file = ${str_log_file}
+# debug, info, warn, error
+log_level = ${str_log_level}
+log_max_days = ${set_log_max_days}
+# auth token
+token = ${set_token}
+# It is convenient to use subdomain configure for httpãhttps type when many people use one frps server together.
+subdomain_host = ${set_subdomain_host}
+# only allow frpc to bind ports you list, if you set nothing, there won't be any limit
+#allow_ports = 1-65535
+# pool_count in each proxy will change to max_pool_count if they exceed the maximum value
+max_pool_count = ${set_max_pool_count}
+# if tcp stream multiplexing is used, default is true
+tcp_mux = ${set_tcp_mux}
+EOF
+fi
+    echo " done"
 
     echo -n "download ${program_name} ..."
     rm -f ${str_program_dir}/${program_name} ${program_init}
@@ -589,7 +667,6 @@ install_program_server_clang() { [ ! -d ${str_program_dir} ] && mkdir -p ${str_p
         update-rc.d -f ${program_name} defaults
     fi
     echo " done"
-    
     [ -s ${program_init} ] && ln -s ${program_init} /usr/bin/${program_name}
     ${program_init} start
     fun_clangcn
