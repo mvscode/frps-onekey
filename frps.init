@@ -22,13 +22,13 @@
 
 # Paths and variables
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
-PROGRAM_NAME="Frps"
+PROGRAM_NAME="frps"
 PROGRAM_PATH="/usr/local/frps"
 SERVICE_NAME="frps"
 BIN="${PROGRAM_PATH}/${SERVICE_NAME}"
 CONFIGFILE="${PROGRAM_PATH}/frps.toml"
 SCRIPT_NAME="/etc/init.d/${SERVICE_NAME}"
-VERSION="2023"
+VERSION="2024"
 PROGRAM_VERSION=$("$BIN" --version)
 RET_VAL=0
 
