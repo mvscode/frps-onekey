@@ -1,5 +1,5 @@
 
-Frp服务端一键配置脚本，脚本默認获取Frp最新版本
+Frp服务端一键配置脚本，脚本默認获取Frp最新版本  
 Frp server one-click configuration script. The script obtains the latest Frp version by default
 
 [![GitHub Repo][repo-shield]][repo-url]
