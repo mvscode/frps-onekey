@@ -1,5 +1,5 @@
 
-Frps服务端一键配置脚本，脚本已支持获取Frp最新版本
+Frps服务端一键配置脚本，脚本默認获取Frp最新版本
 ===========
 
 [![GitHub Repo][repo-shield]][repo-url]
@@ -49,15 +49,7 @@ chmod 700 ./install-frps.sh
 ```Bash
 Usage: /etc/init.d/frps {start|stop|restart|status|config|version}
 ```
-Frps onkey-install-shell
+ Script ChangeLog
 ---------------------------------------
 
- <!-- vim-markdown-toc GFM -->
-
- * ## [Shell Updated [2023/10/23]]([2023/10/23])
-   * ## The install shell hd Support multiple architectures and fetch latest version from Gitee/GitHub
-   * ## Thank muxinxy much https://github.com/MvsCode/frps-onekey/pull/92#issue-1957164654
-    > Added architecture detection for arm, arm64, mips, mips64, mips64le, mipsle, and riscv64.
-    
-    > Integrated functionality to retrieve the latest software version from both Gitee and GitHub.
-   * ## The Frps Version update details will no longer be indicated today
+1/ frps config file change to frps.toml from frps.int
