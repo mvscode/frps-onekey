@@ -49,7 +49,11 @@ chmod 700 ./install-frps.sh
 ```Bash
 Usage: /etc/init.d/frps {start|stop|restart|status|config|version}
 ```
- Script ChangeLog
+ 
+# Script ChangeLog
 ---------------------------------------
+## [1.0.1] - 2024-06-07
 
-1/ frps config file change to frps.toml from frps.int
+### Changed
+* frps program config file change to frps.toml from frps.int
+
