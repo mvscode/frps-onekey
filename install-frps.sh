@@ -113,6 +113,8 @@ checkos(){
         OS=Ubuntu
     elif grep -Eqi "Fedora" /etc/issue || grep -Eq "Fedora" /etc/*-release; then
         OS=Fedora
+    elif grep -Eqi "AlmaLinux" /etc/issue || grep -Eq "AlmaLinux" /etc/*-release; then
+        OS=AlmaLinux
     else
         echo "Not support OS, Please reinstall OS and retry!"
         exit 1
