@@ -70,7 +70,6 @@ start() {
     echo " done"
     echo "${PROGRAM_NAME} (pid $PID) is running."
 }
-
 stop() {
     print_header
     if ! check_run; then
@@ -78,10 +77,13 @@ stop() {
         return 0
     fi
     echo -n "Stopping ${PROGRAM_NAME} (pid $PID)... "
-    kill $PID
-    [ $? -eq 0 ] && echo " done" || echo " failed"
+    if ps -p $PID > /dev/null; then
+        kill $PID
+        [ $? -eq 0 ] && echo " done" || echo " failed"
+    else
+        echo " process not found"
+    fi
 }
-
 restart() {
     stop
     start
