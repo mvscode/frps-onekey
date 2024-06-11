@@ -10,8 +10,8 @@ export FRPS_VER_32BIT="$LATEST_RELEASE"
 export FRPS_INIT="https://raw.githubusercontent.com/MvsCode/frps-onekey/master/frps.init"
 export gitee_download_url="https://gitee.com/Mvscode/frps-onekey/releases/download"
 export github_download_url="https://github.com/fatedier/frp/releases/download"
-export gitee_latest_version=$(curl -s https://gitee.com/mvscode/frps-onekey/releases/latest | grep -Po '"name":\s*"v\K[^"]+')
-export github_latest_version=$(curl -s https://github.com/fatedier/frp/releases/latest | grep -Po '\/tag\/v\K[^"]+')
+export gitee_latest_version_api="https://gitee.com/api/v5/repos/MvsCode/frps-onekey/releases/latest"
+export github_latest_version_api="https://api.github.com/repos/fatedier/frp/releases/latest"
 
 # Program information
 program_name="frps"
