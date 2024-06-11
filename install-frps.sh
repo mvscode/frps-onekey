@@ -573,7 +573,9 @@ install_program_server_frps(){
     echo -n "config file for ${program_name} ..."
 # Config file
 if [[ "${set_transport_protocol}" == "kcp" ]]; then
-cat > ${str_program_dir}/${program_config_file} <<-EOF
+
+cat > ${str_program_dir}/${program_config_file} <<'EOF'
+
 # This configuration file is for reference only. Please do not use this configuration directly to run the program as it may have various issues.
 # A literal address or host name for IPv6 must be enclosed
 # in square brackets, as in "[::1]:80", "[ipv6-host]:http" or "[ipv6-host%zone]:80"
@@ -709,8 +711,10 @@ natholeAnalysisDataReserveHours = 168
 # sshTunnelGateway.autoGenPrivateKeyPath = ""
 # sshTunnelGateway.authorizedKeysFile = "/home/frp-user/.ssh/authorized_keys"
 EOF
+
 else
-cat > ${str_program_dir}/${program_config_file} <<-EOF
+cat > ${str_program_dir}/${program_config_file} <<'EOF'
+
 # This configuration file is for reference only. Please do not use this configuration directly to run the program as it may have various issues.
 # A literal address or host name for IPv6 must be enclosed
 # in square brackets, as in "[::1]:80", "[ipv6-host]:http" or "[ipv6-host%zone]:80"
