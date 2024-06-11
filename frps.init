@@ -72,16 +72,23 @@ start() {
 }
 stop() {
     print_header
-    if ! check_run; then
+    PID=$(ps aux | grep frps | awk '{print $2}')
+    if [ -z "$PID" ]; then
         echo "${PROGRAM_NAME} is not running."
         return 0
     fi
     echo -n "Stopping ${PROGRAM_NAME} (pid $PID)... "
-    if ps -p $PID > /dev/null; then
-        kill $PID
-        [ $? -eq 0 ] && echo " done" || echo " failed"
+    kill $PID
+    if [ $? -eq 0 ]; then
+        echo "done"
     else
-        echo " process not found"
+        echo "failed"
+        kill -9 $PID
+        if [ $? -eq 0 ]; then
+            echo "done (forced)"
+        else
+            echo "failed (forced)"
+        fi
     fi
 }
 restart() {
