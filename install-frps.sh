@@ -74,7 +74,7 @@ fun_frps(){
     fi
     echo ""
     echo "+------------------------------------------------------------+"
-    echo "|   frps for Linux Server, Author Clang, Mender MvsCode     |" 
+    echo "|   frps for Linux Server, Author Clang, Mender MvsCode      |" 
     echo "|      A tool to auto-compile & install frps on Linux        |"
     echo "+------------------------------------------------------------+"
     echo ""
@@ -526,15 +526,15 @@ pre_install_frps(){
         echo -e "transporttcpMux: ${COLOR_YELOW}${set_transporttcpMux}${COLOR_END}"
         echo -e ""
         echo -e "Please select ${COLOR_GREEN}transport_protocol${COLOR_END}"
-        echo "1: kcp"
-        echo "2: quic (default)"
+        echo "1: kcp (default)"
+        echo "2: quic"
         echo "-------------------------"
-        read -e -p "Enter your choice (1, 2 or exit. default [2]): " str_transport_protocol
+        read -e -p "Enter your choice (1, 2 or exit. default [1]): " str_transport_protocol
         case "${transport_protocol}" in
             1|[kK][cC][pP]) set_transport_protocol="kcp" ;;
-            2|[qQ][uU][iI][cC]|[yY]|[yY][eE][sS]|[oO][nN]|[tT][rR][uU][eE]|[eE][nN][aA][bB][lL][eE]) set_transport_protocol="quic" ;;
+            2|[qQ][uU][iI][cC]) set_transport_protocol="quic" ;;
               [eE][xX][iI][tT]) exit 1 ;;
-            *) set_transport_protocol="quic"
+            *) set_transport_protocol="kcp"
                 ;;
         esac
         echo -e "transport_protocol: ${COLOR_YELOW}${set_transport_protocol}${COLOR_END}"
@@ -550,7 +550,7 @@ pre_install_frps(){
         echo -e "Dashboard password : ${COLOR_GREEN}${set_webServerpassword}${COLOR_END}"
         echo -e "token              : ${COLOR_GREEN}${set_token}${COLOR_END}"
         echo -e "subDomainHost      : ${COLOR_GREEN}${set_subDomainHost}${COLOR_END}"
-		echo -e "Transport protocol : ${COLOR_GREEN}${set_transport_protocol}${COLOR_END}"
+        echo -e "Transport protocol : ${COLOR_GREEN}${set_transport_protocol}${COLOR_END}"
         echo -e "TransporttcpMux    : ${COLOR_GREEN}${set_transporttcpMux}${COLOR_END}"
         echo -e "Max Pool count     : ${COLOR_GREEN}${set_transportmaxPoolCount}${COLOR_END}"
         echo -e "Log level          : ${COLOR_GREEN}${str_loglevel}${COLOR_END}"
