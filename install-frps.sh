@@ -641,7 +641,6 @@ vhostHTTPSPort = ${set_vhost_https_port}
 
 # Configure the web server to enable the dashboard for frps.
 # dashboard is available only if webServerport is set.
-webServer.addr = "0.0.0.0"
 webServer.port = ${set_dashboard_port}
 webServer.user = "${set_dashboard_user}"
 webServer.password = "${set_dashboard_pwd}"
