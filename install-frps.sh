@@ -1,41 +1,61 @@
 #!/bin/bash
+
+# Set the PATH variable
 PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
-###export###
 export PATH
-export FRPS_VER=0.52.1
-export FRPS_YAML="https://raw.githubusercontent.com/MvsCode/frps-onekey/dev/frps.yaml"
+
+# Set environment variables
+export FRPS_VER="$LATEST_RELEASE"
+export FRPS_VER_32BIT="$LATEST_RELEASE"
+export FRPS_INIT="https://raw.githubusercontent.com/MvsCode/frps-onekey/master/frps.init"
 export gitee_download_url="https://gitee.com/Mvscode/frps-onekey/releases/download"
 export github_download_url="https://github.com/fatedier/frp/releases/download"
-#======================================================================
-#   System Required:  CentOS Debian Ubuntu or Fedora(32bit/64bit)
-#   Description:  A tool to auto-compile & install frps on Linux
-#   Author : Clang
-#   Mender : MvsCode
-#======================================================================
+export gitee_latest_version_api="https://gitee.com/api/v5/repos/MvsCode/frps-onekey/releases/latest"
+export github_latest_version_api="https://api.github.com/repos/fatedier/frp/releases/latest"
+
+# Program information
 program_name="frps"
-version="20231020"
+version="202405"
 str_program_dir="/usr/local/${program_name}"
 program_init="/etc/init.d/${program_name}"
-program_config_file="frps.yaml"
+program_config_file="frps.toml"
 ver_file="/tmp/.frp_ver.sh"
-str_install_shell="https://raw.githubusercontent.com/Mvscode/frps-onekey/dev/install-frps.sh"
-shell_update(){
+str_install_shell="https://raw.githubusercontent.com/Mvscode/frps-onekey/master/install-frps.sh"
+
+# Function to check for shell updates
+shell_update() {
+    # Clear the terminal
     fun_clangcn "clear"
-    echo "Check updates for shell..."
-    remote_shell_version=`wget --no-check-certificate -qO- ${str_install_shell} | sed -n '/'^version'/p' | cut -d\" -f2`
-    if [ ! -z ${remote_shell_version} ]; then
-        if [[ "${version}" != "${remote_shell_version}" ]];then
-            echo -e "${COLOR_GREEN}Found a new version,update now!!!${COLOR_END}"
+
+    # Echo a message to indicate that we're checking for shell updates
+    echo "Checking for shell updates..."
+
+    # Fetch the remote shell version from the specified URL
+    remote_shell_version=$(wget --no-check-certificate -qO- "${str_install_shell}" | sed -n '/^version/p' | cut -d'"' -f2)
+
+    # Check if the remote shell version is not empty
+    if [ -n "${remote_shell_version}" ]; then
+        # Check if the local version is different from the remote version
+        if [[ "${version}" != "${remote_shell_version}" ]]; then
+            # Echo a message to indicate that a new version has been found
+            echo -e "${COLOR_GREEN}Found a new version, updating now!${COLOR_END}"
             echo
-            echo -n "Update shell ..."
-            if ! wget --no-check-certificate -qO $0 ${str_install_shell}; then
+
+            # Echo a message to indicate that we're updating the shell
+            echo -n "Updating shell..."
+
+            # Attempt to download the new version and overwrite the current script
+            if ! wget --no-check-certificate -qO "$0" "${str_install_shell}"; then
+                # Echo a message to indicate that the update failed
                 echo -e " [${COLOR_RED}failed${COLOR_END}]"
                 echo
                 exit 1
             else
+                # Echo a message to indicate that the update was successful
                 echo -e " [${COLOR_GREEN}OK${COLOR_END}]"
                 echo
-                echo -e "${COLOR_GREEN}Please Re-run${COLOR_END} ${COLOR_PINK}$0 ${clang_action}${COLOR_END}"
+                # Echo a message to instruct the user to re-run the script
+                echo -e "${COLOR_GREEN}Please re-run${COLOR_END} ${COLOR_PINK}$0 ${clang_action}${COLOR_END}"
                 echo
                 exit 1
             fi
@@ -52,7 +72,7 @@ fun_clangcn(){
     echo ""
     echo "+------------------------------------------------------------+"
     echo "|   frps for Linux Server, Author Clang ，Mender MvsCode     |" 
-    echo "|      A tool to auto-compile & install frps on Linux  2init |"
+    echo "|      A tool to auto-compile & install frps on Linux        |"
     echo "+------------------------------------------------------------+"
     echo ""
 }
@@ -118,15 +138,22 @@ centosversion(){
     fi
 }
 # Check OS bit
-check_os_bit(){
-    ARCHS=""
-    if [[ `getconf WORD_BIT` = '32' && `getconf LONG_BIT` = '64' ]] ; then
-        Is_64bit='y'
-        ARCHS="amd64"
-    else
-        Is_64bit='n'
-        ARCHS="386"
-    fi
+check_os_bit() {
+    local arch
+    arch=$(uname -m)
+
+    case $arch in
+        x86_64)      Is_64bit='y'; ARCHS="amd64";;
+        i386|i486|i586|i686) Is_64bit='n'; ARCHS="386"; FRPS_VER="$FRPS_VER_32BIT";;
+        aarch64)     Is_64bit='y'; ARCHS="arm64";;
+        arm*|armv*)  Is_64bit='n'; ARCHS="arm"; FRPS_VER="$FRPS_VER_32BIT";;
+        mips)        Is_64bit='n'; ARCHS="mips"; FRPS_VER="$FRPS_VER_32BIT";;
+        mips64)      Is_64bit='y'; ARCHS="mips64";;
+        mips64el)    Is_64bit='y'; ARCHS="mips64le";;
+        mipsel)      Is_64bit='n'; ARCHS="mipsle"; FRPS_VER="$FRPS_VER_32BIT";;
+        riscv64)     Is_64bit='y'; ARCHS="riscv64";;
+        *)           echo "Unknown architecture";;
+    esac
 }
 check_centosversion(){
 if centosversion 5; then
@@ -178,10 +205,12 @@ fun_getServer(){
     [ -z "${set_server_url}" ] && set_server_url="${def_server_url}"
     case "${set_server_url}" in
         1|[Ga][Ii][Tt][Ee][Ee])
-            program_download_url=${gitee_download_url}
+            program_download_url=${gitee_download_url};
+            choice=1
             ;;
         2|[Gg][Ii][Tt][Hh][Uu][Bb])
-            program_download_url=${github_download_url}
+            program_download_url=${github_download_url};
+            choice=2
             ;;
         [eE][xX][iI][tT])
             exit 1
@@ -196,6 +225,16 @@ fun_getServer(){
 }
 fun_getVer(){
     echo -e "Loading network version for ${program_name}, please wait..."
+    case $choice in
+        1)  LATEST_RELEASE=$(curl -s ${gitee_latest_version_api} | grep -oP '"tag_name":"\Kv[^"]+' | cut -c2-);;
+        2)  LATEST_RELEASE=$(curl -s ${github_latest_version_api} | grep '"tag_name":' | cut -d '"' -f 4 | cut -c 2-);;
+    esac
+    if [[ ! -z "$LATEST_RELEASE" ]]; then
+        FRPS_VER="$LATEST_RELEASE"
+        echo "FRPS_VER set to: $FRPS_VER"
+    else
+        echo "Failed to retrieve the latest version."
+    fi
     program_latest_filename="frp_${FRPS_VER}_linux_${ARCHS}.tar.gz"
     program_latest_file_url="${program_download_url}/v${FRPS_VER}/${program_latest_filename}"
     if [ -z "${program_latest_filename}" ]; then
@@ -610,7 +649,7 @@ fi
     echo " done"
     echo -n "download ${program_init}..."
     if [ ! -s ${program_init} ]; then
-        if ! wget  -q ${FRPS_YAML} -O ${program_init}; then
+        if ! wget  -q ${FRPS_INIT} -O ${program_init}; then
             echo -e " ${COLOR_RED}failed${COLOR_END}"
             exit 1
         fi
@@ -800,64 +839,72 @@ update_config_clang(){
         fi
     fi
 }
-update_program_server_clang(){
+update_program_server_clang() {
     fun_clangcn "clear"
-    if [ -s ${program_init} ] || [ -s ${str_program_dir}/${program_name} ] ; then
-        echo "============== Update ${program_name} =============="
+
+    if [ -s "$program_init" ] || [ -s "$str_program_dir/$program_name" ]; then
+        echo "============== Update $program_name =============="
         update_config_clang
         checkos
         check_centosversion
         check_os_bit
-    fun_getVer
-        remote_init_version=`wget  -qO- ${FRPS_YAML} | sed -n '/'^version'/p' | cut -d\" -f2`
-        local_init_version=`sed -n '/'^version'/p' ${program_init} | cut -d\" -f2`
-        install_shell=${strPath}
-        if [ ! -z ${remote_init_version} ];then
-            if [[ "${local_init_version}" != "${remote_init_version}" ]];then
-                echo "========== Update ${program_name} ${program_init} =========="
-                if ! wget  ${FRPS_YAML} -O ${program_init}; then
-                    echo "Failed to download ${program_name}.init file!"
+        fun_getVer
+
+        remote_init_version=$(wget -qO- "$FRPS_INIT" | sed -n '/^version/p' | cut -d\" -f2)
+        local_init_version=$(sed -n '/^version/p' "$program_init" | cut -d\" -f2)
+        install_shell="$strPath"
+
+        if [ -n "$remote_init_version" ]; then
+            if [ "$local_init_version" != "$remote_init_version" ]; then
+                echo "========== Update $program_name $program_init =========="
+                if ! wget "$FRPS_INIT" -O "$program_init"; then
+                    echo "Failed to download $program_name.init file!"
                     exit 1
                 else
                     echo -e "${COLOR_GREEN}${program_init} Update successfully !!!${COLOR_END}"
                 fi
             fi
         fi
-        [ ! -d ${str_program_dir} ] && mkdir -p ${str_program_dir}
-        echo -e "Loading network version for ${program_name}, please wait..."
-     fun_getServer
+
+        [ ! -d "$str_program_dir" ] && mkdir -p "$str_program_dir"
+        echo -e "Loading network version for $program_name, please wait..."
+        fun_getServer
         fun_getVer >/dev/null 2>&1
-        local_program_version=`${str_program_dir}/${program_name} --version`
-        echo -e "${COLOR_GREEN}${program_name}  local version ${local_program_version}${COLOR_END}"
-        echo -e "${COLOR_GREEN}${program_name} remote version ${FRPS_VER}${COLOR_END}"
-        if [[ "${local_program_version}" != "${FRPS_VER}" ]];then
-            echo -e "${COLOR_GREEN}Found a new version,update now!!!${COLOR_END}"
-            ${program_init} stop
+        local_program_version="$($str_program_dir/$program_name --version)"
+        echo -e "${COLOR_GREEN}$program_name local version $local_program_version${COLOR_END}"
+        echo -e "${COLOR_GREEN}$program_name remote version $FRPS_VER${COLOR_END}"
+
+        if [ "$local_program_version" != "$FRPS_VER" ]; then
+            echo -e "${COLOR_GREEN}Found a new version, update now!!!${COLOR_END}"
+            "$program_init" stop
             sleep 1
-            rm -f /usr/bin/${program_name} ${str_program_dir}/${program_name}
-     fun_download_file
-            if [ "${OS}" == 'CentOS' ]; then
-                chmod +x ${program_init}
-                chkconfig --add ${program_name}
+            rm -f /usr/bin/$program_name "$str_program_dir/$program_name"
+            fun_download_file
+
+            if [ "$OS" == 'CentOS' ]; then
+                chmod +x "$program_init"
+                chkconfig --add "$program_name"
             else
-                chmod +x ${program_init}
-                update-rc.d -f ${program_name} defaults
+                chmod +x "$program_init"
+                update-rc.d -f "$program_name" defaults
             fi
-            [ -s ${program_init} ] && ln -s ${program_init} /usr/bin/${program_name}
-            [ ! -x ${program_init} ] && chmod 755 ${program_init}
-            ${program_init} start
-            echo "${program_name} version `${str_program_dir}/${program_name} --version`"
-            echo "${program_name} update success!"
+
+            [ -s "$program_init" ] && ln -s "$program_init" /usr/bin/$program_name
+            [ ! -x "$program_init" ] && chmod 755 "$program_init"
+            "$program_init" start
+            echo "$program_name version $($str_program_dir/$program_name --version)"
+            echo "$program_name update success!"
         else
-                echo -e "no need to update !!!${COLOR_END}"
+            echo -e "no need to update !!!${COLOR_END}"
         fi
     else
-        echo "${program_name} Not install!"
+        echo "$program_name Not install!"
     fi
     exit 0
 }
+
 clear
-strPath=`pwd`
+strPath=$(pwd)
 rootness
 fun_set_text_color
 checkos
@@ -865,26 +912,33 @@ check_centosversion
 check_os_bit
 pre_install_packs
 shell_update
-# initialization
+
+# Initialization
 action=$1
-[  -z $1 ]
-case "$action" in
-install)
-    pre_install_clang 2>&1 | tee /root/${program_name}-install.log
-    ;;
-config)
-    configure_program_server_clang
-    ;;
-uninstall)
-    uninstall_program_server_clang 2>&1 | tee /root/${program_name}-uninstall.log
-    ;;
-update)
-    update_program_server_clang 2>&1 | tee /root/${program_name}-update.log
-    ;;
-*)
+if [ -z "$action" ]; then
     fun_clangcn
-    echo "Arguments error! [${action} ]"
-    echo "Usage: `basename $0` {install|uninstall|update|config}"
+    echo "Arguments error! [$action ]"
+    echo "Usage: $(basename "$0") {install|uninstall|update|config}"
     RET_VAL=1
-    ;;
-esac
+else
+    case "$action" in
+    install)
+        pre_install_clang 2>&1 | tee /root/${program_name}-install.log
+        ;;
+    config)
+        configure_program_server_clang
+        ;;
+    uninstall)
+        uninstall_program_server_clang 2>&1 | tee /root/${program_name}-uninstall.log
+        ;;
+    update)
+        update_program_server_clang 2>&1 | tee /root/${program_name}-update.log
+        ;;
+    *)
+        fun_clangcn
+        echo "Arguments error! [$action ]"
+        echo "Usage: $(basename "$0") {install|uninstall|update|config}"
+        RET_VAL=1
+        ;;
+    esac
+fi
