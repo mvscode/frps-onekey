@@ -57,3 +57,13 @@ Usage: /etc/init.d/frps {start|stop|restart|status|config|version}
 #### Changed
 * frps program config file change to frps.toml from frps.int
 
+### [1.0.2] - 2024-06-12
+
+#### Update
+* Update format to follow up the latest config file for server and clent
+  **for example:
+    bind_port --> bindPort
+    kcp_bind_port --> kcpBindPort
+    vhost_http_port --> vhostHTTPPort
+    vhost_http_port --> vhostHTTPSPort
+    etc..
