@@ -18,7 +18,7 @@ program_name="frps"
 version="202405"
 str_program_dir="/usr/local/${program_name}"
 program_init="/etc/init.d/${program_name}"
-program_config_file="frps.ini"
+program_config_file="frps.toml"
 ver_file="/tmp/.frp_ver.sh"
 str_install_shell="https://raw.githubusercontent.com/Mvscode/frps-onekey/master/install-frps.sh"
 
