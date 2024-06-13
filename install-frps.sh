@@ -578,6 +578,7 @@ cat << EOF > "${str_program_dir}/${program_config_file}"
 # A literal address or host name for IPv6 must be enclosed
 # in square brackets, as in "[::1]:80", "[ipv6-host]:http" or "[ipv6-host%zone]:80"
 # For single "bindAddr" field, no need square brackets, like `bindAddr = "::"`.
+
 bindAddr = "0.0.0.0"
 bindPort = ${set_bind_port}
 
@@ -717,6 +718,7 @@ cat << EOF > "${str_program_dir}/${program_config_file}"
 # A literal address or host name for IPv6 must be enclosed
 # in square brackets, as in "[::1]:80", "[ipv6-host]:http" or "[ipv6-host%zone]:80"
 # For single "bindAddr" field, no need square brackets, like `bindAddr = "::"`.
+
 bindAddr = "0.0.0.0"
 bindPort = ${set_bind_port}
 
