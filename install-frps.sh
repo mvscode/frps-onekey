@@ -339,7 +339,7 @@ fun_input_vhost_https_port(){
     fun_check_port "vhost_https" "${input_vhost_https_port}"
 }
 fun_input_log_max_days(){
-    def_max_days="30" 
+    def_max_days="15" 
     def_log_max_days="3"
     echo ""
     echo -e "Please input ${program_name} ${COLOR_GREEN}log_max_days${COLOR_END} [1-${def_max_days}]"
@@ -348,8 +348,8 @@ fun_input_log_max_days(){
     fun_check_number "log_max_days" "${def_max_days}" "${input_log_max_days}"
 }
 fun_input_max_pool_count(){
-    def_max_pool="200"
-    def_max_pool_count="50"
+    def_max_pool="50"
+    def_max_pool_count="5"
     echo ""
     echo -e "Please input ${program_name} ${COLOR_GREEN}max_pool_count${COLOR_END} [1-${def_max_pool}]"
     read -e -p "(Default : ${def_max_pool_count}):" input_max_pool_count
@@ -598,10 +598,10 @@ bindPort = ${set_bind_port}
 # transport.heartbeatTimeout = 90
 
 # Pool count in each proxy will keep no more than maxPoolCount.
-# transport.maxPoolCount = ${set_transportmaxPoolCount}
+transport.maxPoolCount = ${set_max_pool_count}
 
 # If tcp stream multiplexing is used, default is true
-# transport.tcpMux = ${set_transporttcpMux}
+transport.tcpMux = "${set_tcp_mux}"
 
 # Specify keep alive interval for tcp mux.
 # only valid if tcpMux is true.
@@ -733,10 +733,10 @@ kcpBindPort = ${set_bind_port}
 # transport.heartbeatTimeout = 90
 
 # Pool count in each proxy will keep no more than maxPoolCount.
-# transport.maxPoolCount = ${set_transportmaxPoolCount}
+transport.maxPoolCount = ${set_max_pool_count}
 
 # If tcp stream multiplexing is used, default is true
-# transport.tcpMux = ${set_transporttcpMux}
+transport.tcpMux = ${set_tcp_mux}
 
 # Specify keep alive interval for tcp mux.
 # only valid if tcpMux is true.
@@ -840,6 +840,7 @@ subDomainHost = "${set_subdomain_host}"
 # sshTunnelGateway.autoGenPrivateKeyPath = ""
 # sshTunnelGateway.authorizedKeysFile = "/home/frp-user/.ssh/authorized_keys"
 EOF
+
 fi
     echo " done"
 
