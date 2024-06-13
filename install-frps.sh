@@ -938,6 +938,13 @@ uninstall_program_server_clang(){
         if [ "${str_uninstall}" == 'n' ]; then
             echo "You select [No],shell exit!"
         else
+            checkos
+            ${program_init} stop
+            if [ "${OS}" == 'CentOS' ]; then
+                chkconfig --del ${program_name}
+            else
+                update-rc.d -f ${program_name} remove
+            fi
             rm -f ${program_init} /var/run/${program_name}.pid /usr/bin/${program_name}
             rm -fr ${str_program_dir}
             echo "${program_name} uninstall success!"
