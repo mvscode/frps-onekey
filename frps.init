@@ -72,7 +72,7 @@ start() {
 }
 stop() {
     print_header
-    PID=$(ps aux | grep frps | awk '{print $2}')
+    PID=$(pgrep -f $PROGRAM_NAME)
     if [ -z "$PID" ]; then
         echo "${PROGRAM_NAME} is not running."
         return 0
