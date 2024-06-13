@@ -57,7 +57,7 @@ Usage: /etc/init.d/frps {start|stop|restart|status|config|version}
 #### Changed
 * frps program config file change to frps.toml from frps.int
 
-### [1.0.2] - 2024-06-12
+### [1.0.2] - 2024-06-13
 
 #### Update
 * Update format to follow up the latest config file for server and clent
