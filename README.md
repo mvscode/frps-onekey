@@ -61,8 +61,8 @@ Usage: /etc/init.d/frps {start|stop|restart|status|config|version}
 
 #### Update
 * Update frp server config format to follow up the latest version.
-  For example:
   ```
+   For example:
   bind_addr --> bindAddr
   bind_port --> bindPort
   kcp_bind_port --> kcpBindPort
