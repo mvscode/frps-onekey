@@ -574,11 +574,6 @@ install_program_server_clang(){
 if [[ "${set_kcp}" == "false" ]]; then
 cat << EOF > "${str_program_dir}/${program_config_file}"
 
-# This configuration file is for reference only. Please do not use this configuration directly to run the program as it may have various issues.
-# A literal address or host name for IPv6 must be enclosed
-# in square brackets, as in "[::1]:80", "[ipv6-host]:http" or "[ipv6-host%zone]:80"
-# For single "bindAddr" field, no need square brackets, like `bindAddr = "::"`.
-
 bindAddr = "0.0.0.0"
 bindPort = ${set_bind_port}
 
@@ -713,11 +708,6 @@ EOF
 
 else
 cat << EOF > "${str_program_dir}/${program_config_file}"
-
-# This configuration file is for reference only. Please do not use this configuration directly to run the program as it may have various issues.
-# A literal address or host name for IPv6 must be enclosed
-# in square brackets, as in "[::1]:80", "[ipv6-host]:http" or "[ipv6-host%zone]:80"
-# For single "bindAddr" field, no need square brackets, like `bindAddr = "::"`.
 
 bindAddr = "0.0.0.0"
 bindPort = ${set_bind_port}
