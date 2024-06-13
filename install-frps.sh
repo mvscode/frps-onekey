@@ -339,7 +339,7 @@ fun_input_vhost_https_port(){
     fun_check_port "vhost_https" "${input_vhost_https_port}"
 }
 fun_input_log_max_days(){
-    def_max_days="30" 
+    def_max_days="15" 
     def_log_max_days="3"
     echo ""
     echo -e "Please input ${program_name} ${COLOR_GREEN}log_max_days${COLOR_END} [1-${def_max_days}]"
@@ -348,8 +348,8 @@ fun_input_log_max_days(){
     fun_check_number "log_max_days" "${def_max_days}" "${input_log_max_days}"
 }
 fun_input_max_pool_count(){
-    def_max_pool="200"
-    def_max_pool_count="50"
+    def_max_pool="50"
+    def_max_pool_count="5"
     echo ""
     echo -e "Please input ${program_name} ${COLOR_GREEN}max_pool_count${COLOR_END} [1-${def_max_pool}]"
     read -e -p "(Default : ${def_max_pool_count}):" input_max_pool_count
@@ -569,77 +569,278 @@ install_program_server_clang(){
     echo "${program_name} install path:$PWD"
 
     echo -n "config file for ${program_name} ..."
-# Config file
+    
+# Write the configuration to the frps config file
 if [[ "${set_kcp}" == "false" ]]; then
-cat > ${str_program_dir}/${program_config_file}<<-EOF
-# [common] is integral section
-[common]
-# A literal address or host name for IPv6 must be enclosed
-# in square brackets, as in "[::1]:80", "[ipv6-host]:http" or "[ipv6-host%zone]:80"
-bind_addr = 0.0.0.0
-bind_port = ${set_bind_port}
-# udp port used for kcp protocol, it can be same with 'bind_port'
-# if not set, kcp is disabled in frps
-#kcp_bind_port = ${set_bind_port}
-# if you want to configure or reload frps by dashboard, dashboard_port must be set
-dashboard_port = ${set_dashboard_port}
+cat << EOF > "${str_program_dir}/${program_config_file}"
+
+bindAddr = "0.0.0.0"
+bindPort = ${set_bind_port}
+
+# udp port used for kcp protocol, it can be same with 'bindPort'.
+# if not set, kcp is disabled in frps.
+# kcpBindPort = ${set_bind_port}
+
+# udp port used for quic protocol.
+# if not set, quic is disabled in frps.
+# quicBindPort = ${set_bindPort}
+
+# Specify which address proxy will listen for, default value is same with bindAddr
+# proxyBindAddr = "127.0.0.1"
+
+# quic protocol options
+# transport.quic.keepalivePeriod = 10
+# transport.quic.maxIdleTimeout = 30
+# transport.quic.maxIncomingStreams = 100000
+
+# Heartbeat configure, it's not recommended to modify the default value
+# The default value of heartbeatTimeout is 90. Set negative value to disable it.
+# transport.heartbeatTimeout = 90
+
+# Pool count in each proxy will keep no more than maxPoolCount.
+transport.maxPoolCount = ${set_max_pool_count}
+
+# If tcp stream multiplexing is used, default is true
+transport.tcpMux = "${set_tcp_mux}"
+
+# Specify keep alive interval for tcp mux.
+# only valid if tcpMux is true.
+# transport.tcpMuxKeepaliveInterval = 30
+
+# tcpKeepalive specifies the interval between keep-alive probes for an active network connection between frpc and frps.
+# If negative, keep-alive probes are disabled.
+# transport.tcpKeepalive = 7200
+
+# transport.tls.force specifies whether to only accept TLS-encrypted connections. By default, the value is false.
+# transport.tls.force = false
+
+# transport.tls.certFile = "server.crt"
+# transport.tls.keyFile = "server.key"
+# transport.tls.trustedCaFile = "ca.crt"
+
+# If you want to support virtual host, you must set the http port for listening (optional)
+# Note: http port and https port can be same with bindPort
+vhostHTTPPort = ${set_vhost_http_port}
+vhostHTTPSPort = ${set_vhost_https_port}
+
+# Response header timeout(seconds) for vhost http server, default is 60s
+# vhostHTTPTimeout = 60
+
+# tcpmuxHTTPConnectPort specifies the port that the server listens for TCP
+# HTTP CONNECT requests. If the value is 0, the server will not multiplex TCP
+# requests on one single port. If it's not - it will listen on this value for
+# HTTP CONNECT requests. By default, this value is 0.
+# tcpmuxHTTPConnectPort = 1337
+
+# If tcpmuxPassthrough is true, frps won't do any update on traffic.
+# tcpmuxPassthrough = false
+
+# Configure the web server to enable the dashboard for frps.
+# dashboard is available only if webServerport is set.
+webServer.addr = "0.0.0.0"
+webServer.port = ${set_dashboard_port}
+webServer.user = "${set_dashboard_user}"
+webServer.password = "${set_dashboard_pwd}"
+# webServer.tls.certFile = "server.crt"
+# webServer.tls.keyFile = "server.key"
 # dashboard assets directory(only for debug mode)
-dashboard_user = ${set_dashboard_user}
-dashboard_pwd = ${set_dashboard_pwd}
-# assets_dir = ./static
-vhost_http_port = ${set_vhost_http_port}
-vhost_https_port = ${set_vhost_https_port}
+# webServer.assetsDir = "./static"
+
+# Enable golang pprof handlers in dashboard listener.
+# Dashboard port must be set first
+# webServer.pprofEnable = false
+
+# enablePrometheus will export prometheus metrics on webServer in /metrics api.
+# enablePrometheus = true
+
 # console or real logFile path like ./frps.log
-log_file = ${str_log_file}
-# debug, info, warn, error
-log_level = ${str_log_level}
-log_max_days = ${set_log_max_days}
+log.to = "${str_log_file_flag}"
+# trace, debug, info, warn, error
+log.level = "${str_log_level}"
+log.maxDays = ${set_log_max_days}
+# disable log colors when log.to is console, default is false
+# log.disablePrintColor = false
+
+# DetailedErrorsToClient defines whether to send the specific error (with debug info) to frpc. By default, this value is true.
+# detailedErrorsToClient = true
+
+# auth.method specifies what authentication method to use authenticate frpc with frps.
+# If "token" is specified - token will be read into login message.
+# If "oidc" is specified - OIDC (Open ID Connect) token will be issued using OIDC settings. By default, this value is "token".
+auth.method = "token"
+
+# auth.additionalScopes specifies additional scopes to include authentication information.
+# Optional values are HeartBeats, NewWorkConns.
+# auth.additionalScopes = ["HeartBeats", "NewWorkConns"]
+
 # auth token
-token = ${set_token}
-# It is convenient to use subdomain configure for http、https type when many people use one frps server together.
-subdomain_host = ${set_subdomain_host}
-# only allow frpc to bind ports you list, if you set nothing, there won't be any limit
-#allow_ports = 1-65535
-# pool_count in each proxy will change to max_pool_count if they exceed the maximum value
-max_pool_count = ${set_max_pool_count}
-# if tcp stream multiplexing is used, default is true
-tcp_mux = ${set_tcp_mux}
+auth.token = "${set_token}"
+
+# userConnTimeout specifies the maximum time to wait for a work connection.
+# userConnTimeout = 10
+
+# Max ports can be used for each client, default value is 0 means no limit
+# maxPortsPerClient = 0
+
+# If subDomainHost is not empty, you can set subdomain when type is http or https in frpc's configure file
+# When subdomain is test, the host used by routing is test.frps.com
+subDomainHost = "${set_subdomain_host}"
+
+# custom 404 page for HTTP requests
+# custom404Page = "/path/to/404.html"
+
+# specify udp packet size, unit is byte. If not set, the default value is 1500.
+# This parameter should be same between client and server.
+# It affects the udp and sudp proxy.
+# udpPacketSize = 1500
+
+# Retention time for NAT hole punching strategy data.
+# natholeAnalysisDataReserveHours = 168
+
+# ssh tunnel gateway
+# If you want to enable this feature, the bindPort parameter is required, while others are optional.
+# By default, this feature is disabled. It will be enabled if bindPort is greater than 0.
+# sshTunnelGateway.bindPort = 2200
+# sshTunnelGateway.privateKeyFile = "/home/frp-user/.ssh/id_rsa"
+# sshTunnelGateway.autoGenPrivateKeyPath = ""
+# sshTunnelGateway.authorizedKeysFile = "/home/frp-user/.ssh/authorized_keys"
 EOF
+
 else
-cat > ${str_program_dir}/${program_config_file}<<-EOF
-# [common] is integral section
-[common]
-# A literal address or host name for IPv6 must be enclosed
-# in square brackets, as in "[::1]:80", "[ipv6-host]:http" or "[ipv6-host%zone]:80"
-bind_addr = 0.0.0.0
-bind_port = ${set_bind_port}
-# udp port used for kcp protocol, it can be same with 'bind_port'
-# if not set, kcp is disabled in frps
-kcp_bind_port = ${set_bind_port}
-# if you want to configure or reload frps by dashboard, dashboard_port must be set
-dashboard_port = ${set_dashboard_port}
+cat << EOF > "${str_program_dir}/${program_config_file}"
+
+bindAddr = "0.0.0.0"
+bindPort = ${set_bind_port}
+
+# udp port used for kcp protocol, it can be same with 'bindPort'.
+# if not set, kcp is disabled in frps.
+kcpBindPort = ${set_bind_port}
+
+# udp port used for quic protocol.
+# if not set, quic is disabled in frps.
+# quicBindPort = ${set_bindPort}
+
+# Specify which address proxy will listen for, default value is same with bindAddr
+# proxyBindAddr = "127.0.0.1"
+
+# quic protocol options
+# transport.quic.keepalivePeriod = 10
+# transport.quic.maxIdleTimeout = 30
+# transport.quic.maxIncomingStreams = 100000
+
+# Heartbeat configure, it's not recommended to modify the default value
+# The default value of heartbeatTimeout is 90. Set negative value to disable it.
+# transport.heartbeatTimeout = 90
+
+# Pool count in each proxy will keep no more than maxPoolCount.
+transport.maxPoolCount = ${set_max_pool_count}
+
+# If tcp stream multiplexing is used, default is true
+transport.tcpMux = ${set_tcp_mux}
+
+# Specify keep alive interval for tcp mux.
+# only valid if tcpMux is true.
+# transport.tcpMuxKeepaliveInterval = 30
+
+# tcpKeepalive specifies the interval between keep-alive probes for an active network connection between frpc and frps.
+# If negative, keep-alive probes are disabled.
+# transport.tcpKeepalive = 7200
+
+# transport.tls.force specifies whether to only accept TLS-encrypted connections. By default, the value is false.
+# transport.tls.force = false
+
+# transport.tls.certFile = "server.crt"
+# transport.tls.keyFile = "server.key"
+# transport.tls.trustedCaFile = "ca.crt"
+
+# If you want to support virtual host, you must set the http port for listening (optional)
+# Note: http port and https port can be same with bindPort
+vhostHTTPPort = ${set_vhost_http_port}
+vhostHTTPSPort = ${set_vhost_https_port}
+
+# Response header timeout(seconds) for vhost http server, default is 60s
+# vhostHTTPTimeout = 60
+
+# tcpmuxHTTPConnectPort specifies the port that the server listens for TCP
+# HTTP CONNECT requests. If the value is 0, the server will not multiplex TCP
+# requests on one single port. If it's not - it will listen on this value for
+# HTTP CONNECT requests. By default, this value is 0.
+# tcpmuxHTTPConnectPort = 1337
+
+# If tcpmuxPassthrough is true, frps won't do any update on traffic.
+# tcpmuxPassthrough = false
+
+# Configure the web server to enable the dashboard for frps.
+# dashboard is available only if webServerport is set.
+webServer.addr = "0.0.0.0"
+webServer.port = ${set_dashboard_port}
+webServer.user = "${set_dashboard_user}"
+webServer.password = "${set_dashboard_pwd}"
+# webServer.tls.certFile = "server.crt"
+# webServer.tls.keyFile = "server.key"
 # dashboard assets directory(only for debug mode)
-dashboard_user = ${set_dashboard_user}
-dashboard_pwd = ${set_dashboard_pwd}
-# assets_dir = ./static
-vhost_http_port = ${set_vhost_http_port}
-vhost_https_port = ${set_vhost_https_port}
+# webServer.assetsDir = "./static"
+
+# Enable golang pprof handlers in dashboard listener.
+# Dashboard port must be set first
+# webServer.pprofEnable = false
+
+# enablePrometheus will export prometheus metrics on webServer in /metrics api.
+# enablePrometheus = true
+
 # console or real logFile path like ./frps.log
-log_file = ${str_log_file}
-# debug, info, warn, error
-log_level = ${str_log_level}
-log_max_days = ${set_log_max_days}
+log.to = "${str_log_file_flag}"
+# trace, debug, info, warn, error
+log.level = "${str_log_level}"
+log.maxDays = ${set_log_max_days}
+# disable log colors when log.to is console, default is false
+# log.disablePrintColor = false
+
+# DetailedErrorsToClient defines whether to send the specific error (with debug info) to frpc. By default, this value is true.
+# detailedErrorsToClient = true
+
+# auth.method specifies what authentication method to use authenticate frpc with frps.
+# If "token" is specified - token will be read into login message.
+# If "oidc" is specified - OIDC (Open ID Connect) token will be issued using OIDC settings. By default, this value is "token".
+auth.method = "token"
+
+# auth.additionalScopes specifies additional scopes to include authentication information.
+# Optional values are HeartBeats, NewWorkConns.
+# auth.additionalScopes = ["HeartBeats", "NewWorkConns"]
+
 # auth token
-token = ${set_token}
-# It is convenient to use subdomain configure for http、https type when many people use one frps server together.
-subdomain_host = ${set_subdomain_host}
-# only allow frpc to bind ports you list, if you set nothing, there won't be any limit
-#allow_ports = 1-65535
-# pool_count in each proxy will change to max_pool_count if they exceed the maximum value
-max_pool_count = ${set_max_pool_count}
-# if tcp stream multiplexing is used, default is true
-tcp_mux = ${set_tcp_mux}
+auth.token = "${set_token}"
+
+# userConnTimeout specifies the maximum time to wait for a work connection.
+# userConnTimeout = 10
+
+# Max ports can be used for each client, default value is 0 means no limit
+# maxPortsPerClient = 0
+
+# If subDomainHost is not empty, you can set subdomain when type is http or https in frpc's configure file
+# When subdomain is test, the host used by routing is test.frps.com
+subDomainHost = "${set_subdomain_host}"
+
+# custom 404 page for HTTP requests
+# custom404Page = "/path/to/404.html"
+
+# specify udp packet size, unit is byte. If not set, the default value is 1500.
+# This parameter should be same between client and server.
+# It affects the udp and sudp proxy.
+# udpPacketSize = 1500
+
+# Retention time for NAT hole punching strategy data.
+# natholeAnalysisDataReserveHours = 168
+
+# ssh tunnel gateway
+# If you want to enable this feature, the bindPort parameter is required, while others are optional.
+# By default, this feature is disabled. It will be enabled if bindPort is greater than 0.
+# sshTunnelGateway.bindPort = 2200
+# sshTunnelGateway.privateKeyFile = "/home/frp-user/.ssh/id_rsa"
+# sshTunnelGateway.autoGenPrivateKeyPath = ""
+# sshTunnelGateway.authorizedKeysFile = "/home/frp-user/.ssh/authorized_keys"
 EOF
+
 fi
     echo " done"
 
