@@ -62,8 +62,10 @@ Usage: /etc/init.d/frps {start|stop|restart|status|config|version}
 #### Update
 * Update format to follow up the latest config file for server and clent
   #### for example:
+  ```
     bind_port --> bindPort
     kcp_bind_port --> kcpBindPort
     vhost_http_port --> vhostHTTPPort
     vhost_http_port --> vhostHTTPSPort
     etc..
+  ```
