@@ -15,7 +15,7 @@ export github_latest_version_api="https://api.github.com/repos/fatedier/frp/rele
 
 # Program information
 program_name="frps"
-version="202405"
+version="1.0.2"
 str_program_dir="/usr/local/${program_name}"
 program_init="/etc/init.d/${program_name}"
 program_config_file="frps.toml"
