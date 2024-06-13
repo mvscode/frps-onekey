@@ -60,7 +60,7 @@ Usage: /etc/init.d/frps {start|stop|restart|status|config|version}
 ### [1.0.2] - 2024-06-13
 
 #### Update
-* Update format to follow up the latest config file for server and clent
+* Update confile file format to follow up the latest version for server and clent
   #### for example:
   ```
     bind_port --> bindPort
