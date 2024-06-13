@@ -569,8 +569,8 @@ install_program_server_clang(){
     echo "${program_name} install path:$PWD"
 
     echo -n "config file for ${program_name} ..."
-# Write the configuration to the file
-
+    
+# Write the configuration to the frps config file
 if [[ "${set_kcp}" == "false" ]]; then
 cat << EOF > "${str_program_dir}/${program_config_file}"
 
