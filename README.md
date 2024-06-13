@@ -31,7 +31,7 @@ chmod 700 ./install-frps.sh
 ```
 #### Github
 ```Bash
-wget https://raw.githubusercontent.com/mvscode/frps-onekey/dev/install-frps.sh -O ./install-frps.sh
+wget https://raw.githubusercontent.com/mvscode/frps-onekey/master/install-frps.sh -O ./install-frps.sh
 chmod 700 ./install-frps.sh
 ./install-frps.sh install
 ```
