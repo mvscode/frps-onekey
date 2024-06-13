@@ -719,21 +719,24 @@ uninstall_program_server_clang(){
         read -e -p "[Y/N]:" str_uninstall
         case "${str_uninstall}" in
         [yY]|[yY][eE][sS])
-        echo ""
-        echo "You select [Yes], press any key to continue."
-        str_uninstall="y"
-        char=`get_char`
-        ;;
-        *)
-        echo ""
-        str_uninstall="n"
-        esac
-        if [ "${str_uninstall}" == 'n' ]; then
-            echo "You select [No],shell exit!"
-        else
+            echo ""
+            echo "You select [Yes], press any key to continue."
+            str_uninstall="y"
+            char=`get_char`
+
+            # 停止 frps 服务
+            ${program_init} stop
+
             rm -f ${program_init} /var/run/${program_name}.pid /usr/bin/${program_name}
             rm -fr ${str_program_dir}
             echo "${program_name} uninstall success!"
+            ;;
+        *)
+            echo ""
+            str_uninstall="n"
+            esac
+        if [ "${str_uninstall}" == 'n' ]; then
+            echo "You select [No],shell exit!"
         fi
     else
         echo "${program_name} Not install!"
