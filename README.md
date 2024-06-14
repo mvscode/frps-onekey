@@ -73,7 +73,7 @@ Usage: /etc/init.d/frps {start|stop|restart|status|config|version}
 #### Amendment
 * Amend function name to frps
 
-#### Change
+#### Changed
 * Change curl common to get server ip from wget common
 
  
