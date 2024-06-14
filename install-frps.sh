@@ -307,7 +307,7 @@ fun_check_number(){
 }
 # input configuration data
 fun_input_bind_port(){
-    def_server_port="5443"
+    def_server_port="7000"
     echo ""
     echo -n -e "Please input ${program_name} ${COLOR_GREEN}bind_port${COLOR_END} [1-65535]"
     read -e -p "(Default Server Port: ${def_server_port}):" serverport
@@ -315,7 +315,7 @@ fun_input_bind_port(){
     fun_check_port "bind" "${serverport}"
 }
 fun_input_dashboard_port(){
-    def_dashboard_port="6443"
+    def_dashboard_port="7500"
     echo ""
     echo -n -e "Please input ${program_name} ${COLOR_GREEN}dashboard_port${COLOR_END} [1-65535]"
     read -e -p "(Default : ${def_dashboard_port}):" input_dashboard_port
