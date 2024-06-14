@@ -67,5 +67,14 @@ Usage: /etc/init.d/frps {start|stop|restart|status|config|version}
   kcp_bind_port --> kcpBindPort
   etc..
   ```
+
+### [1.0.3] - 2024-06-14
+
+#### Amendment
+* Amend function name to frps
+
+#### Change
+* Change curl common to get server ip from wget common
+
  
   
