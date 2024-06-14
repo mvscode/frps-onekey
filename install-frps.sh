@@ -15,7 +15,7 @@ export github_latest_version_api="https://api.github.com/repos/fatedier/frp/rele
 
 # Program information
 program_name="frps"
-version="1.0.2"
+version="1.0.3"
 str_program_dir="/usr/local/${program_name}"
 program_init="/etc/init.d/${program_name}"
 program_config_file="frps.toml"
@@ -25,7 +25,7 @@ str_install_shell="https://raw.githubusercontent.com/Mvscode/frps-onekey/master/
 # Function to check for shell updates
 shell_update() {
     # Clear the terminal
-    fun_clangcn "clear"
+    fun_frps "clear"
 
     # Echo a message to indicate that we're checking for shell updates
     echo "Checking for shell updates..."
@@ -55,7 +55,7 @@ shell_update() {
                 echo -e " [${COLOR_GREEN}OK${COLOR_END}]"
                 echo
                 # Echo a message to instruct the user to re-run the script
-                echo -e "${COLOR_GREEN}Please re-run${COLOR_END} ${COLOR_PINK}$0 ${clang_action}${COLOR_END}"
+                echo -e "${COLOR_GREEN}Please re-run${COLOR_END} ${COLOR_PINK}$0 ${frps_action}${COLOR_END}"
                 echo
                 exit 1
             fi
@@ -63,7 +63,7 @@ shell_update() {
         fi
     fi
 }
-fun_clangcn(){
+fun_frps(){
     local clear_flag=""
     clear_flag=$1
     if [[ ${clear_flag} == "clear" ]]; then
@@ -89,7 +89,7 @@ fun_set_text_color(){
 # Check if user is root
 rootness(){
     if [[ $EUID -ne 0 ]]; then
-        fun_clangcn
+        fun_frps
         echo "Error:This script must be run as root!" 1>&2
         exit 1
     fi
@@ -385,19 +385,19 @@ fun_input_subdomain_host(){
     [ -z "${input_subdomain_host}" ] && input_subdomain_host="${def_subdomain_host}"
 }
 
-pre_install_clang(){
-    fun_clangcn
+pre_install_frps(){
+    fun_frps
     echo -e "Check your server setting, please wait..."
     disable_selinux
     if [ -s ${str_program_dir}/${program_name} ] && [ -s ${program_init} ]; then
         echo "${program_name} is installed!"
     else
         clear
-        fun_clangcn
+        fun_frps
         fun_getServer
         fun_getVer
         echo -e "Loading You Server IP, please wait..."
-        defIP=$(wget -qO- ip.clang.cn | sed -r 's/\r//')
+        defIP=$(curl -s https://api.ipify.org)
         echo -e "You Server IP:${COLOR_GREEN}${defIP}${COLOR_END}"
         echo -e "————————————————————————————————————————————"
         echo -e "     ${COLOR_RED}Please input your server setting:${COLOR_END}"
@@ -559,11 +559,11 @@ pre_install_clang(){
         echo "Press any key to start...or Press Ctrl+c to cancel"
 
         char=`get_char`
-        install_program_server_clang
+        install_program_server_frps
     fi
 }
 # ====== install server ======
-install_program_server_clang(){
+install_program_server_frps(){
     [ ! -d ${str_program_dir} ] && mkdir -p ${str_program_dir}
     cd ${str_program_dir}
     echo "${program_name} install path:$PWD"
@@ -870,7 +870,7 @@ fi
     echo " done"
     [ -s ${program_init} ] && ln -s ${program_init} /usr/bin/${program_name}
     ${program_init} start
-    fun_clangcn
+    fun_frps
     #install successfully
     echo ""
     echo "Congratulations, ${program_name} install completed!"
@@ -902,7 +902,7 @@ fi
     exit 0
 }
 ############################### configure ##################################
-configure_program_server_clang(){
+configure_program_server_frps(){
     if [ -s ${str_program_dir}/${program_config_file} ]; then
         vi ${str_program_dir}/${program_config_file}
     else
@@ -911,8 +911,8 @@ configure_program_server_clang(){
     fi
 }
 ############################### uninstall ##################################
-uninstall_program_server_clang(){
-    fun_clangcn
+uninstall_program_server_frps(){
+    fun_frps
     if [ -s ${program_init} ] || [ -s ${str_program_dir}/${program_name} ] ; then
         echo "============== Uninstall ${program_name} =============="
         str_uninstall="n"
@@ -945,7 +945,7 @@ uninstall_program_server_clang(){
     exit 0
 }
 ############################### update ##################################
-update_config_clang(){
+update_config_frps(){
     if [ ! -r "${str_program_dir}/${program_config_file}" ]; then
         echo "config file ${str_program_dir}/${program_config_file} not found."
     else
@@ -1043,12 +1043,12 @@ update_config_clang(){
         fi
     fi
 }
-update_program_server_clang() {
-    fun_clangcn "clear"
+update_program_server_frps() {
+    fun_frps "clear"
 
     if [ -s "$program_init" ] || [ -s "$str_program_dir/$program_name" ]; then
         echo "============== Update $program_name =============="
-        update_config_clang
+        update_config_frps
         checkos
         check_centosversion
         check_os_bit
@@ -1120,26 +1120,26 @@ shell_update
 # Initialization
 action=$1
 if [ -z "$action" ]; then
-    fun_clangcn
+    fun_frps
     echo "Arguments error! [$action ]"
     echo "Usage: $(basename "$0") {install|uninstall|update|config}"
     RET_VAL=1
 else
     case "$action" in
     install)
-        pre_install_clang 2>&1 | tee /root/${program_name}-install.log
+        pre_install_frps 2>&1 | tee /root/${program_name}-install.log
         ;;
     config)
-        configure_program_server_clang
+        configure_program_server_frps
         ;;
     uninstall)
-        uninstall_program_server_clang 2>&1 | tee /root/${program_name}-uninstall.log
+        uninstall_program_server_frps 2>&1 | tee /root/${program_name}-uninstall.log
         ;;
     update)
-        update_program_server_clang 2>&1 | tee /root/${program_name}-update.log
+        update_program_server_frps 2>&1 | tee /root/${program_name}-update.log
         ;;
     *)
-        fun_clangcn
+        fun_frps
         echo "Arguments error! [$action ]"
         echo "Usage: $(basename "$0") {install|uninstall|update|config}"
         RET_VAL=1
