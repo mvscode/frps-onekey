@@ -68,7 +68,7 @@ Usage: /etc/init.d/frps {start|stop|restart|status|config|version}
   etc..
   ```
 
-### [1.0.3] - 2024-06-14
+### [1.0.3] - 2024-06-15
 
 #### Amendment
 * Amend function name to frps
