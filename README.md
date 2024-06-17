@@ -6,12 +6,12 @@
 [![Stars][stars-shield]][stars-url]
 [![Forks][forks-shield]][forks-url]
 
-[repo-shield]: https://img.shields.io/badge/GitHub-MvsCode%2Ffrps--onekey-brightgreen?style=flat-square&logo=github
-[repo-url]: https://github.com/MvsCode/frps-onekey
-[stars-shield]: https://img.shields.io/github/stars/MvsCode/frps-onekey.svg?style=flat-square&logo=github&color=yellow
-[stars-url]: https://github.com/MvsCode/frps-onekey/stargazers
-[forks-shield]: https://img.shields.io/github/forks/MvsCode/frps-onekey.svg?style=flat-square&logo=github&color=green
-[forks-url]: https://github.com/MvsCode/frps-onekey/network/members
+[repo-shield]: https://img.shields.io/badge/GitHub-mvscode%2Ffrps--onekey-brightgreen?style=flat-square&logo=github
+[repo-url]: https://github.com/mvscode/frps-onekey
+[stars-shield]: https://img.shields.io/github/stars/mvscode/frps-onekey.svg?style=flat-square&logo=github&color=yellow
+[stars-url]: https://github.com/mvscode/frps-onekey/stargazers
+[forks-shield]: https://img.shields.io/github/forks/mvscode/frps-onekey.svg?style=flat-square&logo=github&color=green
+[forks-url]: https://github.com/mvscode/frps-onekey/network/members
 
 
 *Frp 是一个高性能的反向代理应用，可以帮助您轻松地进行内网穿透，对外网提供服务，支持 tcp, http, https 等协议类型，并且 web 服务支持根据域名进行路由转发。*
@@ -75,6 +75,18 @@ Usage: /etc/init.d/frps {start|stop|restart|status|config|version}
 
 #### Changed
 * Change curl common to get server ip from wget common
+
+
+### [1.0.4] - 2024-06-17
+
+#### Update
+* Add trace option at log level
+
+* Update shell update function
+
+#### Changed
+* Change curl common to get server ip from wget common
+
 
  
   
