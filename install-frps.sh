@@ -31,60 +31,37 @@ shell_update() {
     echo "Checking for shell updates..."
 
     # Fetch the remote shell version from the specified URL
-    remote_shell_version=$(wget --no-check-certificate -qO- "${str_install_shell}"| sed -n '/^version/p' | cut -d'"' -f2)
+    remote_shell_version=$(wget --no-check-certificate -qO- "${str_install_shell}" | sed -n '/^version/p' | cut -d'"' -f2)
 
     # Check if the remote shell version is not empty
     if [ -n "${remote_shell_version}" ]; then
-        # Check if the remote version is greater than the local version
-        if version_gt "${remote_shell_version}" "${version}"; then
-            # Echo a message to indicate the old and new versions
-            echo -e "${COLOR_GREEN}Found a new version. Current version: ${version}, New version: ${remote_shell_version}${COLOR_END}"
+        # Check if the local version is different from the remote version
+        if [[ "${version}" != "${remote_shell_version}" ]]; then
+            # Echo a message to indicate that a new version has been found
+            echo -e "${COLOR_GREEN}Found a new version, updating now!${COLOR_END}"
             echo
 
-            # Ask the user if they want to update
-            read -p "Do you want to update to version ${remote_shell_version}? (y/n) " choice
-            case "$choice" in
-                y|Y)
-                    # Download the new version
-                    echo "Downloading the new version..."
-                    if ! wget --no-check-certificate -qO "$0" "${str_install_shell}"; then
-                        echo -e "${COLOR_RED}Failed to download the new version.${COLOR_END}"
-                        return 1
-                    fi
+            # Echo a message to indicate that we're updating the shell
+            echo -n "Updating shell..."
 
-                    # Update the script
-					echo "Download completed..."
-
-                    ## Ask the user if they want to re-run the new version
-                    read -p "Do you want to re-run the new version of the script? (y/n) " rerun_choice
-                    case "$rerun_choice" in
-                        y|Y)
-                            ./install-frps.sh install
-                            exit 0  # Exit the script after re-running
-                            ;;
-                        n|N)
-                            echo "Skipping re-run."
-                            ;;
-                        *)
-                            echo "Invalid choice. Skipping re-run."
-                            ;;
-                    esac
-                    ;;
-                n|N)
-                    echo "Skipping update."
-                    ;;
-                *)
-                    echo "Invalid choice. Skipping update."
-                    ;;
-            esac
-        else
-            echo "You are running the latest version."
+            # Attempt to download the new version and overwrite the current script
+            if ! wget --no-check-certificate -qO "$0" "${str_install_shell}"; then
+                # Echo a message to indicate that the update failed
+                echo -e " [${COLOR_RED}failed${COLOR_END}]"
+                echo
+                exit 1
+            else
+                # Echo a message to indicate that the update was successful
+                echo -e " [${COLOR_GREEN}OK${COLOR_END}]"
+                echo
+                # Echo a message to instruct the user to re-run the script
+                echo -e "${COLOR_GREEN}Please re-run${COLOR_END} ${COLOR_PINK}$0 ${frps_action}${COLOR_END}"
+                echo
+                exit 1
+            fi
+            exit 1
         fi
     fi
-}
-# Function to compare two version strings
-version_gt() {
-    test "$(printf '%s\n' "$@" | sort -V | head -n 1)" != "$1"
 }
 fun_frps(){
     local clear_flag=""
