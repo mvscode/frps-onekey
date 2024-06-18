@@ -622,7 +622,7 @@ bindPort = ${set_bind_port}
 
 # Heartbeat configure, it's not recommended to modify the default value
 # The default value of heartbeatTimeout is 90. Set negative value to disable it.
-# transport.heartbeatTimeout = 90
+transport.heartbeatTimeout = 90
 
 # Pool count in each proxy will keep no more than maxPoolCount.
 transport.maxPoolCount = ${set_max_pool_count}
@@ -757,7 +757,7 @@ kcpBindPort = ${set_bind_port}
 
 # Heartbeat configure, it's not recommended to modify the default value
 # The default value of heartbeatTimeout is 90. Set negative value to disable it.
-# transport.heartbeatTimeout = 90
+transport.heartbeatTimeout = 90
 
 # Pool count in each proxy will keep no more than maxPoolCount.
 transport.maxPoolCount = ${set_max_pool_count}
