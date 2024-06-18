@@ -77,16 +77,12 @@ Usage: /etc/init.d/frps {start|stop|restart|status|config|version}
 * Change curl common to get server ip from wget common
 
 
-### [1.0.4] - 2024-06-17
+### [1.0.4] - 2024-06-18
 
 #### Update
-* Add trace option at log level
+* Add trace option at log level, default is still info
 
-* Update shell update function
-
-#### Changed
-* Change curl common to get server ip from wget common
-
+* Update shell update function, ask the user if they want to update
 
  
   
