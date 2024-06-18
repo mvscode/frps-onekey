@@ -6,18 +6,18 @@
 [![Stars][stars-shield]][stars-url]
 [![Forks][forks-shield]][forks-url]
 
-[repo-shield]: https://img.shields.io/badge/GitHub-MvsCode%2Ffrps--onekey-brightgreen?style=flat-square&logo=github
-[repo-url]: https://github.com/MvsCode/frps-onekey
-[stars-shield]: https://img.shields.io/github/stars/MvsCode/frps-onekey.svg?style=flat-square&logo=github&color=yellow
-[stars-url]: https://github.com/MvsCode/frps-onekey/stargazers
-[forks-shield]: https://img.shields.io/github/forks/MvsCode/frps-onekey.svg?style=flat-square&logo=github&color=green
-[forks-url]: https://github.com/MvsCode/frps-onekey/network/members
+[repo-shield]: https://img.shields.io/badge/GitHub-mvscode%2Ffrps--onekey-brightgreen?style=flat-square&logo=github
+[repo-url]: https://github.com/mvscode/frps-onekey
+[stars-shield]: https://img.shields.io/github/stars/mvscode/frps-onekey.svg?style=flat-square&logo=github&color=yellow
+[stars-url]: https://github.com/mvscode/frps-onekey/stargazers
+[forks-shield]: https://img.shields.io/github/forks/mvscode/frps-onekey.svg?style=flat-square&logo=github&color=green
+[forks-url]: https://github.com/mvscode/frps-onekey/network/members
 
 
 *Frp 是一个高性能的反向代理应用，可以帮助您轻松地进行内网穿透，对外网提供服务，支持 tcp, http, https 等协议类型，并且 web 服务支持根据域名进行路由转发。*
 
-* 详情：fatedier[<img alt="github" src="https://img.shields.io/badge/github/fatedier/frp-8da0cb?style=for-the-badge&labelColor=555555&logo=github" height="16">](https://github.com/fatedier/frp)
-* 此脚本原作者：clangcn [<img alt="github" src="https://img.shields.io/badge/github/clangcn/onekey_install_shell-8da0cb?style=for-the-badge&labelColor=555555&logo=github" height="16">](https://github.com/clangcn/onekey-install-shell)
+* Detail(详情)：fatedier[<img alt="github" src="https://img.shields.io/badge/github/fatedier/frp-8da0cb?style=for-the-badge&labelColor=555555&logo=github" height="16">](https://github.com/fatedier/frp)
+* Script author（脚本原作者）：clangcn [<img alt="github" src="https://img.shields.io/badge/github/clangcn/onekey_install_shell-8da0cb?style=for-the-badge&labelColor=555555&logo=github" height="16">](https://github.com/clangcn/onekey-install-shell)
 
 ## Frps-Onekey-Install-Shell For CentOS/Debian/Ubuntu/Fedora (32bit/64bit)
 
@@ -75,6 +75,17 @@ Usage: /etc/init.d/frps {start|stop|restart|status|config|version}
 
 #### Changed
 * Change curl common to get server ip from wget common
+
+
+### [1.0.4] - 2024-06-18
+
+#### Updated
+* Add trace option at log level, default is info
+
+* Update shell update function, ask the user if they want to update
+
+#### New
+* frps support transport heartbeatTimeout = 90, default is enable
 
  
   

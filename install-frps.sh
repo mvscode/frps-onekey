@@ -7,20 +7,20 @@ export PATH
 # Set environment variables
 export FRPS_VER="$LATEST_RELEASE"
 export FRPS_VER_32BIT="$LATEST_RELEASE"
-export FRPS_INIT="https://raw.githubusercontent.com/MvsCode/frps-onekey/master/frps.init"
-export gitee_download_url="https://gitee.com/Mvscode/frps-onekey/releases/download"
+export FRPS_INIT="https://raw.githubusercontent.com/mvscode/frps-onekey/master/frps.init"
+export gitee_download_url="https://gitee.com/mvscode/frps-onekey/releases/download"
 export github_download_url="https://github.com/fatedier/frp/releases/download"
-export gitee_latest_version_api="https://gitee.com/api/v5/repos/MvsCode/frps-onekey/releases/latest"
+export gitee_latest_version_api="https://gitee.com/api/v5/repos/mvscode/frps-onekey/releases/latest"
 export github_latest_version_api="https://api.github.com/repos/fatedier/frp/releases/latest"
 
 # Program information
 program_name="frps"
-version="1.0.3"
+version="1.0.4"
 str_program_dir="/usr/local/${program_name}"
 program_init="/etc/init.d/${program_name}"
 program_config_file="frps.toml"
 ver_file="/tmp/.frp_ver.sh"
-str_install_shell="https://raw.githubusercontent.com/Mvscode/frps-onekey/master/install-frps.sh"
+str_install_shell="https://raw.githubusercontent.com/mvscode/frps-onekey/master/install-frps.sh"
 
 # Function to check for shell updates
 shell_update() {
@@ -31,37 +31,60 @@ shell_update() {
     echo "Checking for shell updates..."
 
     # Fetch the remote shell version from the specified URL
-    remote_shell_version=$(wget --no-check-certificate -qO- "${str_install_shell}" | sed -n '/^version/p' | cut -d'"' -f2)
+    remote_shell_version=$(wget --no-check-certificate -qO- "${str_install_shell}"| sed -n '/^version/p' | cut -d'"' -f2)
 
     # Check if the remote shell version is not empty
     if [ -n "${remote_shell_version}" ]; then
-        # Check if the local version is different from the remote version
-        if [[ "${version}" != "${remote_shell_version}" ]]; then
-            # Echo a message to indicate that a new version has been found
-            echo -e "${COLOR_GREEN}Found a new version, updating now!${COLOR_END}"
+        # Check if the remote version is greater than the local version
+        if version_gt "${remote_shell_version}" "${version}"; then
+            # Echo a message to indicate the old and new versions
+            echo -e "${COLOR_GREEN}Found a new version. Current version: ${version}, New version: ${remote_shell_version}${COLOR_END}"
             echo
 
-            # Echo a message to indicate that we're updating the shell
-            echo -n "Updating shell..."
+            # Ask the user if they want to update
+            read -p "Do you want to update to version ${remote_shell_version}? (y/n) " choice
+            case "$choice" in
+                y|Y)
+                    # Download the new version
+                    echo "Downloading the new version..."
+                    if ! wget --no-check-certificate -qO "$0" "${str_install_shell}"; then
+                        echo -e "${COLOR_RED}Failed to download the new version.${COLOR_END}"
+                        return 1
+                    fi
 
-            # Attempt to download the new version and overwrite the current script
-            if ! wget --no-check-certificate -qO "$0" "${str_install_shell}"; then
-                # Echo a message to indicate that the update failed
-                echo -e " [${COLOR_RED}failed${COLOR_END}]"
-                echo
-                exit 1
-            else
-                # Echo a message to indicate that the update was successful
-                echo -e " [${COLOR_GREEN}OK${COLOR_END}]"
-                echo
-                # Echo a message to instruct the user to re-run the script
-                echo -e "${COLOR_GREEN}Please re-run${COLOR_END} ${COLOR_PINK}$0 ${frps_action}${COLOR_END}"
-                echo
-                exit 1
-            fi
-            exit 1
+                    # Update the script
+					echo "Download completed..."
+
+                    ## Ask the user if they want to re-run the new version
+                    read -p "Do you want to re-run the new version of the script? (y/n) " rerun_choice
+                    case "$rerun_choice" in
+                        y|Y)
+                            ./install-frps.sh install
+                            exit 0  # Exit the script after re-running
+                            ;;
+                        n|N)
+                            echo "Skipping re-run."
+                            ;;
+                        *)
+                            echo "Invalid choice. Skipping re-run."
+                            ;;
+                    esac
+                    ;;
+                n|N)
+                    echo "Skipping update."
+                    ;;
+                *)
+                    echo "Invalid choice. Skipping update."
+                    ;;
+            esac
+        else
+            echo "You are running the latest version."
         fi
     fi
+}
+# Function to compare two version strings
+version_gt() {
+    test "$(printf '%s\n' "$@" | sort -V | head -n 1)" != "$1"
 }
 fun_frps(){
     local clear_flag=""
@@ -438,35 +461,39 @@ pre_install_frps(){
         [ -n "${input_number}" ] && set_max_pool_count="${input_number}"
         echo -e "${program_name} max_pool_count: ${COLOR_YELOW}${set_max_pool_count}${COLOR_END}"
         echo -e ""
-        echo -e "Please select ${COLOR_GREEN}log_level${COLOR_END}"
-        echo    "1: info (default)"
-        echo    "2: warn"
-        echo    "3: error"
-        echo    "4: debug"    
-        echo    "-------------------------"
-        read -e -p "Enter your choice (1, 2, 3, 4 or exit. default [1]): " str_log_level
-        case "${str_log_level}" in
-            1|[Ii][Nn][Ff][Oo])
-                str_log_level="info"
-                ;;
-            2|[Ww][Aa][Rr][Nn])
-                str_log_level="warn"
-                ;;
-            3|[Ee][Rr][Rr][Oo][Rr])
-                str_log_level="error"
-                ;;
-            4|[Dd][Ee][Bb][Uu][Gg])
-                str_log_level="debug"
-                ;;
-            [eE][xX][iI][tT])
-                exit 1
-                ;;
-            *)
-                str_log_level="info"
-                ;;
-        esac
-        echo -e "log_level: ${COLOR_YELOW}${str_log_level}${COLOR_END}"
-        echo -e ""
+		echo -e "Please select ${COLOR_GREEN}log_level${COLOR_END}"
+		echo    "1: info (default)"
+		echo    "2: warn"
+		echo    "3: error"
+		echo    "4: debug"
+		echo    "5: trace"
+		echo    "-------------------------"
+		read -e -p "Enter your choice (1, 2, 3, 4, 5 or exit. default [1]): " str_log_level
+		case "${str_log_level}" in
+			1|[Ii][Nn][Ff][Oo])
+				str_log_level="info"
+				;;
+			2|[Ww][Aa][Rr][Nn])
+				str_log_level="warn"
+				;;
+			3|[Ee][Rr][Rr][Oo][Rr])
+				str_log_level="error"
+				;;
+			4|[Dd][Ee][Bb][Uu][Gg])
+				str_log_level="debug"
+				;;
+			5|[Tt][Rr][Aa][Cc][Ee])
+				str_log_level="trace"
+				;;
+			[eE][xX][iI][tT])
+				exit 1
+				;;
+			*)
+				str_log_level="info"
+				;;
+		esac
+		echo -e "log_level: ${COLOR_YELOW}${str_log_level}${COLOR_END}"
+		echo -e ""
         fun_input_log_max_days
         [ -n "${input_number}" ] && set_log_max_days="${input_number}"
         echo -e "${program_name} log_max_days: ${COLOR_YELOW}${set_log_max_days}${COLOR_END}"
@@ -595,7 +622,7 @@ bindPort = ${set_bind_port}
 
 # Heartbeat configure, it's not recommended to modify the default value
 # The default value of heartbeatTimeout is 90. Set negative value to disable it.
-# transport.heartbeatTimeout = 90
+transport.heartbeatTimeout = 90
 
 # Pool count in each proxy will keep no more than maxPoolCount.
 transport.maxPoolCount = ${set_max_pool_count}
@@ -730,7 +757,7 @@ kcpBindPort = ${set_bind_port}
 
 # Heartbeat configure, it's not recommended to modify the default value
 # The default value of heartbeatTimeout is 90. Set negative value to disable it.
-# transport.heartbeatTimeout = 90
+transport.heartbeatTimeout = 90
 
 # Pool count in each proxy will keep no more than maxPoolCount.
 transport.maxPoolCount = ${set_max_pool_count}
