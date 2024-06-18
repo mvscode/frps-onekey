@@ -53,9 +53,22 @@ shell_update() {
                     fi
 
                     # Update the script
-                    echo "Updating the script..."
-                    chmod +x "${str_install_shell}"
-                    "${str_install_shell}" update
+					echo "Download completed..."
+
+                    ## Ask the user if they want to re-run the new version
+                    read -p "Do you want to re-run the new version of the script? (y/n) " rerun_choice
+                    case "$rerun_choice" in
+                        y|Y)
+                            ./install-frps.sh install
+                            exit 0  # Exit the script after re-running
+                            ;;
+                        n|N)
+                            echo "Skipping re-run."
+                            ;;
+                        *)
+                            echo "Invalid choice. Skipping re-run."
+                            ;;
+                    esac
                     ;;
                 n|N)
                     echo "Skipping update."
