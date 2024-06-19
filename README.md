@@ -87,5 +87,15 @@ Usage: /etc/init.d/frps {start|stop|restart|status|config|version}
 #### New
 * frps support transport heartbeatTimeout = 90, default is enable
 
+### [1.0.5] - 2024-06-19
+
+#### ADDED
+* Add quic of transport protocol support,server port default same as https port.
+
+* Add user-defined functions for the kcp bind port,server port default same as bind port.
+
+#### Fixed
+* Fix the script under frps server start faild still install complete bug.
+
  
   

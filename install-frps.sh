@@ -15,7 +15,7 @@ export github_latest_version_api="https://api.github.com/repos/fatedier/frp/rele
 
 # Program information
 program_name="frps"
-version="1.0.4"
+version="1.0.5"
 str_program_dir="/usr/local/${program_name}"
 program_init="/etc/init.d/${program_name}"
 program_config_file="frps.toml"
@@ -33,35 +33,45 @@ shell_update() {
     # Fetch the remote shell version from the specified URL
     remote_shell_version=$(wget --no-check-certificate -qO- "${str_install_shell}" | sed -n '/^version/p' | cut -d'"' -f2)
 
-    # Check if the remote shell version is not empty
-    if [ -n "${remote_shell_version}" ]; then
-        # Check if the local version is different from the remote version
-        if [[ "${version}" != "${remote_shell_version}" ]]; then
-            # Echo a message to indicate that a new version has been found
-            echo -e "${COLOR_GREEN}Found a new version, updating now!${COLOR_END}"
-            echo
+	# Check if the local version is lower than the remote version
+	if [[ "${version}" < "${remote_shell_version}" ]]; then
+	# Echo a message to indicate that a new version has been found
+	echo -e "${COLOR_YELOW}Found a newer version!${COLOR_END}"
+	echo
+	# Echo the local and remote versions
+	echo -e "${COLOR_BLUE}Local version: ${version}${COLOR_END}"
+	echo -e "${COLOR_GREEN}Remote version: ${remote_shell_version}${COLOR_END}"
+	echo
+	# Ask user if they need to update
+	read -p "Update the latest script version? [y/N] " -n 1 -r
+	echo
+	if [[ $REPLY =~ ^[Yy]$ ]]; then
+	echo
 
-            # Echo a message to indicate that we're updating the shell
-            echo -n "Updating shell..."
+	# Echo a message to indicate that we're updating the shell
+	echo -n "Updating shell..."
 
-            # Attempt to download the new version and overwrite the current script
-            if ! wget --no-check-certificate -qO "$0" "${str_install_shell}"; then
-                # Echo a message to indicate that the update failed
-                echo -e " [${COLOR_RED}failed${COLOR_END}]"
-                echo
-                exit 1
-            else
-                # Echo a message to indicate that the update was successful
-                echo -e " [${COLOR_GREEN}OK${COLOR_END}]"
-                echo
-                # Echo a message to instruct the user to re-run the script
-                echo -e "${COLOR_GREEN}Please re-run${COLOR_END} ${COLOR_PINK}$0 ${frps_action}${COLOR_END}"
-                echo
-                exit 1
-            fi
-            exit 1
-        fi
-    fi
+	# Attempt to download the new version and overwrite the current script
+	if ! wget --no-check-certificate -qO "$0" "${str_install_shell}"; then
+		# Echo a message to indicate that the update failed
+		echo -e " [${COLOR_RED}failed${COLOR_END}]"
+		echo
+		exit 1
+	else
+		# Echo a message to indicate that the update was successful
+		echo -e " [${COLOR_GREEN}OK${COLOR_END}]"
+		echo
+		# Echo a message to instruct the user to re-run the script
+		echo -e "${COLOR_GREEN}Please re-run${COLOR_END} ${COLOR_PINK}$0 ${frps_action}${COLOR_END}"
+		echo
+		exit 1
+	fi
+    else
+	# If user chooses not to update, continue with the script
+	    echo
+	    echo -e "${COLOR_YELOW}Continuing with the current script...${COLOR_END}"
+	fi
+fi
 }
 fun_frps(){
     local clear_flag=""
@@ -384,14 +394,47 @@ fun_input_subdomain_host(){
     read -e -p "(Default : ${def_subdomain_host}):" input_subdomain_host
     [ -z "${input_subdomain_host}" ] && input_subdomain_host="${def_subdomain_host}"
 }
-
+fun_input_kcp_bind_port(){
+    def_kcp_bind_port="${serverport}"
+    echo ""
+    echo -n -e "Please input ${program_name} ${COLOR_GREEN}kcp_bind_port${COLOR_END} [1-65535]"
+    read -e -p "(Default kcp bind port: ${def_kcp_bind_port}):" input_kcp_bind_port
+    [ -z "${input_kcp_bind_port}" ] && input_kcp_bind_port="${def_kcp_bind_port}"
+    fun_check_port "input_kcp_bind_port" "${input_kcp_bind_port}"
+}
+fun_input_quic_bind_port(){
+    def_quic_bind_port="${input_vhost_https_port}"
+    echo ""
+    echo -n -e "Please input ${program_name} ${COLOR_GREEN}quic_bind_port${COLOR_END} [1-65535]"
+    read -e -p "(Default quic bind port: ${def_quic_bind_port}):" input_quic_bind_port
+    [ -z "${input_quic_bind_port}" ] && input_quic_bind_port="${def_quic_bind_port}"
+    fun_check_port "input_quic_bind_port" "${input_quic_bind_port}"
+}
 pre_install_frps(){
     fun_frps
     echo -e "Check your server setting, please wait..."
     disable_selinux
-    if [ -s ${str_program_dir}/${program_name} ] && [ -s ${program_init} ]; then
-        echo "${program_name} is installed!"
-    else
+
+    # Check if the frps service is already running
+    if pgrep -x "${program_name}" >/dev/null; then
+    echo -e "${COLOR_GREEN}${program_name} is already installed and running.${COLOR_END}"
+else
+    echo -e "${COLOR_YELLOW}${program_name} is not running or not install.${COLOR_END}"
+    echo ""
+    read -p "Do you want to re-install ${program_name}? (y/n) " choice
+	echo ""
+    case "$choice" in
+      y|Y)
+        echo "Re-installing ${program_name}..."
+        install_frps
+        ;;
+      n|N)
+        echo "Skipping installation."
+        ;;
+      *)
+        echo "Invalid choice. Skipping installation."
+        ;;
+    esac
         clear
         fun_frps
         fun_getServer
@@ -520,32 +563,49 @@ pre_install_frps(){
         esac
         echo -e "tcp_mux: ${COLOR_YELOW}${set_tcp_mux}${COLOR_END}"
         echo -e ""
-        echo -e "Please select ${COLOR_GREEN}kcp support${COLOR_END}"
+        echo -e "Please select ${COLOR_GREEN}transport protocol support${COLOR_END}"
         echo    "1: enable (default)"
         echo    "2: disable"
         echo "-------------------------"  
-        read -e -p "Enter your choice (1, 2 or exit. default [1]): " str_kcp
-        case "${str_kcp}" in
+        read -e -p "Enter your choice (1, 2 or exit. default [1]): " str_transport_protocol
+        case "${str_transport_protocol}" in
             1|[yY]|[yY][eE][sS]|[oO][nN]|[tT][rR][uU][eE]|[eE][nN][aA][bB][lL][eE])
-                set_kcp="true"
+                set_transport_protocol="enable"
+				fun_input_kcp_bind_port
+        [ -n "${input_port}" ] && set_kcp_bind_port="${input_kcp_bind_port}"
+        echo -e "${program_name} kcp_bind_port: ${COLOR_YELOW}${set_kcp_bind_port}${COLOR_END}"
+        echo -e ""
+			    fun_input_quic_bind_port
+        [ -n "${input_port}" ] && set_quic_bind_port="${input_quic_bind_port}"
+        echo -e "${program_name} quic_bind_port: ${COLOR_YELOW}${set_quic_bind_port}${COLOR_END}"
+        echo -e ""
                 ;;
             0|2|[nN]|[nN][oO]|[oO][fF][fF]|[fF][aA][lL][sS][eE]|[dD][iI][sS][aA][bB][lL][eE])
-                set_kcp="false"
+                set_transport_protocol="disable"
+				set_kcp_bind_port=0
+                set_quic_bind_port=0
                 ;;
             [eE][xX][iI][tT])
                 exit 1
                 ;;
             *)
-                set_kcp="true"
+                set_transport_protocol="enable"
+				fun_input_kcp_bind_port
+        [ -n "${input_port}" ] && set_kcp_bind_port="${input_kcp_bind_port}"
+        echo -e "${program_name} kcp_bind_port: ${COLOR_YELOW}${set_kcp_bind_port}${COLOR_END}"
+        echo -e ""
+			    fun_input_quic_bind_port
+        [ -n "${input_port}" ] && set_quic_bind_port="${input_quic_bind_port}"
+        echo -e "${program_name} quic_bind_port: ${COLOR_YELOW}${set_quic_bind_port}${COLOR_END}"
+        echo -e ""
                 ;;
         esac
-        echo -e "kcp support: ${COLOR_YELOW}${set_kcp}${COLOR_END}"
+        echo -e "transport protocol support: ${COLOR_YELOW}${set_transport_protocol}${COLOR_END}"
         echo -e ""
 
         echo "============== Check your input =============="
         echo -e "You Server IP      : ${COLOR_GREEN}${defIP}${COLOR_END}"
         echo -e "Bind port          : ${COLOR_GREEN}${set_bind_port}${COLOR_END}"
-        echo -e "kcp support        : ${COLOR_GREEN}${set_kcp}${COLOR_END}"
         echo -e "vhost http port    : ${COLOR_GREEN}${set_vhost_http_port}${COLOR_END}"
         echo -e "vhost https port   : ${COLOR_GREEN}${set_vhost_https_port}${COLOR_END}"
         echo -e "Dashboard port     : ${COLOR_GREEN}${set_dashboard_port}${COLOR_END}"
@@ -558,6 +618,9 @@ pre_install_frps(){
         echo -e "Log level          : ${COLOR_GREEN}${str_log_level}${COLOR_END}"
         echo -e "Log max days       : ${COLOR_GREEN}${set_log_max_days}${COLOR_END}"
         echo -e "Log file           : ${COLOR_GREEN}${str_log_file_flag}${COLOR_END}"
+		echo -e "transport protocol : ${COLOR_GREEN}${set_transport_protocol}${COLOR_END}"
+		echo -e "kcp bind port      : ${COLOR_GREEN}${set_kcp_bind_port}${COLOR_END}"
+		echo -e "quic bind port     : ${COLOR_GREEN}${set_quic_bind_port}${COLOR_END}"
         echo "=============================================="
         echo ""
         echo "Press any key to start...or Press Ctrl+c to cancel"
@@ -575,7 +638,7 @@ install_program_server_frps(){
     echo -n "config file for ${program_name} ..."
     
 # Write the configuration to the frps config file
-if [[ "${set_kcp}" == "false" ]]; then
+
 cat << EOF > "${str_program_dir}/${program_config_file}"
 
 bindAddr = "0.0.0.0"
@@ -583,146 +646,11 @@ bindPort = ${set_bind_port}
 
 # udp port used for kcp protocol, it can be same with 'bindPort'.
 # if not set, kcp is disabled in frps.
-# kcpBindPort = ${set_bind_port}
+kcpBindPort = ${set_kcp_bind_port}
 
 # udp port used for quic protocol.
 # if not set, quic is disabled in frps.
-# quicBindPort = ${set_bindPort}
-
-# Specify which address proxy will listen for, default value is same with bindAddr
-# proxyBindAddr = "127.0.0.1"
-
-# quic protocol options
-# transport.quic.keepalivePeriod = 10
-# transport.quic.maxIdleTimeout = 30
-# transport.quic.maxIncomingStreams = 100000
-
-# Heartbeat configure, it's not recommended to modify the default value
-# The default value of heartbeatTimeout is 90. Set negative value to disable it.
-transport.heartbeatTimeout = 90
-
-# Pool count in each proxy will keep no more than maxPoolCount.
-transport.maxPoolCount = ${set_max_pool_count}
-
-# If tcp stream multiplexing is used, default is true
-transport.tcpMux = "${set_tcp_mux}"
-
-# Specify keep alive interval for tcp mux.
-# only valid if tcpMux is true.
-# transport.tcpMuxKeepaliveInterval = 30
-
-# tcpKeepalive specifies the interval between keep-alive probes for an active network connection between frpc and frps.
-# If negative, keep-alive probes are disabled.
-# transport.tcpKeepalive = 7200
-
-# transport.tls.force specifies whether to only accept TLS-encrypted connections. By default, the value is false.
-# transport.tls.force = false
-
-# transport.tls.certFile = "server.crt"
-# transport.tls.keyFile = "server.key"
-# transport.tls.trustedCaFile = "ca.crt"
-
-# If you want to support virtual host, you must set the http port for listening (optional)
-# Note: http port and https port can be same with bindPort
-vhostHTTPPort = ${set_vhost_http_port}
-vhostHTTPSPort = ${set_vhost_https_port}
-
-# Response header timeout(seconds) for vhost http server, default is 60s
-# vhostHTTPTimeout = 60
-
-# tcpmuxHTTPConnectPort specifies the port that the server listens for TCP
-# HTTP CONNECT requests. If the value is 0, the server will not multiplex TCP
-# requests on one single port. If it's not - it will listen on this value for
-# HTTP CONNECT requests. By default, this value is 0.
-# tcpmuxHTTPConnectPort = 1337
-
-# If tcpmuxPassthrough is true, frps won't do any update on traffic.
-# tcpmuxPassthrough = false
-
-# Configure the web server to enable the dashboard for frps.
-# dashboard is available only if webServerport is set.
-webServer.addr = "0.0.0.0"
-webServer.port = ${set_dashboard_port}
-webServer.user = "${set_dashboard_user}"
-webServer.password = "${set_dashboard_pwd}"
-# webServer.tls.certFile = "server.crt"
-# webServer.tls.keyFile = "server.key"
-# dashboard assets directory(only for debug mode)
-# webServer.assetsDir = "./static"
-
-# Enable golang pprof handlers in dashboard listener.
-# Dashboard port must be set first
-# webServer.pprofEnable = false
-
-# enablePrometheus will export prometheus metrics on webServer in /metrics api.
-# enablePrometheus = true
-
-# console or real logFile path like ./frps.log
-log.to = "${str_log_file_flag}"
-# trace, debug, info, warn, error
-log.level = "${str_log_level}"
-log.maxDays = ${set_log_max_days}
-# disable log colors when log.to is console, default is false
-# log.disablePrintColor = false
-
-# DetailedErrorsToClient defines whether to send the specific error (with debug info) to frpc. By default, this value is true.
-# detailedErrorsToClient = true
-
-# auth.method specifies what authentication method to use authenticate frpc with frps.
-# If "token" is specified - token will be read into login message.
-# If "oidc" is specified - OIDC (Open ID Connect) token will be issued using OIDC settings. By default, this value is "token".
-auth.method = "token"
-
-# auth.additionalScopes specifies additional scopes to include authentication information.
-# Optional values are HeartBeats, NewWorkConns.
-# auth.additionalScopes = ["HeartBeats", "NewWorkConns"]
-
-# auth token
-auth.token = "${set_token}"
-
-# userConnTimeout specifies the maximum time to wait for a work connection.
-# userConnTimeout = 10
-
-# Max ports can be used for each client, default value is 0 means no limit
-# maxPortsPerClient = 0
-
-# If subDomainHost is not empty, you can set subdomain when type is http or https in frpc's configure file
-# When subdomain is test, the host used by routing is test.frps.com
-subDomainHost = "${set_subdomain_host}"
-
-# custom 404 page for HTTP requests
-# custom404Page = "/path/to/404.html"
-
-# specify udp packet size, unit is byte. If not set, the default value is 1500.
-# This parameter should be same between client and server.
-# It affects the udp and sudp proxy.
-# udpPacketSize = 1500
-
-# Retention time for NAT hole punching strategy data.
-# natholeAnalysisDataReserveHours = 168
-
-# ssh tunnel gateway
-# If you want to enable this feature, the bindPort parameter is required, while others are optional.
-# By default, this feature is disabled. It will be enabled if bindPort is greater than 0.
-# sshTunnelGateway.bindPort = 2200
-# sshTunnelGateway.privateKeyFile = "/home/frp-user/.ssh/id_rsa"
-# sshTunnelGateway.autoGenPrivateKeyPath = ""
-# sshTunnelGateway.authorizedKeysFile = "/home/frp-user/.ssh/authorized_keys"
-EOF
-
-else
-cat << EOF > "${str_program_dir}/${program_config_file}"
-
-bindAddr = "0.0.0.0"
-bindPort = ${set_bind_port}
-
-# udp port used for kcp protocol, it can be same with 'bindPort'.
-# if not set, kcp is disabled in frps.
-kcpBindPort = ${set_bind_port}
-
-# udp port used for quic protocol.
-# if not set, quic is disabled in frps.
-# quicBindPort = ${set_bindPort}
+quicBindPort = ${set_quic_bind_port}
 
 # Specify which address proxy will listen for, default value is same with bindAddr
 # proxyBindAddr = "127.0.0.1"
@@ -844,47 +772,74 @@ subDomainHost = "${set_subdomain_host}"
 # sshTunnelGateway.autoGenPrivateKeyPath = ""
 # sshTunnelGateway.authorizedKeysFile = "/home/frp-user/.ssh/authorized_keys"
 EOF
-
-fi
     echo " done"
 
-    echo -n "download ${program_name} ..."
-    rm -f ${str_program_dir}/${program_name} ${program_init}
-    fun_download_file
-    echo " done"
-    echo -n "download ${program_init}..."
-    if [ ! -s ${program_init} ]; then
-        if ! wget  -q ${FRPS_INIT} -O ${program_init}; then
-            echo -e " ${COLOR_RED}failed${COLOR_END}"
-            exit 1
-        fi
-    fi
-    [ ! -x ${program_init} ] && chmod +x ${program_init}
-    echo " done"
+	echo -n "download ${program_name} ..."
+	rm -f ${str_program_dir}/${program_name} ${program_init}
+	fun_download_file
+	echo " done"
+	echo -n "download ${program_init}..."
+	if [ ! -s ${program_init} ]; then
+		if ! wget  -q ${FRPS_INIT} -O ${program_init}; then
+			echo -e " ${COLOR_RED}failed${COLOR_END}"
+			exit 1
+		fi
+	fi
+	[ ! -x ${program_init} ] && chmod +x ${program_init}
+	echo " done"
 
-    echo -n "setting ${program_name} boot..."
-    [ ! -x ${program_init} ] && chmod +x ${program_init}
+	echo -n "setting ${program_name} boot..."
+	[ ! -x ${program_init} ] && chmod +x ${program_init}
+	if [ "${OS}" == 'CentOS' ]; then
+		chmod +x ${program_init}
+		chkconfig --add ${program_name}
+	else
+		chmod +x ${program_init}
+		update-rc.d -f ${program_name} defaults
+	fi
+	echo " done"
+	[ -s ${program_init} ] && ln -s ${program_init} /usr/bin/${program_name}
+
+	# Start the frps service
+	${program_init} start
+
+	# Check if the frps service started successfully
+	if pgrep -x "${program_name}" >/dev/null; then
+		echo "${program_name} service started successfully."
+		fun_frps
+		echo -e "${COLOR_GREEN}
+	┌─────────────────────────────────────────┐
+	│   frp service started successfully.     │
+	└─────────────────────────────────────────┘
+	┌─────────────────────────────────────────┐
+	│  Installation completed successfully.   │
+	└─────────────────────────────────────────┘${COLOR_END}"
+	echo ""
+	else
+		echo -e "${COLOR_RED}
+	┌─────────────────────────────────────────┐
+	│   frp service failed to start.          │
+	└─────────────────────────────────────────┘	
+	┌─────────────────────────────────────────┐
+	│ Installation failed, Please re-install. │
+	└─────────────────────────────────────────┘${COLOR_END}"
+	echo ""
+	# Remove the installed service
     if [ "${OS}" == 'CentOS' ]; then
-        chmod +x ${program_init}
-        chkconfig --add ${program_name}
+        chkconfig --del ${program_name}
     else
-        chmod +x ${program_init}
-        update-rc.d -f ${program_name} defaults
+        update-rc.d -f ${program_name} remove
     fi
-    echo " done"
-    [ -s ${program_init} ] && ln -s ${program_init} /usr/bin/${program_name}
-    ${program_init} start
-    fun_frps
-    #install successfully
+			exit 1
+fi
+    # Print the frps configuration
     echo ""
     echo "Congratulations, ${program_name} install completed!"
     echo "================================================"
     echo -e "You Server IP      : ${COLOR_GREEN}${defIP}${COLOR_END}"
-    echo -e "Bind port          : ${COLOR_GREEN}${set_bind_port}${COLOR_END}"
-    echo -e "KCP support        : ${COLOR_GREEN}${set_kcp}${COLOR_END}"
+    echo -e "bind port          : ${COLOR_GREEN}${set_bind_port}${COLOR_END}"
     echo -e "vhost http port    : ${COLOR_GREEN}${set_vhost_http_port}${COLOR_END}"
     echo -e "vhost https port   : ${COLOR_GREEN}${set_vhost_https_port}${COLOR_END}"
-    echo -e "Dashboard port     : ${COLOR_GREEN}${set_dashboard_port}${COLOR_END}"
     echo -e "token              : ${COLOR_GREEN}${set_token}${COLOR_END}"
     echo -e "subdomain_host     : ${COLOR_GREEN}${set_subdomain_host}${COLOR_END}"
     echo -e "tcp_mux            : ${COLOR_GREEN}${set_tcp_mux}${COLOR_END}"
@@ -892,8 +847,12 @@ fi
     echo -e "Log level          : ${COLOR_GREEN}${str_log_level}${COLOR_END}"
     echo -e "Log max days       : ${COLOR_GREEN}${set_log_max_days}${COLOR_END}"
     echo -e "Log file           : ${COLOR_GREEN}${str_log_file_flag}${COLOR_END}"
+	echo -e "transport protocol : ${COLOR_GREEN}${set_transport_protocol}${COLOR_END}"
+	echo -e "kcp bind port      : ${COLOR_GREEN}${set_kcp_bind_port}${COLOR_END}"
+	echo -e "quic bind port     : ${COLOR_GREEN}${set_quic_bind_port}${COLOR_END}"	
     echo "================================================"
     echo -e "${program_name} Dashboard     : ${COLOR_GREEN}http://${set_subdomain_host}:${set_dashboard_port}/${COLOR_END}"
+	echo -e "Dashboard port     : ${COLOR_GREEN}${set_dashboard_port}${COLOR_END}"
     echo -e "Dashboard user     : ${COLOR_GREEN}${set_dashboard_user}${COLOR_END}"
     echo -e "Dashboard password : ${COLOR_GREEN}${set_dashboard_pwd}${COLOR_END}"
     echo "================================================"
@@ -929,7 +888,7 @@ uninstall_program_server_frps(){
             str_uninstall="y"
             char=`get_char`
 
-            # 停止 frps 服务
+            # Stop frps server
             ${program_init} stop
 
             rm -f ${program_init} /var/run/${program_name}.pid /usr/bin/${program_name}
@@ -956,10 +915,11 @@ update_config_frps(){
         search_dashboard_user=`grep "dashboard_user" ${str_program_dir}/${program_config_file}`
         search_dashboard_pwd=`grep "dashboard_pwd" ${str_program_dir}/${program_config_file}`
         search_kcp_bind_port=`grep "kcp_bind_port" ${str_program_dir}/${program_config_file}`
+		search_quic_bind_port=`grep "quic_bind_port" ${str_program_dir}/${program_config_file}`
         search_tcp_mux=`grep "tcp_mux" ${str_program_dir}/${program_config_file}`
         search_token=`grep "privilege_token" ${str_program_dir}/${program_config_file}`
         search_allow_ports=`grep "privilege_allow_ports" ${str_program_dir}/${program_config_file}`
-        if [ -z "${search_dashboard_user}" ] || [ -z "${search_dashboard_pwd}" ] || [ -z "${search_kcp_bind_port}" ] || [ -z "${search_tcp_mux}" ] || [ ! -z "${search_token}" ] || [ ! -z "${search_allow_ports}" ];then
+        if [ -z "${search_dashboard_user}" ] || [ -z "${search_dashboard_pwd}" ] || [ -z "${search_kcp_bind_port}" ] || [ -z "${search_quic_bind_port}" ] || [ -z "${search_tcp_mux}" ] || [ ! -z "${search_token}" ] || [ ! -z "${search_allow_ports}" ];then
             echo -e "${COLOR_GREEN}Configuration files need to be updated, now setting:${COLOR_END}"
             echo ""
             if [ ! -z "${search_token}" ];then
@@ -979,31 +939,31 @@ update_config_frps(){
                 sed -i "/dashboard_port =.*/a\dashboard_user = ${set_dashboard_user_update}\ndashboard_pwd = ${set_dashboard_pwd_update}\n" ${str_program_dir}/${program_config_file}
             fi
             if [ -z "${search_kcp_bind_port}" ];then 
-                echo -e "${COLOR_GREEN}Please select kcp support${COLOR_END}"
+                echo -e "${COLOR_GREEN}Please select transport protocol support${COLOR_END}"
                 echo "1: enable (default)"
                 echo "2: disable"
                 echo "-------------------------"  
-                read -e -p "Enter your choice (1, 2 or exit. default [1]): " str_kcp
-                case "${str_kcp}" in
+                read -e -p "Enter your choice (1, 2 or exit. default [1]): " str_transport_protocol
+                case "${str_transport_protocol}" in
                     1|[yY]|[yY][eE][sS]|[oO][nN]|[tT][rR][uU][eE]|[eE][nN][aA][bB][lL][eE])
-                        set_kcp="true"
+                        set_transport_protocol="enable"
                         ;;
                     0|2|[nN]|[nN][oO]|[oO][fF][fF]|[fF][aA][lL][sS][eE]|[dD][iI][sS][aA][bB][lL][eE])
-                        set_kcp="false"
+                        set_transport_protocol="disable"
                         ;;
                     [eE][xX][iI][tT])
                         exit 1
                         ;;
                     *)
-                        set_kcp="true"
+                        set_transport_protocol="enable"
                         ;;
                 esac
-                echo "kcp support: ${set_kcp}"
+                echo "transport protocol support: ${set_transport_protocol}"
                 def_kcp_bind_port=( $( __readINI ${str_program_dir}/${program_config_file} common bind_port ) )
-                if [[ "${set_kcp}" == "false" ]]; then
-                    sed -i "/^bind_port =.*/a\# udp port used for kcp protocol, it can be same with 'bind_port'\n# if not set, kcp is disabled in frps\n#kcp_bind_port = ${def_kcp_bind_port}\n" ${str_program_dir}/${program_config_file}
+                if [[ "${set_transport_protocol}" == "disable" ]]; then
+                    sed -i "/^bind_port =.*/a\# udp port used for transport protocol, it can be same with 'bind_port'\n# if not set, transport protocol is disabled in frps\n#kcp_bind_port = ${def_kcp_bind_port}\n" ${str_program_dir}/${program_config_file}
                 else
-                    sed -i "/^bind_port =.*/a\# udp port used for kcp protocol, it can be same with 'bind_port'\n# if not set, kcp is disabled in frps\nkcp_bind_port = ${def_kcp_bind_port}\n" ${str_program_dir}/${program_config_file}
+                    sed -i "/^bind_port =.*/a\# udp port used for transport protocol, it can be same with 'bind_port'\n# if not set, kcp is disabled in frps\nkcp_bind_port = ${def_kcp_bind_port}\n" ${str_program_dir}/${program_config_file}
                 fi
             fi
             if [ -z "${search_tcp_mux}" ];then
@@ -1037,6 +997,7 @@ update_config_frps(){
         verify_dashboard_user=`grep "^dashboard_user" ${str_program_dir}/${program_config_file}`
         verify_dashboard_pwd=`grep "^dashboard_pwd" ${str_program_dir}/${program_config_file}`
         verify_kcp_bind_port=`grep "kcp_bind_port" ${str_program_dir}/${program_config_file}`
+		verify_quic_bind_port=`grep "quic_bind_port" ${str_program_dir}/${program_config_file}`
         verify_tcp_mux=`grep "^tcp_mux" ${str_program_dir}/${program_config_file}`
         verify_token=`grep "privilege_token" ${str_program_dir}/${program_config_file}`
         verify_allow_ports=`grep "privilege_allow_ports" ${str_program_dir}/${program_config_file}`
