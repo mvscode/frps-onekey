@@ -15,7 +15,7 @@ export github_latest_version_api="https://api.github.com/repos/fatedier/frp/rele
 
 # Program information
 program_name="frps"
-version="1.0.5"
+version="1.0.6"
 str_program_dir="/usr/local/${program_name}"
 program_init="/etc/init.d/${program_name}"
 program_config_file="frps.toml"
@@ -81,7 +81,7 @@ fun_frps(){
     fi
     echo ""
     echo "+------------------------------------------------------------+"
-    echo "|   frps for Linux Server, Author Clang ，Mender MvsCode     |" 
+    echo "|    frps for Linux Server, Author Clang, Mender MvsCode     |" 
     echo "|      A tool to auto-compile & install frps on Linux        |"
     echo "+------------------------------------------------------------+"
     echo ""
@@ -113,38 +113,55 @@ get_char(){
     stty echo
     stty $SAVEDSTTY
 }
-# Check OS
+# Check Server OS
 checkos(){
-    if   grep -Eqi "CentOS" /etc/issue || grep -Eq "CentOS" /etc/*-release; then
+    if grep -Eqi "CentOS" /etc/issue || grep -Eq "CentOS" /etc/*-release; then
         OS=CentOS
+    elif grep -Eqi "Red Hat Enterprise Linux" /etc/issue || grep -Eq "Red Hat Enterprise Linux" /etc/*-release; then
+        OS=RHEL
+    elif grep -Eqi "Fedora" /etc/issue || grep -Eq "Fedora" /etc/*-release; then
+        OS=Fedora
+    elif grep -Eqi "Rocky" /etc/issue || grep -Eq "Rocky" /etc/*-release; then
+        OS=Rocky
+    elif grep -Eqi "AlmaLinux" /etc/issue || grep -Eq "AlmaLinux" /etc/*-release; then
+        OS=AlmaLinux
     elif grep -Eqi "Debian" /etc/issue || grep -Eq "Debian" /etc/*-release; then
         OS=Debian
     elif grep -Eqi "Ubuntu" /etc/issue || grep -Eq "Ubuntu" /etc/*-release; then
         OS=Ubuntu
-    elif grep -Eqi "Fedora" /etc/issue || grep -Eq "Fedora" /etc/*-release; then
-        OS=Fedora
     else
-        echo "Not support OS, Please reinstall OS and retry!"
+        echo "Unsupported OS. Please use a supported Linux distribution and retry!"
         exit 1
     fi
 }
 # Get version
 getversion(){
-    if [[ -s /etc/redhat-release ]];then
-        grep -oE  "[0-9.]+" /etc/redhat-release
+    local version
+    if [[ -f /etc/os-release ]]; then
+        source /etc/os-release
+        version="$VERSION_ID"
+    elif [[ -f /etc/redhat-release ]]; then
+        version=$(grep -oE "[0-9.]+" /etc/redhat-release)
     else
-        grep -oE  "[0-9.]+" /etc/issue
+        version=$(grep -oE "[0-9.]+" /etc/issue)
+    fi
+
+    if [[ -z "$version" ]]; then
+        echo "Unable to determine version" >&2
+        return 1
+    else
+        echo "$version"
     fi
 }
-# CentOS version
-centosversion(){
-    local code=$1
-    local version="`getversion`"
-    local main_ver=${version%%.*}
-    if [ $main_ver == $code ];then
-        return 0
+# Check server os version
+check_os_version(){
+    local required_version=$1
+    local current_version=$(getversion)
+    
+    if [[ "$(echo -e "$current_version\n$required_version" | sort -V | head -n1)" == "$required_version" ]]; then
+        return 0  # when current version > required version
     else
-        return 1
+        return 1  # when current version < required version
     fi
 }
 # Check OS bit
@@ -164,12 +181,6 @@ check_os_bit() {
         riscv64)     Is_64bit='y'; ARCHS="riscv64";;
         *)           echo "Unknown architecture";;
     esac
-}
-check_centosversion(){
-if centosversion 5; then
-    echo "Not support CentOS 5.x, please change to CentOS 6,7 or Debian or Ubuntu or Fedora and try again."
-    exit 1
-fi
 }
 # Disable selinux
 disable_selinux(){
@@ -413,26 +424,30 @@ fun_input_quic_bind_port(){
 pre_install_frps(){
     fun_frps
     echo -e "Check your server setting, please wait..."
+	echo ""
     disable_selinux
 
     # Check if the frps service is already running
     if pgrep -x "${program_name}" >/dev/null; then
     echo -e "${COLOR_GREEN}${program_name} is already installed and running.${COLOR_END}"
 else
-    echo -e "${COLOR_YELLOW}${program_name} is not running or not install.${COLOR_END}"
+    echo -e "${COLOR_YELOW}${program_name} is not running or not install.${COLOR_END}"
     echo ""
     read -p "Do you want to re-install ${program_name}? (y/n) " choice
 	echo ""
     case "$choice" in
       y|Y)
-        echo "Re-installing ${program_name}..."
-        install_frps
+        echo -e "${COLOR_GREEN} Re-installing ${program_name}...${COLOR_END}"
         ;;
       n|N)
-        echo "Skipping installation."
+        echo -e "${COLOR_YELOW} Skipping installation.${COLOR_END}"
+		echo ""
+		exit 1
         ;;
       *)
-        echo "Invalid choice. Skipping installation."
+        echo -e "${COLOR_YELOW}Invalid choice. Skipping installation. ${COLOR_END}"
+		echo ""
+		exit 1
         ;;
     esac
         clear
@@ -613,14 +628,14 @@ else
         echo -e "Dashboard password : ${COLOR_GREEN}${set_dashboard_pwd}${COLOR_END}"
         echo -e "token              : ${COLOR_GREEN}${set_token}${COLOR_END}"
         echo -e "subdomain_host     : ${COLOR_GREEN}${set_subdomain_host}${COLOR_END}"
-        echo -e "tcp_mux            : ${COLOR_GREEN}${set_tcp_mux}${COLOR_END}"
+        echo -e "tcp mux            : ${COLOR_GREEN}${set_tcp_mux}${COLOR_END}"
         echo -e "Max Pool count     : ${COLOR_GREEN}${set_max_pool_count}${COLOR_END}"
         echo -e "Log level          : ${COLOR_GREEN}${str_log_level}${COLOR_END}"
         echo -e "Log max days       : ${COLOR_GREEN}${set_log_max_days}${COLOR_END}"
         echo -e "Log file           : ${COLOR_GREEN}${str_log_file_flag}${COLOR_END}"
-        echo -e "transport protocol : ${COLOR_GREEN}${set_transport_protocol}${COLOR_END}"
-        echo -e "kcp bind port      : ${COLOR_GREEN}${set_kcp_bind_port}${COLOR_END}"
-        echo -e "quic bind port     : ${COLOR_GREEN}${set_quic_bind_port}${COLOR_END}"
+		echo -e "transport protocol : ${COLOR_GREEN}${set_transport_protocol}${COLOR_END}"
+		echo -e "kcp bind port      : ${COLOR_GREEN}${set_kcp_bind_port}${COLOR_END}"
+		echo -e "quic bind port     : ${COLOR_GREEN}${set_quic_bind_port}${COLOR_END}"
         echo "=============================================="
         echo ""
         echo "Press any key to start...or Press Ctrl+c to cancel"
@@ -789,7 +804,9 @@ EOF
 	echo " done"
 
 	echo -n "setting ${program_name} boot..."
+	
 	[ ! -x ${program_init} ] && chmod +x ${program_init}
+	
 	if [ "${OS}" == 'CentOS' ]; then
 		chmod +x ${program_init}
 		chkconfig --add ${program_name}
@@ -797,8 +814,10 @@ EOF
 		chmod +x ${program_init}
 		update-rc.d -f ${program_name} defaults
 	fi
+	
 	echo " done"
-	[ -s ${program_init} ] && ln -s ${program_init} /usr/bin/${program_name}
+
+	[ -s ${program_init} ] && ln -sf ${program_init} /usr/bin/${program_name}
 
 	# Start the frps service
 	${program_init} start
@@ -842,17 +861,17 @@ fi
     echo -e "vhost https port   : ${COLOR_GREEN}${set_vhost_https_port}${COLOR_END}"
     echo -e "token              : ${COLOR_GREEN}${set_token}${COLOR_END}"
     echo -e "subdomain_host     : ${COLOR_GREEN}${set_subdomain_host}${COLOR_END}"
-    echo -e "tcp_mux            : ${COLOR_GREEN}${set_tcp_mux}${COLOR_END}"
+    echo -e "tcp mux            : ${COLOR_GREEN}${set_tcp_mux}${COLOR_END}"
     echo -e "Max Pool count     : ${COLOR_GREEN}${set_max_pool_count}${COLOR_END}"
     echo -e "Log level          : ${COLOR_GREEN}${str_log_level}${COLOR_END}"
     echo -e "Log max days       : ${COLOR_GREEN}${set_log_max_days}${COLOR_END}"
     echo -e "Log file           : ${COLOR_GREEN}${str_log_file_flag}${COLOR_END}"
-    echo -e "transport protocol : ${COLOR_GREEN}${set_transport_protocol}${COLOR_END}"
-    echo -e "kcp bind port      : ${COLOR_GREEN}${set_kcp_bind_port}${COLOR_END}"
-    echo -e "quic bind port     : ${COLOR_GREEN}${set_quic_bind_port}${COLOR_END}"	
+	echo -e "transport protocol : ${COLOR_GREEN}${set_transport_protocol}${COLOR_END}"
+	echo -e "kcp bind port      : ${COLOR_GREEN}${set_kcp_bind_port}${COLOR_END}"
+	echo -e "quic bind port     : ${COLOR_GREEN}${set_quic_bind_port}${COLOR_END}"	
     echo "================================================"
     echo -e "${program_name} Dashboard     : ${COLOR_GREEN}http://${set_subdomain_host}:${set_dashboard_port}/${COLOR_END}"
-    echo -e "Dashboard port     : ${COLOR_GREEN}${set_dashboard_port}${COLOR_END}"
+	echo -e "Dashboard port     : ${COLOR_GREEN}${set_dashboard_port}${COLOR_END}"
     echo -e "Dashboard user     : ${COLOR_GREEN}${set_dashboard_user}${COLOR_END}"
     echo -e "Dashboard password : ${COLOR_GREEN}${set_dashboard_pwd}${COLOR_END}"
     echo "================================================"
@@ -1015,7 +1034,7 @@ update_program_server_frps() {
         echo "============== Update $program_name =============="
         update_config_frps
         checkos
-        check_centosversion
+        check_os_version
         check_os_bit
         fun_getVer
 
@@ -1077,7 +1096,7 @@ strPath=$(pwd)
 rootness
 fun_set_text_color
 checkos
-check_centosversion
+check_os_version
 check_os_bit
 pre_install_packs
 shell_update

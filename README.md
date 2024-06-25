@@ -52,10 +52,43 @@ Usage: /etc/init.d/frps {start|stop|restart|status|config|version}
  
 ## Script ChangeLog
 ---------------------------------------
-### [1.0.1] - 2024-06-07
+### [1.0.6] - 2024-06-25
+
+#### Added
+* Add new server os to support, RHEL,Rocky,AlmaLinux OS.
+
+* Add new server os on frps.init file
+
+#### Fixed
+* fix check server os version script bug
+
+### [1.0.5] - 2024-06-19
+
+#### Added
+* Add quic of transport protocol support,server port default same as https port.
+
+* Add user-defined functions for the kcp bind port,server port default same as bind port.
+
+#### Fixed
+* Fix the script under frps server start faild still install complete bug.
+
+### [1.0.4] - 2024-06-18
+
+#### Updated
+* Add trace option at log level, default is info
+
+* Update shell update function, ask the user if they want to update
+
+#### New
+* frps support transport heartbeatTimeout = 90, default is enable
+
+### [1.0.3] - 2024-06-16
+
+#### Amendment
+* Amend function name to frps
 
 #### Changed
-* frps program config file change to frps.toml from frps.int
+* Change curl common to get server ip from wget common
 
 ### [1.0.2] - 2024-06-13
 
@@ -68,34 +101,18 @@ Usage: /etc/init.d/frps {start|stop|restart|status|config|version}
   etc..
   ```
 
-### [1.0.3] - 2024-06-16
-
-#### Amendment
-* Amend function name to frps
+### [1.0.1] - 2024-06-07
 
 #### Changed
-* Change curl common to get server ip from wget common
+* frps program config file change to frps.toml from frps.int
 
 
-### [1.0.4] - 2024-06-18
 
-#### Updated
-* Add trace option at log level, default is info
 
-* Update shell update function, ask the user if they want to update
 
-#### New
-* frps support transport heartbeatTimeout = 90, default is enable
 
-### [1.0.5] - 2024-06-19
 
-#### ADDED
-* Add quic of transport protocol support,server port default same as https port.
-
-* Add user-defined functions for the kcp bind port,server port default same as bind port.
-
-#### Fixed
-* Fix the script under frps server start faild still install complete bug.
+ 
 
  
   

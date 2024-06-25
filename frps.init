@@ -19,19 +19,19 @@
 ### END INIT INFO
 
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
-ProgramName="Frps"
+ProgramName="frps"
 ProgramPath="/usr/local/frps"
 NAME=frps
 BIN=${ProgramPath}/${NAME}
 CONFIGFILE=${ProgramPath}/frps.toml
 SCRIPTNAME=/etc/init.d/${NAME}
-version="2023"
+version="2024"
 program_version=`${BIN} --version`
 RET_VAL=0
 
 [ -x ${BIN} ] || exit 0
 strLog=""
-fun_clangcn()
+fun_frps()
 {
     echo ""
     echo "+---------------------------------------------------------+"
@@ -57,7 +57,7 @@ fun_load_config(){
 fun_start()
 {
     if [ "${arg1}" = "start" ]; then
-      fun_clangcn
+      fun_frps
     fi
     if fun_check_run; then
         echo "${ProgramName} (pid $PID) already running."
@@ -78,7 +78,7 @@ fun_start()
 
 fun_stop(){
     if [ "${arg1}" = "stop" ] || [ "${arg1}" = "restart" ]; then
-      fun_clangcn
+      fun_frps
     fi
     if fun_check_run; then
         echo -n "Stoping ${ProgramName} (pid $PID)... "
@@ -108,19 +108,23 @@ fun_status(){
     fi
 }
 checkos(){
-    if   grep -Eqi "CentOS" /etc/issue || grep -Eq "CentOS" /etc/*-release; then
+    if grep -Eqi "CentOS" /etc/issue || grep -Eq "CentOS" /etc/*-release; then
         OS=CentOS
+    elif grep -Eqi "Red Hat Enterprise Linux" /etc/issue || grep -Eq "Red Hat Enterprise Linux" /etc/*-release; then
+        OS=RHEL
+    elif grep -Eqi "Fedora" /etc/issue || grep -Eq "Fedora" /etc/*-release; then
+        OS=Fedora
+    elif grep -Eqi "Rocky" /etc/issue || grep -Eq "Rocky" /etc/*-release; then
+        OS=Rocky
+    elif grep -Eqi "AlmaLinux" /etc/issue || grep -Eq "AlmaLinux" /etc/*-release; then
+        OS=AlmaLinux
     elif grep -Eqi "Debian" /etc/issue || grep -Eq "Debian" /etc/*-release; then
         OS=Debian
     elif grep -Eqi "Ubuntu" /etc/issue || grep -Eq "Ubuntu" /etc/*-release; then
         OS=Ubuntu
-    elif grep -Eqi "Alpine" /etc/issue || grep -Eq "Alpine" /etc/*-release; then
-        OS=Alpine
-    elif grep -Eqi "Fedora" /etc/issue || grep -Eq "Fedora" /etc/*-release; then
-        OS=Fedora
     else
-        echo "Not support OS, Please reinstall OS and retry!"
-        return 1
+        echo "Unsupported OS. Please use a supported Linux distribution and retry!"
+        exit 1
     fi
 }
 fun_config(){
@@ -156,7 +160,7 @@ case "${arg1}" in
         fun_help
     ;;
     *)
-        fun_clangcn
+        fun_frps
         echo "Usage: $SCRIPTNAME {start|stop|restart|status|config|version}"
         RET_VAL=1
     ;;
