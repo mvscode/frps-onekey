@@ -15,7 +15,7 @@ export github_latest_version_api="https://api.github.com/repos/fatedier/frp/rele
 
 # Program information
 program_name="frps"
-version="1.0.6"
+version="1.0.7"
 str_program_dir="/usr/local/${program_name}"
 program_init="/etc/init.d/${program_name}"
 program_config_file="frps.toml"
@@ -1031,8 +1031,7 @@ update_program_server_frps() {
     fun_frps "clear"
 
     if [ -s "$program_init" ] || [ -s "$str_program_dir/$program_name" ]; then
-        echo "============== Update $program_name =============="
-        update_config_frps
+        echo "============== Update $program_name version=============="
         checkos
         check_os_version
         check_os_bit
@@ -1056,8 +1055,8 @@ update_program_server_frps() {
 
         [ ! -d "$str_program_dir" ] && mkdir -p "$str_program_dir"
         echo -e "Loading network version for $program_name, please wait..."
-        fun_getServer
         fun_getVer >/dev/null 2>&1
+		fun_getServer
         local_program_version="$($str_program_dir/$program_name --version)"
         echo -e "${COLOR_GREEN}$program_name local version $local_program_version${COLOR_END}"
         echo -e "${COLOR_GREEN}$program_name remote version $FRPS_VER${COLOR_END}"
