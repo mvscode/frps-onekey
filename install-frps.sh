@@ -268,22 +268,22 @@ fun_download_file(){
     # download
     if [ ! -s ${str_program_dir}/${program_name} ]; then
         rm -fr ${program_latest_filename} frp_${FRPS_VER}_linux_${ARCHS}
-	echo -e "Downloading ${program_name}..."
-	echo ""
+		echo -e "Downloading ${program_name}..."
+		echo ""
         curl -L --progress-bar "${program_latest_file_url}" -o "${program_latest_filename}" 2>&1 | show_progress
-	echo ""		
+	    echo ""		
 	if [ $? -ne 0 ]; then
         echo -e " ${COLOR_RED}Download failed${COLOR_END}"
-	exit 1
+		exit 1
     fi
 	
     # Verify the downloaded file exists and is not empty
     if [ ! -s ${program_latest_filename} ]; then
-        echo -e " ${COLOR_RED}Downloaded file is empty or not found${COLOR_END}"
-        exit 1
+      echo -e " ${COLOR_RED}Downloaded file is empty or not found${COLOR_END}"
+      exit 1
     fi		
-        echo -e "Extracting ${program_name}..."
-	echo ""
+      echo -e "Extracting ${program_name}..."
+	  echo ""
 	  
       tar xzf ${program_latest_filename}
       mv frp_${FRPS_VER}_linux_${ARCHS}/frps ${str_program_dir}/${program_name}
@@ -305,7 +305,7 @@ show_progress() {
   local GREEN='\033[1;32m'
   local NC='\033[0m'  # No Color
 
-  while [ $CURRENT_SIZE -lt $TOTAL_SIZE ]; do
+  while [ $CURRENT_SIZE -lt $TOTAL_SIZE ] || [ $PERCENTAGE -lt 100 ]; do
     PERCENTAGE=$(awk "BEGIN {printf \"%.0f\", $CURRENT_SIZE*100/$TOTAL_SIZE}")
 
     if ! [[ "$PERCENTAGE" =~ ^[0-9]+$ ]] ; then
@@ -322,16 +322,16 @@ show_progress() {
 
     printf "\r${GREEN}%2d%% [" "$PERCENTAGE"
     for ((i = 0; i < completed; i++)); do
-     if [ $i -eq $((completed - 1)) ]; then
-     printf ">"
-    else
-     printf "="
-    fi
-    done
+	 if [ $i -eq $((completed - 1)) ]; then
+      printf ">"
+     else
+	  printf "="
+	 fi
+	done
     for ((i = 0; i < remaining; i++)); do
-     printf " "
+      printf " "
     done
-     printf "]${NC}"
+    printf "]${NC}"
 
     CURRENT_SIZE=$((CURRENT_SIZE + $((RANDOM % 50000 + 1))))
     sleep 0.05
