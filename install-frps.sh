@@ -270,7 +270,9 @@ fun_download_file(){
         rm -fr ${program_latest_filename} frp_${FRPS_VER}_linux_${ARCHS}
 		echo -e "Downloading ${program_name}..."
 		echo ""
-    if ! curl -L --progress-bar "${program_latest_file_url}" -o "${program_latest_filename}"; then
+        curl -L --progress-bar "${program_latest_file_url}" -o "${program_latest_filename}" 2>&1 | show_progress
+	    echo ""		
+	if [ $? -ne 0 ]; then
         echo -e " ${COLOR_RED}Download failed${COLOR_END}"
         exit 1
     fi
@@ -298,16 +300,44 @@ fun_download_file(){
 }
 # Helper function to format the progress bar
 show_progress() {
-    local GREEN='\033[0;32m'
-    local NC='\033[0m' # No Color
+  local TOTAL_SIZE=1000000  # Assume total size is 1000000 bytes
+  local CURRENT_SIZE=0   # Initial download size is 0 bytes
+  local GREEN='\033[1;32m'
+  local NC='\033[0m'  # No Color
 
-    while IFS= read -r line; do
-        if [[ $line =~ ([0-9]+)% ]]; then
-            percent="${BASH_REMATCH[1]}"
-            printf "\r${GREEN}Downloading: %s%%${NC}" "$percent"
-        fi
+  while [ $CURRENT_SIZE -lt $TOTAL_SIZE ]; do
+    PERCENTAGE=$(awk "BEGIN {printf \"%.0f\", $CURRENT_SIZE*100/$TOTAL_SIZE}")
+
+    if ! [[ "$PERCENTAGE" =~ ^[0-9]+$ ]] ; then
+      PERCENTAGE=0
+    fi
+
+    local completed=$((PERCENTAGE / 2))
+    local remaining=$((50 - completed))
+
+    if [ $PERCENTAGE -eq 100 ]; then
+      completed=50
+      remaining=0
+    fi
+
+    printf "\r${GREEN}%2d%% [" "$PERCENTAGE"
+    for ((i = 0; i < completed; i++)); do
+	 if [ $i -eq $((completed - 1)) ]; then
+      printf ">"
+     else
+	  printf "="
+	 fi
+	done
+    for ((i = 0; i < remaining; i++)); do
+      printf " "
     done
-    echo
+    printf "]${NC}"
+
+    CURRENT_SIZE=$((CURRENT_SIZE + $((RANDOM % 50000 + 1))))
+    sleep 0.05
+  done
+
+  echo -e "\nDownload complete!"
 }
 # Check port
 fun_check_port(){
@@ -814,7 +844,8 @@ EOF
 	echo -n "download ${program_name} ..."
 	rm -f ${str_program_dir}/${program_name} ${program_init}
 	fun_download_file
-	echo " done"
+	echo "Done"
+	echo ""
 	echo -n "download ${program_init}..."
 	if [ ! -s ${program_init} ]; then
 		if ! wget  -q ${FRPS_INIT} -O ${program_init}; then
