@@ -515,7 +515,7 @@ else
         echo -e "Loading You Server IP, please wait..."
         defIP=$(curl -s https://api.ipify.org)
         echo -e "You Server IP:${COLOR_GREEN}${defIP}${COLOR_END}"
-		echo -e ""
+        echo -e ""
         echo -e "————————————————————————————————————————————"
         echo -e "     ${COLOR_RED}Please input your server setting:${COLOR_END}"
         echo -e "————————————————————————————————————————————"
