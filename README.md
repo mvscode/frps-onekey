@@ -52,6 +52,12 @@ Usage: /etc/init.d/frps {start|stop|restart|status|config|version}
  
 ## Script ChangeLog
 ---------------------------------------
+
+### [1.0.7] - 2024-07-24
+
+#### Added
+* Add progress bar for download frps tar file 
+
 ### [1.0.6] - 2024-06-25
 
 #### Added
