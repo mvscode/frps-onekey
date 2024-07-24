@@ -15,7 +15,7 @@ export github_latest_version_api="https://api.github.com/repos/fatedier/frp/rele
 
 # Program information
 program_name="frps"
-version="1.0.6"
+version="1.0.7"
 str_program_dir="/usr/local/${program_name}"
 program_init="/etc/init.d/${program_name}"
 program_config_file="frps.toml"
@@ -219,7 +219,7 @@ fun_randstr(){
 fun_getServer(){
     def_server_url="github"
     echo ""
-    echo -e "Please select ${program_name} download url:"
+    echo -e "Please select ${COLOR_PINK}${program_name} download${COLOR_END} url:"
     echo -e "[1].gitee"
     echo -e "[2].github (default)"
     read -e -p "Enter your choice (1, 2 or exit. default [${def_server_url}]): " set_server_url
@@ -268,26 +268,46 @@ fun_download_file(){
     # download
     if [ ! -s ${str_program_dir}/${program_name} ]; then
         rm -fr ${program_latest_filename} frp_${FRPS_VER}_linux_${ARCHS}
-        if ! wget  -q ${program_latest_file_url} -O ${program_latest_filename}; then
-            echo -e " ${COLOR_RED}failed${COLOR_END}"
-            exit 1
-        fi
-        tar xzf ${program_latest_filename}
-        mv frp_${FRPS_VER}_linux_${ARCHS}/frps ${str_program_dir}/${program_name}
-        rm -fr ${program_latest_filename} frp_${FRPS_VER}_linux_${ARCHS}
+		echo -e "Downloading ${program_name}..."
+		echo ""
+    if ! curl -L --progress-bar "${program_latest_file_url}" -o "${program_latest_filename}"; then
+        echo -e " ${COLOR_RED}Download failed${COLOR_END}"
+        exit 1
     fi
+	
+    # Verify the downloaded file exists and is not empty
+    if [ ! -s ${program_latest_filename} ]; then
+      echo -e " ${COLOR_RED}Downloaded file is empty or not found${COLOR_END}"
+      exit 1
+    fi		
+      echo -e "Extracting ${program_name}..."
+	  echo ""
+	  
+      tar xzf ${program_latest_filename}
+      mv frp_${FRPS_VER}_linux_${ARCHS}/frps ${str_program_dir}/${program_name}
+      rm -fr ${program_latest_filename} frp_${FRPS_VER}_linux_${ARCHS}
+    fi
+	
     chown root:root -R ${str_program_dir}
     if [ -s ${str_program_dir}/${program_name} ]; then
         [ ! -x ${str_program_dir}/${program_name} ] && chmod 755 ${str_program_dir}/${program_name}
     else
-        echo -e " ${COLOR_RED}failed${COLOR_END}"
-        exit 1
+      echo -e " ${COLOR_RED}failed${COLOR_END}"
+      exit 1
     fi
 }
-function __readINI() {
- INIFILE=$1; SECTION=$2; ITEM=$3
- _readIni=`awk -F '=' '/\['$SECTION'\]/{a=1}a==1&&$1~/'$ITEM'/{print $2;exit}' $INIFILE`
-echo ${_readIni}
+# Helper function to format the progress bar
+show_progress() {
+    local GREEN='\033[0;32m'
+    local NC='\033[0m' # No Color
+
+    while IFS= read -r line; do
+        if [[ $line =~ ([0-9]+)% ]]; then
+            percent="${BASH_REMATCH[1]}"
+            printf "\r${GREEN}Downloading: %s%%${NC}" "$percent"
+        fi
+    done
+    echo
 }
 # Check port
 fun_check_port(){
@@ -454,9 +474,11 @@ else
         fun_frps
         fun_getServer
         fun_getVer
+        echo -e ""
         echo -e "Loading You Server IP, please wait..."
         defIP=$(curl -s https://api.ipify.org)
         echo -e "You Server IP:${COLOR_GREEN}${defIP}${COLOR_END}"
+		echo -e ""
         echo -e "————————————————————————————————————————————"
         echo -e "     ${COLOR_RED}Please input your server setting:${COLOR_END}"
         echo -e "————————————————————————————————————————————"
