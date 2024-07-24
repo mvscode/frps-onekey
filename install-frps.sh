@@ -274,7 +274,7 @@ fun_download_file(){
 	    echo ""		
 	if [ $? -ne 0 ]; then
         echo -e " ${COLOR_RED}Download failed${COLOR_END}"
-        exit 1
+		exit 1
     fi
 	
     # Verify the downloaded file exists and is not empty
