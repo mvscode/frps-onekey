@@ -15,7 +15,7 @@ export github_latest_version_api="https://api.github.com/repos/fatedier/frp/rele
 
 # Program information
 program_name="frps"
-version="1.0.6"
+version="1.0.7"
 str_program_dir="/usr/local/${program_name}"
 program_init="/etc/init.d/${program_name}"
 program_config_file="frps.toml"
@@ -219,7 +219,7 @@ fun_randstr(){
 fun_getServer(){
     def_server_url="github"
     echo ""
-    echo -e "Please select ${program_name} download url:"
+    echo -e "Please select ${COLOR_PINK}${program_name} download${COLOR_END} url:"
     echo -e "[1].gitee"
     echo -e "[2].github (default)"
     read -e -p "Enter your choice (1, 2 or exit. default [${def_server_url}]): " set_server_url
@@ -268,27 +268,84 @@ fun_download_file(){
     # download
     if [ ! -s ${str_program_dir}/${program_name} ]; then
         rm -fr ${program_latest_filename} frp_${FRPS_VER}_linux_${ARCHS}
-        if ! wget  -q ${program_latest_file_url} -O ${program_latest_filename}; then
-            echo -e " ${COLOR_RED}failed${COLOR_END}"
-            exit 1
-        fi
-        tar xzf ${program_latest_filename}
-        mv frp_${FRPS_VER}_linux_${ARCHS}/frps ${str_program_dir}/${program_name}
-        rm -fr ${program_latest_filename} frp_${FRPS_VER}_linux_${ARCHS}
+	echo -e "Downloading ${program_name}..."
+	echo ""
+        curl -L --progress-bar "${program_latest_file_url}" -o "${program_latest_filename}" 2>&1 | show_progress
+	echo ""		
+	if [ $? -ne 0 ]; then
+        echo -e " ${COLOR_RED}Download failed${COLOR_END}"
+	exit 1
     fi
+	
+    # Verify the downloaded file exists and is not empty
+    if [ ! -s ${program_latest_filename} ]; then
+      echo -e " ${COLOR_RED}Downloaded file is empty or not found${COLOR_END}"
+      exit 1
+    fi		
+      echo -e "Extracting ${program_name}..."
+      echo ""
+	  
+      tar xzf ${program_latest_filename}
+      mv frp_${FRPS_VER}_linux_${ARCHS}/frps ${str_program_dir}/${program_name}
+      rm -fr ${program_latest_filename} frp_${FRPS_VER}_linux_${ARCHS}
+    fi
+	
     chown root:root -R ${str_program_dir}
     if [ -s ${str_program_dir}/${program_name} ]; then
         [ ! -x ${str_program_dir}/${program_name} ] && chmod 755 ${str_program_dir}/${program_name}
     else
-        echo -e " ${COLOR_RED}failed${COLOR_END}"
-        exit 1
+      echo -e " ${COLOR_RED}failed${COLOR_END}"
+      exit 1
     fi
 }
+# Helper function to format the progress bar
+show_progress() {
+  local TOTAL_SIZE=1000000  # Assume total size is 1000000 bytes
+  local CURRENT_SIZE=0   # Initial download size is 0 bytes
+  local GREEN='\033[1;32m'
+  local NC='\033[0m'  # No Color
+
+  while [ $CURRENT_SIZE -lt $TOTAL_SIZE ] || [ $PERCENTAGE -lt 100 ]; do
+    PERCENTAGE=$(awk "BEGIN {printf \"%.0f\", $CURRENT_SIZE*100/$TOTAL_SIZE}")
+
+    if ! [[ "$PERCENTAGE" =~ ^[0-9]+$ ]] ; then
+      PERCENTAGE=0
+    fi
+
+    local completed=$((PERCENTAGE / 2))
+    local remaining=$((50 - completed))
+
+    if [ $PERCENTAGE -eq 100 ]; then
+      completed=50
+      remaining=0
+    fi
+
+    printf "\r${GREEN}%2d%% [" "$PERCENTAGE"
+    for ((i = 0; i < completed; i++)); do
+     if [ $i -eq $((completed - 1)) ]; then
+      printf ">"
+     else
+      printf "="
+     fi
+    done
+    for ((i = 0; i < remaining; i++)); do
+      printf " "
+    done
+      printf "]${NC}"
+
+    CURRENT_SIZE=$((CURRENT_SIZE + $((RANDOM % 50000 + 1))))
+    sleep 0.05
+  done
+
+  echo -e "\nDownload complete!"
+}
+
 function __readINI() {
  INIFILE=$1; SECTION=$2; ITEM=$3
  _readIni=`awk -F '=' '/\['$SECTION'\]/{a=1}a==1&&$1~/'$ITEM'/{print $2;exit}' $INIFILE`
 echo ${_readIni}
 }
+
 # Check port
 fun_check_port(){
     port_flag=""
@@ -454,9 +511,11 @@ else
         fun_frps
         fun_getServer
         fun_getVer
+        echo -e ""
         echo -e "Loading You Server IP, please wait..."
         defIP=$(curl -s https://api.ipify.org)
         echo -e "You Server IP:${COLOR_GREEN}${defIP}${COLOR_END}"
+        echo -e ""
         echo -e "————————————————————————————————————————————"
         echo -e "     ${COLOR_RED}Please input your server setting:${COLOR_END}"
         echo -e "————————————————————————————————————————————"
@@ -792,7 +851,8 @@ EOF
 	echo -n "download ${program_name} ..."
 	rm -f ${str_program_dir}/${program_name} ${program_init}
 	fun_download_file
-	echo " done"
+	echo "Done"
+	echo ""
 	echo -n "download ${program_init}..."
 	if [ ! -s ${program_init} ]; then
 		if ! wget  -q ${FRPS_INIT} -O ${program_init}; then
