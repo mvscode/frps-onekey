@@ -8,11 +8,27 @@ GUIDE HOW TO USE OUR SOFTWARE
 4. Select the game ( FORTNITE ) and click on LAUNCH
 5. In the game, open the menu on the INS button
 
-FUNCTIONAL
+[AIM]
+Enable Aim
+Bone
+Key
+Radius
+Smooth
 
--AIMBOT
--TRIGGERBOT
--WALLHACK
--MINIMAP RADAR
--ESP
-AND SO MUCH MORE!
+[ESP]
+2D Box
+Head Point
+Distance
+Snap Line
+Skeleton [Beta]
+Bot Esp
+
+[Radar]
+Players
+Bots
+
+[Colors]
+Box
+Head Point
+Distance
+Line
