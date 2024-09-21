@@ -98,7 +98,7 @@ Usage: /etc/init.d/frps {start|stop|restart|status|config|version}
 * Amend function name to frps
 
 #### Changed
-* Change curl common to get server ip from wget common
+* Change curl command to get server ip from wget command [Issue 117](https://github.com/mvscode/frps-onekey/issues/117)
 
 ### [1.0.2] - 2024-06-13
 
