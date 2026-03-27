@@ -158,17 +158,19 @@ pre_install_packs() {
     local wget_flag=0
     local killall_flag=0
     local netstat_flag=0
+    local curl_flag=0
 
     wget --version >/dev/null 2>&1 || wget_flag=$?
     killall -V >/dev/null 2>&1 || killall_flag=$?
     netstat --version >/dev/null 2>&1 || netstat_flag=$?
+    curl --version >/dev/null 2>&1 || curl_flag=$?
 
-    if [ $wget_flag -gt 0 ] || [ $killall_flag -gt 0 ] || [ $netstat_flag -gt 0 ]; then
+    if [ $wget_flag -gt 0 ] || [ $killall_flag -gt 0 ] || [ $netstat_flag -gt 0 ] || [ $curl_flag -gt 0 ]; then
         echo -e "${COLOR_GREEN}Installing support packages...${COLOR_END}"
         if [ "$OS" == 'CentOS' ] || [ "$OS" == 'RHEL' ] || [ "$OS" == 'Rocky' ] || [ "$OS" == 'AlmaLinux' ]; then
-            yum install -y wget psmisc net-tools || exit 1
+            yum install -y wget psmisc net-tools curl || exit 1
         else
-            apt-get -y update && apt-get -y install wget psmisc net-tools || exit 1
+            apt-get -y update && apt-get -y install wget psmisc net-tools curl || exit 1
         fi
     fi
 }
